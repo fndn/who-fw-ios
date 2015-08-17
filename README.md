@@ -33,5 +33,12 @@ Add the following to ~/.bash_profile
 ** IOJS **
 `nvm install iojs-v2 && nvm alias default iojs-v2`
 
+** Update watchman **
+`brew update`
+`brew upgrade watchman`
+
+
+
+
 
 
