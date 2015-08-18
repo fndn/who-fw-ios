@@ -3,7 +3,6 @@
 var React 			= require('react-native');
 var GlobalStyles 	= require('../../Styles/GlobalStyles');
 var SelectArea 		= require('./SelectArea');
-
 var Datastore  		= require('../Datastore');
 
 var {
@@ -17,15 +16,7 @@ var {
 	ListView
 } = React;
 
-/*
-var dummydata = [
-	{"_id": 1, "name": "dk"},
-	{"_id": 2, "name": "se"},
-	{"_id": 3, "name": "no"},
-	{"_id": 4, "name": "gb"}
-];
-
-*/
+var first = true;
 class SelectCountry extends Component {
 
 	constructor( props ){
@@ -41,9 +32,11 @@ class SelectCountry extends Component {
 	render(){
 
 		return (
+
 			<View style={styles.container}>
+
 				<ListView
-					dataSource  = {this.state.dataSource} 
+					dataSource  = {this.state.dataSource}
 					automaticallyAdjustContentInsets={false}
 					renderRow 	= {this._renderRow.bind(this)} />
 			</View>
@@ -92,6 +85,11 @@ class SelectCountry extends Component {
         return (prevState.dataSource != this.state.dataSource)
     }
 
+    onCameInFocus()
+    {
+        console.log("CAME IN FOCUS");
+    }
+
 	componentDidMount(){
 		console.log("SelectCountry:: componentDidMount");
 		this.fetchData();
@@ -103,7 +101,7 @@ class SelectCountry extends Component {
 
 		var _data = Datastore.Get('countries');
         //console.log(_data);
-		if( _data.length > 0 ){
+		if( _data != null && _data.length > 0 ){
 			this.setState({
 				isLoading:false,
 				message:'loaded',
@@ -138,9 +136,15 @@ class SelectCountry extends Component {
 			.done()
 		*/
 	}
+
+    UpdateData()
+    {
+        fetchData();
+    }
 }
 
 module.exports = SelectCountry;
+module.exports.UpdateData = SelectCountry.UpdateData;
 //module.exports.FetchData = this.fetchData();
 
 // Local styles

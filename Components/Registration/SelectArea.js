@@ -51,12 +51,7 @@ class SelectArea extends Component {
     }
 
     _renderRow( rowData, sectionID, rowID ){
-        /*
-         console.log('renderRow', rowData, sectionID, rowID);
-         console.log('renderRow', Object.keys(rowData)) ;
-         console.log('renderRow', rowData["_id"]) ;
-         console.log('renderRow', rowData._id) ;
-         */
+
         return (
             <TouchableHighlight underlayColor='#EEE' onPress={() => this.rowPressed(rowData)}>
                 <View>

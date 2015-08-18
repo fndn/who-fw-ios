@@ -2,13 +2,13 @@
 
 var React 			= require('react-native');
 var GlobalStyles 	= require('../../Styles/GlobalStyles');
-var SelectCountry 	= require('./SelectCountry')
+var SelectCountry 	= require('./SelectCountry');
 var Datastore       = require('../Datastore');
 var t               = require('tcomb-form-native');
 
 var Form = t.form.Form;
 
-var Person = t.struct({
+var Country = t.struct({
     name: t.Str,              // a required string
     countryCode: t.maybe(t.Str)  // an optional string
 
@@ -40,7 +40,7 @@ var RegisterCountry = React.createClass({
             <View style={styles.container}>
                 <Form
                     ref="form"
-                    type={Person}
+                    type={Country}
                     options={options}
                     />
                 <TouchableHighlight style={styles.button} onPress = {this.onPress} underlayColor='#99d9f4'>
@@ -59,14 +59,8 @@ var RegisterCountry = React.createClass({
         if (value) { // if validation fails, value will be null
 
             Datastore.Set("name", value.name);
-
             this.props.navigator.pop();
         }
-    },
-
-    componentDidMount: function()
-    {
-        console.log("RegisterCountry did mount");
     }
 });
 
