@@ -51,10 +51,6 @@ class SelectCountry extends Component {
 		
 	}
 
-
-
-
-
 	_renderRow( rowData, sectionID, rowID ){
 		/*
 		console.log('renderRow', rowData, sectionID, rowID);
@@ -89,6 +85,13 @@ class SelectCountry extends Component {
 		});	
 	}
 
+    // This currently functions as a "Update once" function to fetch new data
+    shouldComponentUpdate(prevProps, prevState)
+    {
+        this.fetchData();
+        return (prevState.dataSource != this.state.dataSource)
+    }
+
 	componentDidMount(){
 		console.log("SelectCountry:: componentDidMount");
 		this.fetchData();
@@ -99,13 +102,15 @@ class SelectCountry extends Component {
 		console.log("SelectCountry:: fetchData");
 
 		var _data = Datastore.Get('countries');
+        //console.log(_data);
 		if( _data.length > 0 ){
 			this.setState({
 				isLoading:false,
 				message:'loaded',
 				//categories: responseData.categories
-				 dataSource: this.state.dataSource.cloneWithRows(_data),
+                dataSource: this.state.dataSource.cloneWithRows(_data),
 			});
+            this.forceUpdate(); // Make sure we skip "shouldComponentUpdate" after fetching data
 		}
 		
 		/*
@@ -136,6 +141,7 @@ class SelectCountry extends Component {
 }
 
 module.exports = SelectCountry;
+//module.exports.FetchData = this.fetchData();
 
 // Local styles
 var styles = StyleSheet.create({

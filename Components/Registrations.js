@@ -15,7 +15,8 @@
 
 var React 			= require('react-native');
 var GlobalStyles 	= require('../Styles/GlobalStyles');
-var SelectCountry 	= require('./Registration/SelectCountry')
+var SelectCountry 	= require('./Registration/SelectCountry');
+var RegisterCountry = require('./Registration/RegisterCountry');
 
 var {
 	StyleSheet,
@@ -34,14 +35,29 @@ class Registrations extends Component {
 	render(){
 		return (
 			<NavigatorIOS
+                ref="nav"
 				style={GlobalStyles.container_fs}
 				initialRoute={{
 					component: SelectCountry,
-					title: 'SelectCountry',
-					passProps: { myProp: 'foo' },
+					rightButtonTitle: 'Add',
+					onRightButtonPress: () => this.OpenAddCountry(),
+					title: 'Select Country'
 				}}/>
 		);
 	}
+
+    OpenAddCountry ()
+    {
+        this.refs.nav.navigator.push({
+                title: 'Register Country',
+                component: RegisterCountry,
+                leftButtonTitle: 'Cancel',
+                onLeftButtonPress: () => { this.refs.nav.navigator.pop();}
+                //rightButtonTitle: 'Done'
+            });
+    }
+
+
 }
 
 module.exports = Registrations;
