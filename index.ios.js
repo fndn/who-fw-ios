@@ -1,4 +1,3 @@
-
 'use strict';
 
 var React         = require('react-native');
@@ -6,7 +5,6 @@ var React         = require('react-native');
 var Introduction  = require('./Components/Introduction');
 var Registrations = require('./Components/Registrations');
 var Sync          = require('./Components/Sync');
-
 
 var {
 	AppRegistry,
@@ -17,6 +15,8 @@ var {
 } = React;
 
 
+var Datastore = require('./Components/Datastore');
+Datastore.init();
 
 var FWA = React.createClass({
 

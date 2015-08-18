@@ -52,9 +52,6 @@ class SelectCountry extends Component {
 	}
 
 
-
-
-
 	_renderRow( rowData, sectionID, rowID ){
 		/*
 		console.log('renderRow', rowData, sectionID, rowID);
@@ -90,14 +87,26 @@ class SelectCountry extends Component {
 	}
 
 	componentDidMount(){
-		console.log("SelectCountry:: componentDidMount");
+		//console.log("SelectCountry:: componentDidMount");
 		this.fetchData();
 	}
 
 	fetchData(){
 
 		console.log("SelectCountry:: fetchData");
+		var self = this;
+		Datastore.init(function(){
+			var _data = Datastore.all('countries');
+			if( _data.length > 0 ){
+				self.setState({
+					isLoading:false,
+					message:'loaded',
+					dataSource: self.state.dataSource.cloneWithRows(_data),
+				});
+			}	
+		});
 
+		/*
 		var _data = Datastore.Get('countries');
 		if( _data.length > 0 ){
 			this.setState({
@@ -107,7 +116,8 @@ class SelectCountry extends Component {
 				 dataSource: this.state.dataSource.cloneWithRows(_data),
 			});
 		}
-		
+		*/
+
 		/*
 		this.setState({ isLoading: true });
 
@@ -143,8 +153,7 @@ var styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		marginTop: 63,
-		flexDirection: 'column',
-		color: '#09f'
+		flexDirection: 'column'
 	},
 
 	list: {
