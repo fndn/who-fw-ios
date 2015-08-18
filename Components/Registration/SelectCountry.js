@@ -99,17 +99,19 @@ class SelectCountry extends Component {
 
 		console.log("SelectCountry:: fetchData");
 
-		var _data = Datastore.Get('countries');
-        //console.log(_data);
-		if( _data != null && _data.length > 0 ){
-			this.setState({
-				isLoading:false,
-				message:'loaded',
-				//categories: responseData.categories
-                dataSource: this.state.dataSource.cloneWithRows(_data),
-			});
-            this.forceUpdate(); // Make sure we skip "shouldComponentUpdate" after fetching data
-		}
+		var self = this;
+		Datastore.init(function(){
+			var _data = Datastore.all('countries');
+			if( _data != null &&  _data.length > 0 ){
+				self.setState({
+					isLoading:false,
+					message:'loaded',
+					dataSource: self.state.dataSource.cloneWithRows(_data),
+				});
+				self.forceUpdate(); // Make sure we skip "shouldComponentUpdate" after fetching data
+			}	
+		});
+
 		
 		/*
 		this.setState({ isLoading: true });
