@@ -155,8 +155,7 @@ var styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		marginTop: 63,
-		flexDirection: 'column',
-		color: '#09f'
+		flexDirection: 'column'
 	},
 
 	list: {

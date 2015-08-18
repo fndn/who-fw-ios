@@ -4,16 +4,18 @@ var React 			= require('react-native');
 var GlobalStyles 	= require('../../Styles/GlobalStyles');
 var SelectCountry 	= require('./SelectCountry');
 var Datastore       = require('../Datastore');
+var Models          = require('../Models');
 var t               = require('tcomb-form-native');
 
 var Form = t.form.Form;
 
+/*
 var Country = t.struct({
     name: t.Str,              // a required string
     countryCode: t.maybe(t.Str)  // an optional string
 
 });
-
+*/
 var options = {}; // optional rendering options (see documentation)
 
 var {
@@ -24,7 +26,8 @@ var {
     TextInput,
     TouchableHighlight,
     ActivityIndicatorIOS,
-    NavigatorIOS
+    NavigatorIOS,
+    ScrollView
     } = React;
 
 var RegisterCountry = React.createClass({
@@ -37,16 +40,16 @@ var RegisterCountry = React.createClass({
     render: function(){
 
         return (
-            <View style={styles.container}>
+            <ScrollView> {/* todo: STylLE */}
                 <Form
                     ref="form"
-                    type={Country}
+                    type={Models.Country()}
                     options={options}
                     />
                 <TouchableHighlight style={styles.button} onPress = {this.onPress} underlayColor='#99d9f4'>
                     <Text style={styles.buttonText}>Save</Text>
                 </TouchableHighlight>
-            </View>
+            </ScrollView>
         );
     },
 

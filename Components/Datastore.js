@@ -105,7 +105,7 @@ var init = module.exports.init = function( cb ){
 		console.log('initializing Datastore (once)');
 
 		_setDefaults( DefaultData ); //TODO: Call this with server-loaded "defaults"
-		//_test();
+		_test();
 
 	}else{
 		console.log('_init_queue push ', cb);
@@ -126,11 +126,13 @@ function _test(){
 		//console.log('put 4 obj >', Datastore.put(table, 3, {'age':55}) );
 		//////console.log('del 1 >', Datastore.del(table, 1) );
 
-		console.log('all >  ', Datastore.all(table) );
+		//console.log('all >  ', Datastore.all(table) );
 
-		console.log('putx >  ', Datastore.putx(table, {name: 'js', age: 155}) );
+		//console.log('putx >  ', Datastore.putx(table, {name: 'js', age: 155}) );
 
 		//console.log('all >  ', Datastore.all(table) );
+
+		console.log('Datastore.Country Model', Datastore.Country() );
 	});
 }
 
@@ -196,6 +198,7 @@ function _findTable( _table ){
 Datastore.all = module.exports.all = function(_table){
 	var table = _findTable(_table);
 	if( table ){
+		// todo: Alpha sort on $orderBy || $name 
 		return table.findAll();
 	}
 }
@@ -257,4 +260,3 @@ Datastore.putx = function(_table, _obj){
 		}
 	}
 }
-

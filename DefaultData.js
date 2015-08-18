@@ -5,4 +5,12 @@ module.exports = {
 		{"name": "Norway" },
 		{"name": "Finland" },
 	],
+	
+	"incomeTypes" : [
+		{'name': 'Low-income area'},
+		{'name': 'High-Income area'}
+	],
+
+	// user created data
+	"items": []
 }
