@@ -1,7 +1,7 @@
 'use strict';
 
 var React 				= require('react-native');
-var ReactNativeStore	= require('react-native-store');
+var ReactNativeStore	= require('../react-native-store');
 var DefaultData			= require('../DefaultData.js');
 
 /**
