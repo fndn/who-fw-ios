@@ -3,7 +3,6 @@
 var React 			= require('react-native');
 var GlobalStyles 	= require('../../Styles/GlobalStyles');
 var SelectArea 		= require('./SelectArea');
-
 var Datastore  		= require('../Datastore');
 
 var {
@@ -17,15 +16,7 @@ var {
 	ListView
 } = React;
 
-/*
-var dummydata = [
-	{"_id": 1, "name": "dk"},
-	{"_id": 2, "name": "se"},
-	{"_id": 3, "name": "no"},
-	{"_id": 4, "name": "gb"}
-];
-
-*/
+var first = true;
 class SelectCountry extends Component {
 
 	constructor( props ){
@@ -41,16 +32,17 @@ class SelectCountry extends Component {
 	render(){
 
 		return (
+
 			<View style={styles.container}>
+
 				<ListView
-					dataSource  = {this.state.dataSource} 
+					dataSource  = {this.state.dataSource}
 					automaticallyAdjustContentInsets={false}
 					renderRow 	= {this._renderRow.bind(this)} />
 			</View>
 		);
 		
 	}
-
 
 	_renderRow( rowData, sectionID, rowID ){
 		/*
@@ -86,38 +78,39 @@ class SelectCountry extends Component {
 		});	
 	}
 
+    // This currently functions as a "Update once" function to fetch new data
+    shouldComponentUpdate(prevProps, prevState)
+    {
+        this.fetchData();
+        return (prevState.dataSource != this.state.dataSource)
+    }
+
+    onCameInFocus()
+    {
+        console.log("CAME IN FOCUS");
+    }
+
 	componentDidMount(){
-		//console.log("SelectCountry:: componentDidMount");
+		console.log("SelectCountry:: componentDidMount");
 		this.fetchData();
 	}
 
 	fetchData(){
 
 		console.log("SelectCountry:: fetchData");
-		var self = this;
-		Datastore.init(function(){
-			var _data = Datastore.all('countries');
-			if( _data.length > 0 ){
-				self.setState({
-					isLoading:false,
-					message:'loaded',
-					dataSource: self.state.dataSource.cloneWithRows(_data),
-				});
-			}	
-		});
 
-		/*
 		var _data = Datastore.Get('countries');
-		if( _data.length > 0 ){
+        //console.log(_data);
+		if( _data != null && _data.length > 0 ){
 			this.setState({
 				isLoading:false,
 				message:'loaded',
 				//categories: responseData.categories
-				 dataSource: this.state.dataSource.cloneWithRows(_data),
+                dataSource: this.state.dataSource.cloneWithRows(_data),
 			});
+            this.forceUpdate(); // Make sure we skip "shouldComponentUpdate" after fetching data
 		}
-		*/
-
+		
 		/*
 		this.setState({ isLoading: true });
 
@@ -143,9 +136,16 @@ class SelectCountry extends Component {
 			.done()
 		*/
 	}
+
+    UpdateData()
+    {
+        fetchData();
+    }
 }
 
 module.exports = SelectCountry;
+module.exports.UpdateData = SelectCountry.UpdateData;
+//module.exports.FetchData = this.fetchData();
 
 // Local styles
 var styles = StyleSheet.create({
@@ -153,7 +153,8 @@ var styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		marginTop: 63,
-		flexDirection: 'column'
+		flexDirection: 'column',
+		color: '#09f'
 	},
 
 	list: {
