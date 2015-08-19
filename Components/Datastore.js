@@ -90,35 +90,39 @@ Datastore.tables = {}; 	// memorymapped async store
 
 
 var Session = {
-	table: "session-dev",
-	store: {},
+	tableName: "session-dev",
+	table: null,	// async store
+	store: {}, 		// memory store
+	sessionID: 0,
 };
 
-Session.clear = function(){
-	ReactNativeStore.table( Datastore.Session.table )
-	.then(function(table){
-		table.removeAll();
-	})
-	.then(function(b){
-		console.log("= Cleared Session");
-	});
-}
 
 
-Session.Create = function(){
-	Session.clear();
+Session.Start = function(id){
+	if( this.table.get(id).length === 0 ){
+		console.log( "sessionID", id, "not found. Starting a new one");
+		this.sessionID = this.table.add({'synced':false});
+	}else{
+		this.sessionID = id;
+	}
+	console.log(" this.sessionID:", this.sessionID );
 }
 
 Session.Set = function(key, value){
 	this.store[key] = value;
 	//console.log( this.store );
 	// persist
+	if( this.sessionID == 0 ){
+		console.log("WARNING: sessionID is zero - did you forget to call Datastore.Session.Start() ?");
+	}
+	this.table.updateById(this.sessionID, this.store);
 }
 Session.Get = function(key){
 	return this.store[key];// || false;
 }
 Session.Show = function(){
-	console.log("Session.Show",  this.store );
+	console.log("Session.store:",  this.store );
+	console.log("Session.table:",  this.table.findAll() );
 }
 module.exports.Session = Session;
 
@@ -129,17 +133,24 @@ var _instance = false; 	// ensure singleton
 var _initialized = -1; 	// -1: not ready, 0:loading, 1: ready
 var _init_queue = [];
 function _process_init_queue(){
-	console.log("= Datastore: _process_init_queue()");
-	_initialized = 1;
-	for(var fn in _init_queue ){
-		console.log('= Datastore: Calling Queued FN', _init_queue[fn]);
-		_init_queue[fn]();
+	if( _init_queue.length ){
+		console.log("= Datastore: Processing Queue");
+		_initialized = 1;
+		for(var fn in _init_queue ){
+			console.log('  Datastore: Calling queued FN', _init_queue[fn]);
+			_init_queue[fn]();
+		}
+		_init_queue = [];
 	}
-	_init_queue = [];
 	console.log("= Datastore: Ready");
 
 	// Run tests
 	//DatastoreTests.RunSessionTests();
+	//or
+	Session.Start(1); // or the id of an existing session
+	Session.Show();
+
+	DatastoreTests.RunNetworkTests();
 }
 
 var init = module.exports.init = function( cb ){
@@ -149,9 +160,16 @@ var init = module.exports.init = function( cb ){
 		_initialized = 0;
 		console.log('= Datastore: initializing Datastore (once)');
 
-		//Datastore._clear("countries");
+		// Connect to Session table
+		ReactNativeStore.table( Session.tableName ).then(function(table){
+			// table.removeAll();
+			Session.table = table;
+			console.log("= Sessionstore: Ready");
+
+			_setDefaults( DefaultData ); //TODO: Call this with server-loaded "defaults"
+		});
 		
-		_setDefaults( DefaultData ); //TODO: Call this with server-loaded "defaults"
+		//_setDefaults( DefaultData ); //TODO: Call this with server-loaded "defaults"
 		//_test();
 
 	}else{
