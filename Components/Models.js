@@ -1,10 +1,33 @@
 'use strict';
 
-var React 	= require('react-native');
-var t 	 	= require('tcomb-form-native');
+var React 	    = require('react-native');
+var t 	 	    = require('tcomb-form-native');
+var Datastore    = require('./Datastore');
+
+// Enums
+var incomeTypes = t.enums({
+    L: 'Low',
+    H: 'High'
+});
+
+var storeTypes = t.enums({
+    0: 'Supermarket',
+    1: 'Pharmacy',
+    2: 'Convinience store/corner shop',
+    3: 'Health Food store',
+    4: 'Department Store',
+    5: 'Mini-market',
+    6: 'Other'
+});
 
 // Models
 
+module.exports.Respondent = function(){
+    return t.struct({
+        name: t.Str,
+        countryCode: t.maybe(t.Str)
+    });
+};
 
 module.exports.Country = function(){
 	return t.struct({
@@ -14,30 +37,28 @@ module.exports.Country = function(){
 };
 
 module.exports.Location = function(){
-	var countries = {};
-	Datastore.all("countries").forEach(function(c){
-		countries[ c.name.toLowerCase() ] = c;	
-		console.log('countries', countries);
-	});
-	console.log('countries', countries);
-	/*var incomeTypes = {};
-	Datastore.all("incomeTypes").sort().forEach(function(c){
-		incomeTypes[ c.toLowerCase() ] = c;	
-	});*/
-
-var Gender = t.enums({
-  M: 'Male',
-  F: 'Female'
-});
-
-
 	return t.struct({
-		name: t.Str,
 		street: t.Str,
-		streetNumber: t.Num,
-		postCode: t.Str,
-		postArea: t.Str,
-		//IncomeType: t.enums(incomeTypes),
-		country: Gender
+		city: t.Str,
+		neighbourhood: t.Str,
+        incomeType: incomeTypes
 	});
+};
+
+module.exports.StoreType = function(){
+    return t.struct({
+        storeType: storeTypes
+    });
+};
+
+module.exports.Brand = function(){
+    return t.struct({
+        name: t.Str
+    });
+};
+
+module.exports.Product = function(){
+    return t.struct({
+        name: t.Str
+    });
 };

@@ -2,7 +2,8 @@
 
 var React 			= require('react-native');
 var GlobalStyles 	= require('../../Styles/GlobalStyles');
-var SelectArea 		= require('./SelectArea');
+var SelectLocation 		= require('./SelectLocation');
+var RegisterLocation    = require('./RegisterLocation');
 var Datastore  		= require('../Datastore');
 
 var {
@@ -68,12 +69,24 @@ class SelectCountry extends Component {
 
 	rowPressed( rowData ){
 		console.log("clicked ", rowData );
+        Datastore.add('sessionCountry', rowData);
+
 		this.props.navigator.push({
 			leftButtonTitle: '< Back',
 			onLeftButtonPress: () => this.props.navigator.pop(),
-			title: 'Select Area*',
-			component: SelectArea,
-			passProps: {id: rowData._id, name: rowData.name },
+			title: 'Select Area',
+			component: SelectLocation,
+            onRightButtonPress: () => {
+                this.props.navigator.push({
+                    title: 'Register Area',
+                    component: RegisterLocation,
+                    leftButtonTitle: 'Cancel',
+                    onLeftButtonPress: () => { this.props.navigator.pop();}
+                    //rightButtonTitle: 'Done'
+                });
+            },
+            rightButtonTitle: 'Add'
+			//passProps: {countryId: rowData._id, countryName: rowData.name },
 
 		});	
 	}
@@ -99,16 +112,16 @@ class SelectCountry extends Component {
 
 		console.log("SelectCountry:: fetchData");
 
-		var self = this;
+		//var self = this;
 		//Datastore.init(function(){
 			var _data = Datastore.all('countries');
-            console.log("DATA:");
-            console.log(_data);
+            //console.log("DATA:");
+            //console.log(_data);
 			if( _data != null &&  _data.length > 0 ){
                 this.setState({
 					isLoading:false,
 					message:'loaded',
-					dataSource: this.state.dataSource.cloneWithRows(_data),
+					dataSource: this.state.dataSource.cloneWithRows(_data)
 				});
                 this.forceUpdate(); // Make sure we skip "shouldComponentUpdate" after fetching data
 			}	
@@ -157,6 +170,6 @@ var styles = StyleSheet.create({
 	},
 
 	list: {
-		flex:1,
-	},
+		flex:1
+	}
 });

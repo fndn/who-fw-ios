@@ -1,11 +1,9 @@
 'use strict';
 
-var React 			= require('react-native');
-var GlobalStyles 	= require('../../Styles/GlobalStyles');
-
-var Datastore  		= require('../Datastore');
-
-
+var React = require('react-native');
+var GlobalStyles = require('../../Styles/GlobalStyles');
+//var SelectArea 		= require('./SelectArea');
+var Datastore = require('../Datastore');
 
 var {
     StyleSheet,
@@ -18,42 +16,41 @@ var {
     ListView
     } = React;
 
-/*
- var dummydata = [
- {"_id": 1, "name": "dk"},
- {"_id": 2, "name": "se"},
- {"_id": 3, "name": "no"},
- {"_id": 4, "name": "gb"}
- ];
-
- */
+var first = true;
 class SelectArea extends Component {
 
-    constructor( props ){
+    constructor(props) {
         super(props);
-        var dataSource = new ListView.DataSource({rowHasChanged: (r1, r2) => r1["_id"] !== r2["_id"] });
+        var dataSource = new ListView.DataSource({rowHasChanged: (r1, r2) => r1["_id"] !== r2["_id"]});
         this.state = {
             isLoading: false,
             message: 'init',
             dataSource: dataSource
-        }
+        };
     }
 
-    render(){
+    render() {
 
         return (
+
             <View style={styles.container}>
+
                 <ListView
-                    dataSource  = {this.state.dataSource}
-                    automaticallyAdjustContentInsets={false}
-                    renderRow 	= {this._renderRow.bind(this)} />
+                    automaticallyAdjustContentInsets={true}
+                    dataSource={this.state.dataSource}
+                    renderRow={this._renderRow.bind(this)}/>
             </View>
         );
 
     }
 
-    _renderRow( rowData, sectionID, rowID ){
-
+    _renderRow(rowData, sectionID, rowID) {
+        /*
+         console.log('renderRow', rowData, sectionID, rowID);
+         console.log('renderRow', Object.keys(rowData)) ;
+         console.log('renderRow', rowData["_id"]) ;
+         console.log('renderRow', rowData._id) ;
+         */
         return (
             <TouchableHighlight underlayColor='#EEE' onPress={() => this.rowPressed(rowData)}>
                 <View>
@@ -63,42 +60,60 @@ class SelectArea extends Component {
                             <Text style={GlobalStyles.listrowSubtitle}>Some subtitle</Text>
                         </View>
                     </View>
-                    <View style={GlobalStyles.listrowSeparator} />
+                    <View style={GlobalStyles.listrowSeparator}/>
                 </View>
             </TouchableHighlight>
         );
     }
 
-    rowPressed( rowData ){
-        console.log("clicked ", rowData );
+    rowPressed(rowData) {
+        console.log("clicked ", rowData);
         this.props.navigator.push({
             leftButtonTitle: '< Back',
             onLeftButtonPress: () => this.props.navigator.pop(),
             title: 'Select Area',
             component: SelectArea,
-            passProps: {id: rowData._id, name: rowData.name },
+            passProps: {id: rowData._id, name: rowData.name}
 
         });
     }
 
-    componentDidMount(){
+    // This currently functions as a "Update once" function to fetch new data
+    shouldComponentUpdate(prevProps, prevState) {
+        this.fetchData();
+        return (prevState.dataSource != this.state.dataSource)
+    }
+
+    /*onCameInFocus()
+     {
+     console.log("CAME IN FOCUS");
+     }*/
+
+    componentDidMount() {
         console.log("SelectArea:: componentDidMount");
+        console.log("SelectArea:: selected country was " + this.props.countryName);
         this.fetchData();
     }
 
-    fetchData(){
+    fetchData() {
 
         console.log("SelectArea:: fetchData");
 
+        //var self = this;
+        //Datastore.init(function(){
         var _data = Datastore.all('locations');
-        if( _data.length > 0 ){
+        console.log("DATA:");
+        console.log(_data);
+        if (_data != null && _data.length > 0) {
             this.setState({
-                isLoading:false,
-                message:'loaded',
-                //categories: responseData.categories
-                dataSource: this.state.dataSource.cloneWithRows(_data),
+                isLoading: false,
+                message: 'loaded',
+                dataSource: this.state.dataSource.cloneWithRows(_data)
             });
+            this.forceUpdate(); // Make sure we skip "shouldComponentUpdate" after fetching data
         }
+        //});
+
 
         /*
          this.setState({ isLoading: true });
@@ -125,21 +140,23 @@ class SelectArea extends Component {
          .done()
          */
     }
+
 }
 
 module.exports = SelectArea;
+
+//module.exports.FetchData = this.fetchData();
 
 // Local styles
 var styles = StyleSheet.create({
 
     container: {
         flex: 1,
-        marginTop: 63,
-        flexDirection: 'column',
-        color: '#09f'
+        marginTop: 0,
+        flexDirection: 'column'
     },
 
     list: {
-        flex:1
+        flex: 1
     }
 });

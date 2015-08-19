@@ -8,7 +8,9 @@ var t               = require('tcomb-form-native');
 
 var Form = t.form.Form;
 
-var options = {}; // optional rendering options (see documentation)
+var options = {
+
+}; // optional rendering options (see documentation)
 
 var {
     StyleSheet,
@@ -22,20 +24,19 @@ var {
     ScrollView
     } = React;
 
-var RegisterArea = React.createClass({
-
-    //constructor( props ){
-    //    super(props);
-    //}
+var RegisterLocation = React.createClass({
 
 
     render: function(){
+
+
+        console.log("stored country: " + Datastore.all('sessionCountry'));
 
         return (
             <ScrollView /*TODO: Add styling*/>
                 <Form
                     ref="form"
-                    type={Models.Country()}
+                    type={Models.Location()}
                     options={options}
                     />
                 <TouchableHighlight style={styles.button} onPress = {this.onPress} underlayColor='#99d9f4'>
@@ -52,8 +53,9 @@ var RegisterArea = React.createClass({
 
         var value = this.refs.form.getValue();
         if (value) { // if validation fails, value will be null
-
-            Datastore.Set("name", value.name);
+            console.log("sdf: " + this.props.countryName);
+           //Datastore.Set("name", value.name);
+            //Datastore.add('locations', value);
             this.props.navigator.pop();
         }
     }
@@ -66,7 +68,7 @@ var styles = StyleSheet.create({
         justifyContent: 'center',
         marginTop: 50,
         padding: 20,
-        backgroundColor: '#ffffff',
+        backgroundColor: '#ffffff'
     },
     title: {
         fontSize: 30,
@@ -92,4 +94,4 @@ var styles = StyleSheet.create({
 
 
 
-module.exports = RegisterArea;
+module.exports = RegisterLocation;
