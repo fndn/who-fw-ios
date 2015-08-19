@@ -86,29 +86,29 @@ var _instance = false; 	// ensure singleton
 var _initialized = -1; 	// -1: not ready, 0:loading, 1: ready
 var _init_queue = [];
 function _process_init_queue(){
-	console.log("== _process_init_queue ==");
+	console.log("= Datastore: _process_init_queue()");
 	_initialized = 1;
 	for(var fn in _init_queue ){
-		console.log('FN', _init_queue[fn]);
+		console.log('= Datastore: Calling Queued FN', _init_queue[fn]);
 		_init_queue[fn]();
 	}
 	_init_queue = [];
+	console.log("= Datastore: Ready");
 }
 
 var init = module.exports.init = function( cb ){
-	console.log('# Datastore init() _instance:', _instance, "_initialized:", _initialized);
+	console.log('= Datastore: init (_instance:', _instance, "_initialized:", _initialized, ")");
 	if( !_instance ){
 		_instance = true;
 		_initialized = 0;
+		console.log('= Datastore: initializing Datastore (once)');
 
-		console.log('--- --- ---');
-		console.log('initializing Datastore (once)');
-
+		//Datastore._clear("countries");
+		
 		_setDefaults( DefaultData ); //TODO: Call this with server-loaded "defaults"
-		_test();
+		//_test();
 
 	}else{
-		console.log('_init_queue push ', cb);
 		_init_queue.push(cb);
 	}
 }
@@ -137,8 +137,8 @@ function _test(){
 }
 
 function _setDefaults( _defaults ){
-	console.log('_setDefaults() Defaults:', _defaults);
-	console.log('Object.keys(Defaults):', Object.keys(_defaults));
+	//console.log('_setDefaults() Defaults:', _defaults);
+	//console.log('Object.keys(Defaults):', Object.keys(_defaults));
 
 
 	// Load all tables defined in _defaults
@@ -146,18 +146,15 @@ function _setDefaults( _defaults ){
 	// if the table does not exist, add all (putx)
 
 	_populate( Object.keys(_defaults), function(){
-		console.log('_setDefaults @_populate cb()');
-
 		for( var t in _defaults ){
-			console.log('t', t);
+			//console.log('t', t);
 			for( var item in _defaults[t] ){
-				console.log("t, item:", t, _defaults[t][item]);
+				//console.log("t, item:", t, _defaults[t][item]);
 				if( Datastore.putx(t, _defaults[t][item] ) > -1 ){
-					console.log("Added ", _defaults[t][item], " to ", t );
+					//console.log("Added ", _defaults[t][item], " to ", t );
 				} 
 			}
-
-			console.log('all '+ t +' >  ', Datastore.all(t) );
+			//console.log('all '+ t +' >  ', Datastore.all(t) );
 		}
 	});
 
@@ -167,14 +164,13 @@ function _setDefaults( _defaults ){
 }
 
 function _populate(_tableNames, cb){
-	console.log('Populating Datastore from AsyncStorage');
+	console.log('= Datastore: Populating from AsyncStorage');
 	var len = _tableNames.length;
 	for(var i = 0; i<len; i++){
 		ReactNativeStore.table( _tableNames[i] ).then(function(_table){
 			//console.log("created table ", _table, "name:", _table.tableName );
 			Datastore.tables[_table.tableName] = _table;
 			if( Object.keys(Datastore.tables).length == len ){
-				console.log("== Datastore Ready ==");
 				_process_init_queue();
 				cb();
 			}
@@ -215,7 +211,19 @@ Datastore.one = module.exports.one = function(_table, _id){
 Datastore.add = module.exports.add = function(_table, _obj){
 	var table = _findTable(_table);
 	if( table ){
-		return table.add(_obj);
+
+		//console.log("adding obj 1:", _obj, typeof _obj, Object.keys(_obj), DefaultData[_table], DefaultData[_table][0]);
+		var schema = DefaultData[_table][0];
+		delete(schema._id);
+		// if..
+		var obj = {};
+		Object.keys(schema).forEach( function(el){
+			if( _obj[el] == null || _obj[el] == undefined ) _obj[el] = '';
+			obj[el] = _obj[el];
+		});
+		console.log('Adding', obj, 'to', _table);
+
+		return table.add(obj);
 	}
 }
 
@@ -226,6 +234,7 @@ Datastore.del = module.exports.del = function(_table, _id){
 		return table.removeById(_id);
 	}
 }
+
 
 // findOneAndUpdate, updates key (single or object) in an existing record 
 Datastore.put = module.exports.put = function(_table, _id, _key, _val){
@@ -251,7 +260,7 @@ Datastore.putx = function(_table, _obj){
 	var table = _findTable(_table);
 	if( table ){
 		var data = table.where( _obj  ).limit(1).find();
-		console.log('@1 data', data);
+		console.log(_table, '@1 data', data, data.length);
 		if( data.length == 0 ){
 			// item does not exist. Add it.
 			return table.add(_obj);
@@ -259,4 +268,16 @@ Datastore.putx = function(_table, _obj){
 			return -1;
 		}
 	}
+}
+
+
+Datastore._clear = function(_table){
+	ReactNativeStore.table( _table )
+	.then(function(table){
+		table.removeAll();
+	})
+	.then(function(b){
+		console.log("= Datastore: Cleared table "+ _table );
+		//_setDefaults( DefaultData );
+	});
 }

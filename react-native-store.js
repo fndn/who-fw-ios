@@ -220,6 +220,28 @@ Model.prototype.remove = function(id) {
 
 };
 
+
+// remove all
+Model.prototype.removeAll = function() {
+
+    var results = [];
+    var rows = this.databaseData[this.tableName]["rows"];
+
+    for (var row in rows) {
+
+        results.push(this.databaseData[this.tableName]["rows"][row]['_id'])
+        delete this.databaseData[this.tableName]["rows"][row];
+        this.databaseData[this.tableName]["totalrows"]--;
+        reactNativeStore.saveTable(this.tableName, this.databaseData[this.tableName]);
+
+    }
+
+    this.init();
+    return results;
+};
+
+
+
 // 按 ID 删除
 Model.prototype.removeById = function(id) {
 

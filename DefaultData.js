@@ -1,9 +1,9 @@
 module.exports = {
 	"countries" : [
-		{"name": "Denmark"},
-		{"name": "Sweeden"},
-		{"name": "Norway" },
-		{"name": "Finland" }
+		{"name": "Denmark", "countryCode":''},
+		{"name": "Sweeden", "countryCode":''},
+		{"name": "Norway",  "countryCode":''},
+		{"name": "Finland", "countryCode":''}
 	],
 	
 	"incomeTypes" : [
