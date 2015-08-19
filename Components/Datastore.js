@@ -248,7 +248,32 @@ Datastore.all = module.exports.all = function(_table){
 	var table = _findTable(_table);
 	if( table ){
 		// todo: Alpha sort on $orderBy || $name 
-		return table.findAll();
+		//return table.findAll();
+
+        // ignore empty items
+        var sl = Object.keys(DefaultData[_table][0]).length;
+        //console.log("SL:", sl);
+        var items = table.findAll();
+        var obj = [];
+        items.forEach( function (itm){
+            //console.log("#", itm )
+            if( Object.keys(itm).length >= sl){
+
+                // igonre empty objects
+                var vals = [];
+                for( var v in itm){
+                    vals.push(itm[v]);
+                }
+                //console.log("vals", vals);
+                //console.log(vals.join(""));
+                if( vals.join("") != "" ){
+                    obj.push( itm );
+                }
+            }
+        });
+        return obj;
+
+        //return table.findAll();
 	}
 }
 

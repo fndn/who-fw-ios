@@ -1,9 +1,9 @@
 module.exports = {
 	"countries" : [
-		{"name": "Denmark", "countryCode":''},
-		{"name": "Sweeden", "countryCode":''},
-		{"name": "Norway",  "countryCode":''},
-		{"name": "Finland", "countryCode":''}
+		{"name": "Denmark", "countryCode":'dk'},
+		{"name": "Sweden",  "countryCode":'sw'},
+		{"name": "Norway",  "countryCode":'no'},
+		{"name": "Finland", "countryCode":'fi'}
 	],
 	
 	"incomeTypes" : [
@@ -24,7 +24,9 @@ module.exports = {
 	// user created data
 	"items": [],
 
-    "locations": [],
+    "locations": [
+        {'city':'', 'neighbourhood':'', 'street':'', 'incomeType':'', 'countryId':''}
+    ],
 
     // Chosen values for this session
     "sessionCountry" : []
