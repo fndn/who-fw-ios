@@ -3,7 +3,7 @@ module.exports = {
 		{"name": "Denmark"},
 		{"name": "Sweeden"},
 		{"name": "Norway" },
-		{"name": "Finland" },
+		{"name": "Finland" }
 	],
 	
 	"incomeTypes" : [
@@ -12,5 +12,10 @@ module.exports = {
 	],
 
 	// user created data
-	"items": []
-}
+	"items": [],
+
+    "locations": [],
+
+    // Chosen values for this session
+    "sessionCountry" : []
+};

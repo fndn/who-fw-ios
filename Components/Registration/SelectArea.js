@@ -5,6 +5,8 @@ var GlobalStyles 	= require('../../Styles/GlobalStyles');
 
 var Datastore  		= require('../Datastore');
 
+
+
 var {
     StyleSheet,
     View,
@@ -88,7 +90,7 @@ class SelectArea extends Component {
 
         console.log("SelectArea:: fetchData");
 
-        var _data = Datastore.Get('areas');
+        var _data = Datastore.all('locations');
         if( _data.length > 0 ){
             this.setState({
                 isLoading:false,

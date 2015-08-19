@@ -2,7 +2,6 @@
 
 var React 			= require('react-native');
 var GlobalStyles 	= require('../../Styles/GlobalStyles');
-var SelectCountry 	= require('./SelectCountry');
 var Datastore       = require('../Datastore');
 var Models          = require('../Models');
 var t               = require('tcomb-form-native');
@@ -23,7 +22,7 @@ var {
     ScrollView
     } = React;
 
-var RegisterCountry = React.createClass({
+var RegisterArea = React.createClass({
 
     //constructor( props ){
     //    super(props);
@@ -33,8 +32,7 @@ var RegisterCountry = React.createClass({
     render: function(){
 
         return (
-            <ScrollView /*TODO: Add styling*/
-                >
+            <ScrollView /*TODO: Add styling*/>
                 <Form
                     ref="form"
                     type={Models.Country()}
@@ -54,8 +52,8 @@ var RegisterCountry = React.createClass({
 
         var value = this.refs.form.getValue();
         if (value) { // if validation fails, value will be null
-            console.log(value);
-            Datastore.add('countries', value);
+
+            Datastore.Set("name", value.name);
             this.props.navigator.pop();
         }
     }
@@ -94,4 +92,4 @@ var styles = StyleSheet.create({
 
 
 
-module.exports = RegisterCountry;
+module.exports = RegisterArea;

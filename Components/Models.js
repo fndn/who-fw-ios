@@ -9,9 +9,9 @@ var t 	 	= require('tcomb-form-native');
 module.exports.Country = function(){
 	return t.struct({
 		name: t.Str,
-		countryCode: t.maybe(t.Str),
+		countryCode: t.maybe(t.Str)
 	});
-}
+};
 
 module.exports.Location = function(){
 	var countries = {};
@@ -40,4 +40,4 @@ var Gender = t.enums({
 		//IncomeType: t.enums(incomeTypes),
 		country: Gender
 	});
-}
+};

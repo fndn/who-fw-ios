@@ -36,8 +36,8 @@ class SelectCountry extends Component {
 			<View style={styles.container}>
 
 				<ListView
+                    automaticallyAdjustContentInsets={true}
 					dataSource  = {this.state.dataSource}
-					automaticallyAdjustContentInsets={false}
 					renderRow 	= {this._renderRow.bind(this)} />
 			</View>
 		);
@@ -85,10 +85,10 @@ class SelectCountry extends Component {
         return (prevState.dataSource != this.state.dataSource)
     }
 
-    onCameInFocus()
+    /*onCameInFocus()
     {
         console.log("CAME IN FOCUS");
-    }
+    }*/
 
 	componentDidMount(){
 		console.log("SelectCountry:: componentDidMount");
@@ -100,17 +100,19 @@ class SelectCountry extends Component {
 		console.log("SelectCountry:: fetchData");
 
 		var self = this;
-		Datastore.init(function(){
+		//Datastore.init(function(){
 			var _data = Datastore.all('countries');
+            console.log("DATA:");
+            console.log(_data);
 			if( _data != null &&  _data.length > 0 ){
-				self.setState({
+                this.setState({
 					isLoading:false,
 					message:'loaded',
-					dataSource: self.state.dataSource.cloneWithRows(_data),
+					dataSource: this.state.dataSource.cloneWithRows(_data),
 				});
-				self.forceUpdate(); // Make sure we skip "shouldComponentUpdate" after fetching data
+                this.forceUpdate(); // Make sure we skip "shouldComponentUpdate" after fetching data
 			}	
-		});
+		//});
 
 		
 		/*
@@ -139,14 +141,10 @@ class SelectCountry extends Component {
 		*/
 	}
 
-    UpdateData()
-    {
-        fetchData();
-    }
 }
 
 module.exports = SelectCountry;
-module.exports.UpdateData = SelectCountry.UpdateData;
+
 //module.exports.FetchData = this.fetchData();
 
 // Local styles
@@ -154,7 +152,7 @@ var styles = StyleSheet.create({
 
 	container: {
 		flex: 1,
-		marginTop: 63,
+		marginTop: 0,
 		flexDirection: 'column'
 	},
 
