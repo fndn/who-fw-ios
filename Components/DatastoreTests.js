@@ -21,13 +21,24 @@ module.exports.RunSessionTests = function(){
 module.exports.RunNetworkTests = function(){
 	console.log('Running DatastoreTests.RunNetworkTests');
 	
-	//Network.get("/version", function(err, json){
-	//	console.log('version:', json);
-	//});
+	console.log('a');
+	Network.Request("GET", "/version", null, function(err, json){
+		console.log('a:', json);
+	});
+	
+	console.log('b');
+	Network.Request("GET", "/xx", null, function(err, json){
+		console.log('b:', json);
+	});
 
-	Network.get("/versioncc", function(err, json){
-		if( err ) return console.log(err);
-		console.log('version:', json);
+	console.log('c');
+	Network.Request("PUT", "/testing", {name:"t1"}, function(err, json){
+		console.log('c:', json);
+	});
+
+	console.log('d');
+	Network.Request("GET", "/testing", null, function(err, json){
+		console.log('d:', json);
 	});
 }
 
