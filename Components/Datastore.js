@@ -1,8 +1,11 @@
 'use strict';
 
-var React 				= require('react-native');
+//var React 				= require('react-native');
 var ReactNativeStore	= require('../react-native-store');
 var DefaultData			= require('../DefaultData.js');
+
+var DatastoreTests 		= require('./DatastoreTests');
+
 
 /**
 
@@ -82,6 +85,46 @@ Datastore.Models = {
 var Datastore 	 = {};
 Datastore.tables = {}; 	// memorymapped async store
 
+
+//
+
+
+var Session = {
+	table: "session-dev",
+	store: {},
+};
+
+Session.clear = function(){
+	ReactNativeStore.table( Datastore.Session.table )
+	.then(function(table){
+		table.removeAll();
+	})
+	.then(function(b){
+		console.log("= Cleared Session");
+	});
+}
+
+
+Session.Create = function(){
+	Session.clear();
+}
+
+Session.Set = function(key, value){
+	this.store[key] = value;
+	//console.log( this.store );
+	// persist
+}
+Session.Get = function(key){
+	return this.store[key];// || false;
+}
+Session.Show = function(){
+	console.log("Session.Show",  this.store );
+}
+module.exports.Session = Session;
+
+
+//
+
 var _instance = false; 	// ensure singleton
 var _initialized = -1; 	// -1: not ready, 0:loading, 1: ready
 var _init_queue = [];
@@ -94,6 +137,9 @@ function _process_init_queue(){
 	}
 	_init_queue = [];
 	console.log("= Datastore: Ready");
+
+	// Run tests
+	//DatastoreTests.RunSessionTests();
 }
 
 var init = module.exports.init = function( cb ){
@@ -179,17 +225,6 @@ function _populate(_tableNames, cb){
 }
 
 
-
-// utility
-function _findTable( _table ){
-	if( Object.keys(Datastore.tables).indexOf(_table) > -1 ){
-		return Datastore.tables[_table];
-	}else{
-		console.log('_findTable '+ _table +' : NOT FOUND');
-		return false;	
-	}
-}
-
 // findAll, returns list
 Datastore.all = module.exports.all = function(_table){
 	var table = _findTable(_table);
@@ -265,7 +300,7 @@ Datastore.putx = function(_table, _obj){
 	var table = _findTable(_table);
 	if( table ){
 		var data = table.where( _obj  ).limit(1).find();
-		console.log(_table, '@1 data', data, data.length);
+		//console.log(_table, '@1 data', data, data.length);
 		if( data.length == 0 ){
 			// item does not exist. Add it.
 			return table.add(_obj);
@@ -285,4 +320,23 @@ Datastore._clear = function(_table){
 		console.log("= Datastore: Cleared table "+ _table );
 		//_setDefaults( DefaultData );
 	});
+}
+
+
+// Utilities
+function _findKey( key, obj ){
+	if( Object.keys(obj).indexOf(key) > -1 ){
+		return obj[key];
+	}else{
+		console.log('_findKey '+ key +' in '+ obj +' : NOT FOUND');
+		return false;	
+	}
+}
+function _findTable( _table ){
+	if( Object.keys(Datastore.tables).indexOf(_table) > -1 ){
+		return Datastore.tables[_table];
+	}else{
+		console.log('_findTable '+ _table +' : NOT FOUND');
+		return false;	
+	}
 }
