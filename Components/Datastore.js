@@ -150,7 +150,7 @@ function _process_init_queue(){
 	Session.Start(1); // or the id of an existing session
 	Session.Show();
 
-	DatastoreTests.RunNetworkTests();
+	//DatastoreTests.RunNetworkTests();
 }
 
 var init = module.exports.init = function( cb ){
@@ -243,6 +243,7 @@ function _populate(_tableNames, cb){
 }
 
 
+
 // findAll, returns list
 Datastore.all = module.exports.all = function(_table){
 	var table = _findTable(_table);
@@ -266,7 +267,7 @@ Datastore.all = module.exports.all = function(_table){
                 }
                 //console.log("vals", vals);
                 //console.log(vals.join(""));
-                if( vals.join("") != "" ){
+                if( vals.join("") != "" && (vals.join("") % 1) !== 0){
                     obj.push( itm );
                 }
             }

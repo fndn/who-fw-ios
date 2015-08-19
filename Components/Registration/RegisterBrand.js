@@ -1,3 +1,6 @@
+/**
+ * Created by JacobMac on 19/08/15.
+ */
 'use strict';
 
 var React 			= require('react-native');
@@ -24,18 +27,16 @@ var {
     ScrollView
     } = React;
 
-var RegisterLocation = React.createClass({
+var RegisterBrand = React.createClass({
 
 
     render: function(){
-
-        console.log("stored country: " + Datastore.all('sessionCountry'));
 
         return (
             <ScrollView /*TODO: Add styling*/>
                 <Form
                     ref="form"
-                    type={Models.Location()}
+                    type={Models.Brand()}
                     options={options}
                     />
                 <TouchableHighlight style={styles.button} onPress = {this.onPress} underlayColor='#99d9f4'>
@@ -57,7 +58,7 @@ var RegisterLocation = React.createClass({
             newVal.country = Datastore.Session.Get('country')._id;
 
             console.log(newVal);
-            Datastore.add('locations', newVal);
+            Datastore.add('brands', value);
             //Datastore.Set("name", value.name);
             //Datastore.add('locations', value);
             this.props.navigator.pop();
@@ -98,4 +99,4 @@ var styles = StyleSheet.create({
 
 
 
-module.exports = RegisterLocation;
+module.exports = RegisterBrand;

@@ -1,3 +1,7 @@
+/**
+ * Created by JacobMac on 19/08/15.
+ */
+
 'use strict';
 
 var React = require('react-native');
@@ -18,7 +22,7 @@ var {
     } = React;
 
 var first = true;
-class SelectLocation extends Component {
+class SelectBrand extends Component {
 
     constructor(props) {
         super(props);
@@ -52,14 +56,13 @@ class SelectLocation extends Component {
          console.log('renderRow', rowData["_id"]) ;
          console.log('renderRow', rowData._id) ;
          */
-
         return (
             <TouchableHighlight underlayColor='#EEE' onPress={() => this.rowPressed(rowData)}>
                 <View>
                     <View style={GlobalStyles.listrowContainer}>
                         <View>
-                            <Text style={GlobalStyles.listrowTitle}>{rowData.city}</Text>
-                            <Text style={GlobalStyles.listrowSubtitle}>{rowData.neighbourhood}</Text>
+                            <Text style={GlobalStyles.listrowTitle}>{rowData.name}</Text>
+                            <Text style={GlobalStyles.listrowSubtitle}>Some comment</Text>
                         </View>
                     </View>
                     <View style={GlobalStyles.listrowSeparator}/>
@@ -70,16 +73,14 @@ class SelectLocation extends Component {
 
     rowPressed(rowData) {
         console.log("clicked ", rowData);
-        Datastore.Session.Set('location', rowData);
-
-        console.log(Datastore.Session.Get('country')._id);
-        this.props.navigator.push({
+        Datastore.Session.Set('brand', rowData);
+        /*this.props.navigator.push({
             leftButtonTitle: '< Back',
             onLeftButtonPress: () => this.props.navigator.pop(),
-            title: 'Select Store Type',
+            title: 'Select Product',
             component: SelectStoreType
 
-        });
+        });*/
     }
 
     // This currently functions as a "Update once" function to fetch new data
@@ -104,7 +105,7 @@ class SelectLocation extends Component {
 
         //var self = this;
         //Datastore.init(function(){
-        var _data = Datastore.all('locations');
+        var _data = Datastore.all('brands');
         //console.log("DATA:");
         //console.log(_data);
         if (_data != null && _data.length > 0) {
@@ -146,7 +147,7 @@ class SelectLocation extends Component {
 
 }
 
-module.exports = SelectLocation;
+module.exports = SelectBrand;
 
 //module.exports.FetchData = this.fetchData();
 

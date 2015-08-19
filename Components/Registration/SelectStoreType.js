@@ -1,10 +1,14 @@
+/**
+ * Created by JacobMac on 19/08/15.
+ */
+
 'use strict';
 
-var React = require('react-native');
-var GlobalStyles = require('../../Styles/GlobalStyles');
-//var SelectLocation 		= require('./SelectLocation');
-var Datastore = require('../Datastore');
-var SelectStoreType = require('./SelectStoreType');
+var React 			= require('react-native');
+var GlobalStyles 	= require('../../Styles/GlobalStyles');
+var SelectBrand 		= require('./SelectBrand');
+var RegisterBrand    = require('./RegisterBrand');
+var Datastore  		= require('../Datastore');
 
 var {
     StyleSheet,
@@ -18,19 +22,19 @@ var {
     } = React;
 
 var first = true;
-class SelectLocation extends Component {
+class SelectStoreType extends Component {
 
-    constructor(props) {
+    constructor( props ){
         super(props);
-        var dataSource = new ListView.DataSource({rowHasChanged: (r1, r2) => r1["_id"] !== r2["_id"]});
+        var dataSource = new ListView.DataSource({rowHasChanged: (r1, r2) => r1["_id"] !== r2["_id"] });
         this.state = {
             isLoading: false,
             message: 'init',
             dataSource: dataSource
-        };
+        }
     }
 
-    render() {
+    render(){
 
         return (
 
@@ -38,79 +42,84 @@ class SelectLocation extends Component {
 
                 <ListView
                     automaticallyAdjustContentInsets={true}
-                    dataSource={this.state.dataSource}
-                    renderRow={this._renderRow.bind(this)}/>
+                    dataSource  = {this.state.dataSource}
+                    renderRow 	= {this._renderRow.bind(this)} />
             </View>
         );
 
     }
 
-    _renderRow(rowData, sectionID, rowID) {
+    _renderRow( rowData, sectionID, rowID ){
         /*
          console.log('renderRow', rowData, sectionID, rowID);
          console.log('renderRow', Object.keys(rowData)) ;
          console.log('renderRow', rowData["_id"]) ;
          console.log('renderRow', rowData._id) ;
          */
-
         return (
             <TouchableHighlight underlayColor='#EEE' onPress={() => this.rowPressed(rowData)}>
                 <View>
                     <View style={GlobalStyles.listrowContainer}>
                         <View>
-                            <Text style={GlobalStyles.listrowTitle}>{rowData.city}</Text>
-                            <Text style={GlobalStyles.listrowSubtitle}>{rowData.neighbourhood}</Text>
+                            <Text style={GlobalStyles.listrowTitle}>{rowData.name}</Text>
+                            <Text style={GlobalStyles.listrowSubtitle}>Some subtitle</Text>
                         </View>
                     </View>
-                    <View style={GlobalStyles.listrowSeparator}/>
+                    <View style={GlobalStyles.listrowSeparator} />
                 </View>
             </TouchableHighlight>
         );
     }
 
-    rowPressed(rowData) {
-        console.log("clicked ", rowData);
-        Datastore.Session.Set('location', rowData);
+    rowPressed( rowData ){
+        console.log("clicked ", rowData );
+        Datastore.Session.Set('storeType', rowData);
 
-        console.log(Datastore.Session.Get('country')._id);
         this.props.navigator.push({
             leftButtonTitle: '< Back',
             onLeftButtonPress: () => this.props.navigator.pop(),
-            title: 'Select Store Type',
-            component: SelectStoreType
+            title: 'Select Brand',
+            component: SelectBrand,
+            onRightButtonPress: () => {
+                this.props.navigator.push({
+                    title: 'Register Brand',
+                    component: RegisterBrand,
+                    leftButtonTitle: 'Cancel',
+                    onLeftButtonPress: () => { this.props.navigator.pop();}
+                });
+            },
+            rightButtonTitle: 'Add'
+            //passProps: {countryId: rowData._id, countryName: rowData.name },
 
         });
     }
 
     // This currently functions as a "Update once" function to fetch new data
-    shouldComponentUpdate(prevProps, prevState) {
+    /*shouldComponentUpdate(prevProps, prevState)
+    {
         this.fetchData();
         return (prevState.dataSource != this.state.dataSource)
-    }
+    }*/
 
-    /*onCameInFocus()
-     {
-     console.log("CAME IN FOCUS");
-     }*/
 
-    componentDidMount() {
-        console.log("SelectLocation:: componentDidMount");
+    componentDidMount(){
+        console.log("SelectStoreType:: componentDidMount");
         this.fetchData();
     }
 
-    fetchData() {
+    fetchData(){
 
-        console.log("SelectLocation:: fetchData");
+        console.log("SelectStoreType:: fetchData");
 
         //var self = this;
         //Datastore.init(function(){
-        var _data = Datastore.all('locations');
+        var _data = Datastore.all('storeTypes');
         //console.log("DATA:");
         //console.log(_data);
-        if (_data != null && _data.length > 0) {
+        if( _data != null &&  _data.length > 0 ){
             this.setState({
-                isLoading: false,
-                message: 'loaded',
+                isLoading:false,
+                message:'loaded',
                 dataSource: this.state.dataSource.cloneWithRows(_data)
             });
             this.forceUpdate(); // Make sure we skip "shouldComponentUpdate" after fetching data
@@ -146,9 +155,7 @@ class SelectLocation extends Component {
 
 }
 
-module.exports = SelectLocation;
-
-//module.exports.FetchData = this.fetchData();
+module.exports = SelectStoreType;
 
 // Local styles
 var styles = StyleSheet.create({
@@ -160,6 +167,6 @@ var styles = StyleSheet.create({
     },
 
     list: {
-        flex: 1
+        flex:1
     }
 });

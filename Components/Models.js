@@ -25,7 +25,7 @@ var storeTypes = t.enums({
 module.exports.Respondent = function(){
     return t.struct({
         name: t.Str,
-        countryCode: t.maybe(t.Str)
+        affiliation: t.Str
     });
 };
 
@@ -38,9 +38,9 @@ module.exports.Country = function(){
 
 module.exports.Location = function(){
 	return t.struct({
-		street: t.Str,
 		city: t.Str,
 		neighbourhood: t.Str,
+        street: t.maybe(t.Str),
         incomeType: incomeTypes
 	});
 };

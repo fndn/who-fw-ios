@@ -69,7 +69,7 @@ class SelectCountry extends Component {
 
 	rowPressed( rowData ){
 		console.log("clicked ", rowData );
-        Datastore.add('sessionCountry', rowData);
+        Datastore.Session.Set('country', rowData);
 
 		this.props.navigator.push({
 			leftButtonTitle: '< Back',
@@ -78,11 +78,10 @@ class SelectCountry extends Component {
 			component: SelectLocation,
             onRightButtonPress: () => {
                 this.props.navigator.push({
-                    title: 'Register Area',
+                    title: 'Register Location',
                     component: RegisterLocation,
                     leftButtonTitle: 'Cancel',
                     onLeftButtonPress: () => { this.props.navigator.pop();}
-                    //rightButtonTitle: 'Done'
                 });
             },
             rightButtonTitle: 'Add'
@@ -98,10 +97,6 @@ class SelectCountry extends Component {
         return (prevState.dataSource != this.state.dataSource)
     }
 
-    /*onCameInFocus()
-    {
-        console.log("CAME IN FOCUS");
-    }*/
 
 	componentDidMount(){
 		console.log("SelectCountry:: componentDidMount");
@@ -157,8 +152,6 @@ class SelectCountry extends Component {
 }
 
 module.exports = SelectCountry;
-
-//module.exports.FetchData = this.fetchData();
 
 // Local styles
 var styles = StyleSheet.create({
