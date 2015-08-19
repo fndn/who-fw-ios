@@ -215,11 +215,16 @@ Datastore.add = module.exports.add = function(_table, _obj){
 		//console.log("adding obj 1:", _obj, typeof _obj, Object.keys(_obj), DefaultData[_table], DefaultData[_table][0]);
 		var schema = DefaultData[_table][0];
 		delete(schema._id);
-		// if..
+		//TODO: if no schema...?
 		var obj = {};
 		Object.keys(schema).forEach( function(el){
-			if( _obj[el] == null || _obj[el] == undefined ) _obj[el] = '';
-			obj[el] = _obj[el];
+			//console.log(el, _obj[el]);
+			if( _obj[el] == null || _obj[el] == undefined ){
+				//console.log('handling nil');
+				obj[el] = '';
+			}else{
+				obj[el] = _obj[el];
+			}
 		});
 		console.log('Adding', obj, 'to', _table);
 
