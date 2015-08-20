@@ -1,10 +1,10 @@
 'use strict';
 
-var React 			= require('react-native');
-var GlobalStyles 	= require('../../Styles/GlobalStyles');
+var React 				= require('react-native');
+var GlobalStyles 		= require('../../Styles/GlobalStyles');
 var SelectLocation 		= require('./SelectLocation');
 var RegisterLocation    = require('./RegisterLocation');
-var Datastore  		= require('../Datastore');
+var Datastore  			= require('../Datastore');
 
 var {
 	StyleSheet,
@@ -88,7 +88,8 @@ var SelectCountry = React.createClass ({
 
 	rowPressed: function( rowData ){
 		console.log("clicked ", rowData );
-        Datastore.Session.Set('country', rowData);
+        //Datastore.Session.Set('country', rowData);
+        Datastore.MemoryStore.country = rowData;
 
 		this.props.navigator.push({
 			leftButtonTitle: '< Back',

@@ -2,8 +2,8 @@ var xhr = require("xhr");
 
 var AUTHTOKEN = module.exports.AUTHTOKEN = "559a76055373e44630a51b6a";
 
-var API = module.exports.API = "http://localhost:8080";
-//var API = module.exports.API = "http://whofw.fndn.dk:8080";
+//var API = module.exports.API = "http://localhost:8080";
+var API = module.exports.API = "http://whofw.fndn.dk:8080";
 
 var headers = {
 	'Accept': 'application/json',

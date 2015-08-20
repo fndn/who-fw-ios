@@ -54,7 +54,8 @@ var RegisterLocation = React.createClass({
         if (value) { // if validation fails, value will be null
             // Copy value because it is not extensible, then add "private" values
             var newVal = JSON.parse(JSON.stringify(value));
-            newVal.country = Datastore.Session.Get('country')._id;
+            //newVal.country = Datastore.Session.Get('country')._id;
+            newVal.country = Datastore.MemoryStore.country;
 
             console.log(newVal);
             Datastore.add('locations', newVal);

@@ -6,8 +6,9 @@
 
 var React 			= require('react-native');
 var GlobalStyles 	= require('../../Styles/GlobalStyles');
-var SelectBrand 		= require('./SelectBrand');
-var RegisterBrand    = require('./RegisterBrand');
+var SelectBrand 	= require('./SelectBrand');
+var RegisterBrand   = require('./RegisterBrand');
+
 var SelectStoreType = React.createClass ({
 
     componentWillMount: function(){

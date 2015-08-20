@@ -87,7 +87,7 @@ function _process_init_queue(){
 	// Run tests ----------------------------------------------------
 	//_test();
 	//console.log('DS all countries >  ', Datastore.all('countries') );
-	//DatastoreTests.RunDiffTest();
+	DatastoreTests.RunDiffTest();
 	//DatastoreTests.RunSessionTests();
 	//DatastoreTests.RunSimpleSessionTests();
 	//or

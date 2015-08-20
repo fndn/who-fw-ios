@@ -6,7 +6,7 @@ var xhr 		= require("xhr");
 module.exports.RunSessionTests = function(){
 
 	console.log("Running DatastoreTests.RunSessionTests");
-
+	/*
 	Datastore.Session.Start(1); // or the id of an existing session
 	
 	Datastore.Session.Set( "test2", 245);
@@ -36,6 +36,7 @@ module.exports.RunSessionTests = function(){
 	//console.log("Get() nested:", Datastore.Session.Get( "nested") );
 
 	Datastore.Session.Show();
+	*/
 }
 
 module.exports.RunSimpleSessionTests = function(){
