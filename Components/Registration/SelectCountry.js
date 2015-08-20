@@ -17,7 +17,7 @@ var {
 	ListView
 } = React;
 
-var first = true;
+var navigatorEventListener;
 var SelectCountry = React.createClass ({
 
 	componentWillMount: function(){
@@ -30,7 +30,7 @@ var SelectCountry = React.createClass ({
 		};
 
         // Called when select country will be focused next
-        this.props.navigator.navigationContext.addListener('willfocus', (event) =>
+        navigatorEventListener = this.props.navigator.navigationContext.addListener('willfocus', (event) =>
         {
             if(event.data.route.component.displayName === "SelectCountry")
                 this.fetchData();
@@ -42,6 +42,11 @@ var SelectCountry = React.createClass ({
     componentDidMount: function(){
         console.log("SelectCountry:: componentDidMount");
         this.fetchData();
+    },
+
+    componentWillUnmount: function()
+    {
+        navigatorEventListener.remove();
     },
 
 	render: function(){

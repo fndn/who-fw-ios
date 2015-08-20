@@ -21,7 +21,7 @@ var {
     ListView
     } = React;
 
-var first = true;
+var navigatorEventListener;
 var SelectBrand = React.createClass ({
 
     componentWillMount: function() {
@@ -34,7 +34,7 @@ var SelectBrand = React.createClass ({
         };
 
         // Called when select country will be focused next
-        this.props.navigator.navigationContext.addListener('willfocus', (event) =>
+        navigatorEventListener = this.props.navigator.navigationContext.addListener('willfocus', (event) =>
         {
             if(event.data.route.component.displayName === "SelectBrand")
                 this.fetchData();
@@ -49,6 +49,11 @@ var SelectBrand = React.createClass ({
         this.fetchData();
     },
 
+    componentWillUnmount: function()
+    {
+        navigatorEventListener.remove();
+    },
+
     render: function() {
 
         return (
@@ -58,7 +63,7 @@ var SelectBrand = React.createClass ({
                 <ListView
                     automaticallyAdjustContentInsets={true}
                     dataSource={this.state.dataSource}
-                    renderRow={this._renderRow.bind(this)}/>
+                    renderRow={this._renderRow}/>
             </View>
         );
 
