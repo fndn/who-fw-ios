@@ -8,33 +8,24 @@ var React 			= require('react-native');
 var GlobalStyles 	= require('../../Styles/GlobalStyles');
 var SelectBrand 		= require('./SelectBrand');
 var RegisterBrand    = require('./RegisterBrand');
-var Datastore  		= require('../Datastore');
+var SelectStoreType = React.createClass ({
 
-var {
-    StyleSheet,
-    View,
-    Text,
-    Component,
-    TextInput,
-    TouchableHighlight,
-    ActivityIndicatorIOS,
-    ListView
-    } = React;
+    componentWillMount: function(){
 
-var first = true;
-class SelectStoreType extends Component {
-
-    constructor( props ){
-        super(props);
         var dataSource = new ListView.DataSource({rowHasChanged: (r1, r2) => r1["_id"] !== r2["_id"] });
         this.state = {
             isLoading: false,
             message: 'init',
             dataSource: dataSource
         }
-    }
+    },
 
-    render(){
+    componentDidMount: function(){
+        console.log("SelectStoreType:: componentDidMount");
+        this.fetchData();
+    },
+
+    render: function(){
 
         return (
 
@@ -43,13 +34,13 @@ class SelectStoreType extends Component {
                 <ListView
                     automaticallyAdjustContentInsets={true}
                     dataSource  = {this.state.dataSource}
-                    renderRow 	= {this._renderRow.bind(this)} />
+                    renderRow 	= {this._renderRow} />
             </View>
         );
 
-    }
+    },
 
-    _renderRow( rowData, sectionID, rowID ){
+    _renderRow: function( rowData, sectionID, rowID ){
         /*
          console.log('renderRow', rowData, sectionID, rowID);
          console.log('renderRow', Object.keys(rowData)) ;
@@ -69,9 +60,10 @@ class SelectStoreType extends Component {
                 </View>
             </TouchableHighlight>
         );
-    }
+    },
 
-    rowPressed( rowData ){
+
+    rowPressed: function( rowData ){
         console.log("clicked ", rowData );
         Datastore.Session.Set('storeType', rowData);
 
@@ -92,22 +84,9 @@ class SelectStoreType extends Component {
             //passProps: {countryId: rowData._id, countryName: rowData.name },
 
         });
-    }
+    },
 
-    // This currently functions as a "Update once" function to fetch new data
-    /*shouldComponentUpdate(prevProps, prevState)
-    {
-        this.fetchData();
-        return (prevState.dataSource != this.state.dataSource)
-    }*/
-
-
-    componentDidMount(){
-        console.log("SelectStoreType:: componentDidMount");
-        this.fetchData();
-    }
-
-    fetchData(){
+    fetchData: function(){
 
         console.log("SelectStoreType:: fetchData");
 
@@ -122,7 +101,6 @@ class SelectStoreType extends Component {
                 message:'loaded',
                 dataSource: this.state.dataSource.cloneWithRows(_data)
             });
-            this.forceUpdate(); // Make sure we skip "shouldComponentUpdate" after fetching data
         }
         //});
 
@@ -153,7 +131,21 @@ class SelectStoreType extends Component {
          */
     }
 
-}
+});
+
+var Datastore  		= require('../Datastore');
+
+var {
+    StyleSheet,
+    View,
+    Text,
+    Component,
+    TextInput,
+    TouchableHighlight,
+    ActivityIndicatorIOS,
+    ListView
+    } = React;
+var first = true;
 
 module.exports = SelectStoreType;
 

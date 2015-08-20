@@ -22,19 +22,34 @@ var {
     } = React;
 
 var first = true;
-class SelectBrand extends Component {
+var SelectBrand = React.createClass ({
 
-    constructor(props) {
-        super(props);
+    componentWillMount: function() {
+
         var dataSource = new ListView.DataSource({rowHasChanged: (r1, r2) => r1["_id"] !== r2["_id"]});
         this.state = {
             isLoading: false,
             message: 'init',
             dataSource: dataSource
         };
-    }
 
-    render() {
+        // Called when select country will be focused next
+        this.props.navigator.navigationContext.addListener('willfocus', (event) =>
+        {
+            if(event.data.route.component.displayName === "SelectBrand")
+                this.fetchData();
+            //console.log(event.data.route.component.displayName);
+
+        });
+    },
+
+
+    componentDidMount: function() {
+        console.log("SelectLocation:: componentDidMount");
+        this.fetchData();
+    },
+
+    render: function() {
 
         return (
 
@@ -47,9 +62,9 @@ class SelectBrand extends Component {
             </View>
         );
 
-    }
+    },
 
-    _renderRow(rowData, sectionID, rowID) {
+    _renderRow: function(rowData, sectionID, rowID) {
         /*
          console.log('renderRow', rowData, sectionID, rowID);
          console.log('renderRow', Object.keys(rowData)) ;
@@ -69,9 +84,8 @@ class SelectBrand extends Component {
                 </View>
             </TouchableHighlight>
         );
-    }
-
-    rowPressed(rowData) {
+    },
+    rowPressed: function(rowData) {
         console.log("clicked ", rowData);
         Datastore.Session.Set('brand', rowData);
         /*this.props.navigator.push({
@@ -81,25 +95,9 @@ class SelectBrand extends Component {
             component: SelectStoreType
 
         });*/
-    }
+    },
 
-    // This currently functions as a "Update once" function to fetch new data
-    shouldComponentUpdate(prevProps, prevState) {
-        this.fetchData();
-        return (prevState.dataSource != this.state.dataSource)
-    }
-
-    /*onCameInFocus()
-     {
-     console.log("CAME IN FOCUS");
-     }*/
-
-    componentDidMount() {
-        console.log("SelectLocation:: componentDidMount");
-        this.fetchData();
-    }
-
-    fetchData() {
+    fetchData: function() {
 
         console.log("SelectLocation:: fetchData");
 
@@ -145,7 +143,7 @@ class SelectBrand extends Component {
          */
     }
 
-}
+});
 
 module.exports = SelectBrand;
 

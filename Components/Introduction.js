@@ -18,9 +18,9 @@ var {
 var { Icon, } = require('react-native-icons');
 
 
-class Introduction extends Component {
+var Introduction = React.createClass ({
 
-	render(){
+	render: function(){
 		return (
 			<View style={styles.container}>
 				<View style={styles.imagewrap}>
@@ -43,7 +43,7 @@ class Introduction extends Component {
 			</View>
 		);
 	}
-}
+});
 
 module.exports = Introduction;
 

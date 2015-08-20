@@ -18,19 +18,33 @@ var {
 } = React;
 
 var first = true;
-class SelectCountry extends Component {
+var SelectCountry = React.createClass ({
 
-	constructor( props ){
-		super(props);
+	componentWillMount: function(){
+		//super(props);
 		var dataSource = new ListView.DataSource({rowHasChanged: (r1, r2) => r1["_id"] !== r2["_id"] });
 		this.state = {
 			isLoading: false,
 			message: 'init',
 			dataSource: dataSource
-		}
-	}
+		};
 
-	render(){
+        // Called when select country will be focused next
+        this.props.navigator.navigationContext.addListener('willfocus', (event) =>
+        {
+            if(event.data.route.component.displayName === "SelectCountry")
+                this.fetchData();
+            //console.log(event.data.route.component.displayName);
+
+        });
+	},
+
+    componentDidMount: function(){
+        console.log("SelectCountry:: componentDidMount");
+        this.fetchData();
+    },
+
+	render: function(){
 
 		return (
 
@@ -39,13 +53,13 @@ class SelectCountry extends Component {
 				<ListView
                     automaticallyAdjustContentInsets={true}
 					dataSource  = {this.state.dataSource}
-					renderRow 	= {this._renderRow.bind(this)} />
+					renderRow 	= {this._renderRow} />
 			</View>
 		);
-		
-	}
 
-	_renderRow( rowData, sectionID, rowID ){
+	},
+
+	_renderRow: function( rowData, sectionID, rowID ){
 		/*
 		console.log('renderRow', rowData, sectionID, rowID);
 		console.log('renderRow', Object.keys(rowData)) ;
@@ -65,16 +79,16 @@ class SelectCountry extends Component {
 				</View>
 			</TouchableHighlight>
 		);
-	}
+	},
 
-	rowPressed( rowData ){
+	rowPressed: function( rowData ){
 		console.log("clicked ", rowData );
         Datastore.Session.Set('country', rowData);
 
 		this.props.navigator.push({
 			leftButtonTitle: '< Back',
 			onLeftButtonPress: () => this.props.navigator.pop(),
-			title: 'Select Area',
+			title: 'Select Location',
 			component: SelectLocation,
             onRightButtonPress: () => {
                 this.props.navigator.push({
@@ -87,23 +101,10 @@ class SelectCountry extends Component {
             rightButtonTitle: 'Add'
 			//passProps: {countryId: rowData._id, countryName: rowData.name },
 
-		});	
-	}
+		});
+	},
 
-    // This currently functions as a "Update once" function to fetch new data
-    shouldComponentUpdate(prevProps, prevState)
-    {
-        this.fetchData();
-        return (prevState.dataSource != this.state.dataSource)
-    }
-
-
-	componentDidMount(){
-		console.log("SelectCountry:: componentDidMount");
-		this.fetchData();
-	}
-
-	fetchData(){
+	fetchData: function(){
 
 		console.log("SelectCountry:: fetchData");
 
@@ -118,7 +119,6 @@ class SelectCountry extends Component {
 					message:'loaded',
 					dataSource: this.state.dataSource.cloneWithRows(_data)
 				});
-                this.forceUpdate(); // Make sure we skip "shouldComponentUpdate" after fetching data
 			}	
 		//});
 
@@ -149,7 +149,7 @@ class SelectCountry extends Component {
 		*/
 	}
 
-}
+});
 
 module.exports = SelectCountry;
 

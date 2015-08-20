@@ -30,9 +30,9 @@ var {
 } = React;
 
 
-class Registrations extends Component {
+var Registrations = React.createClass ({
 
-	render(){
+	render: function(){
 		return (
 			<NavigatorIOS
                 ref="nav"
@@ -44,9 +44,9 @@ class Registrations extends Component {
 					title: 'Select Country'
 				}}/>
 		);
-	}
+	},
 
-    OpenAddCountry ()
+    OpenAddCountry: function ()
     {
         this.refs.nav.navigator.push({
                 title: 'Register Country',
@@ -58,7 +58,7 @@ class Registrations extends Component {
     }
 
 
-}
+});
 
 module.exports = Registrations;
 
