@@ -1,93 +1,18 @@
 'use strict';
 
-//var React 				= require('react-native');
 var ReactNativeStore	= require('../react-native-store');
 var DefaultData			= require('../DefaultData.js');
-
 var DatastoreTests 		= require('./DatastoreTests');
 
-
-/**
-
-todo:
-- load lists (Defaults from server)
-- get Model interface (tcomb)
-- Sync (use fndn/mirror)
-
-
-
-**/
-
-//var t = require('tcomb-form/lib');
-
-/**
-
-clientside store structure
-
-All schema and data should be update-able from server
-- possibly with a transcode to t<Type> structures?
-
-// Generic lists shared by all countries:
-
-Datastore.List = {
-	Countries : [
-		{id, iso, name},
-	],
-
-	IncomeTypes: [
-		{id, name}
-	],
-
-	StoreTypes: [
-		{id, name}
-	],
-
-	AgeGroups: [
-		{id, name}
-	],
-
-	Categories: [
-		{id, name}
-	],
-
-	Brands: {
-		{id, name, logo, icon}
-	}
-}
-
-// Models
-Datastore.Models = {
-	Location: {
-		
-	},
-
-	Respondent: {
-		{id, name, affiliation}
-	},
-
-	Ingredients: {
-	
-	},
-
-	Nutritions: {
-	
-	}
-
-	Product: {
-		{id, brand_id, agegroup_id, category_id, name, }
-	}
-
-}
-
-**/
-
-
-var Datastore 	 = {};
-Datastore.tables = {}; 	// memorymapped async store
+var Datastore 	 		= {};
+Datastore.tables 		= {}; 	// memorymapped async store
 
 
 //
 
+/*
+
+discontinued ?!
 
 var Session = {
 	tableName: "session-dev",
@@ -125,8 +50,23 @@ Session.Show = function(){
 	console.log("Session.table:",  this.table.findAll() );
 }
 module.exports.Session = Session;
+*/
 
 
+// can be manipulated directly
+module.exports.MemoryStore = {};
+
+/*
+module.exports.MemoryStore = function( _initalData ){
+	this.data = _initalData || {};
+	return {
+		data: this.data,
+		save: function(){
+			console.log("MS.save()", this.data);
+		}
+	}
+}
+*/
 //
 
 var _instance = false; 	// ensure singleton
@@ -144,13 +84,18 @@ function _process_init_queue(){
 	}
 	console.log("= Datastore: Ready");
 
-	// Run tests
+	// Run tests ----------------------------------------------------
+	//_test();
+	//console.log('DS all countries >  ', Datastore.all('countries') );
+	//DatastoreTests.RunDiffTest();
 	//DatastoreTests.RunSessionTests();
+	//DatastoreTests.RunSimpleSessionTests();
 	//or
-	Session.Start(1); // or the id of an existing session
-	Session.Show();
+	//Session.Start(1); // or the id of an existing session
+	//Session.Show();
 
 	//DatastoreTests.RunNetworkTests();
+	//DatastoreTests.RunDiffTest();
 }
 
 var init = module.exports.init = function( cb ){
@@ -158,20 +103,31 @@ var init = module.exports.init = function( cb ){
 	if( !_instance ){
 		_instance = true;
 		_initialized = 0;
-		console.log('= Datastore: initializing Datastore (once)');
+		console.log('= Datastore: initializing Datastore (once) =');
 
+		/*
 		// Connect to Session table
-		ReactNativeStore.table( Session.tableName ).then(function(table){
-			// table.removeAll();
-			Session.table = table;
+		ReactNativeStore.table( Session.tableName ).then(function(_table){
+			_table.removeAll();
+			Session.table = _table;
 			console.log("= Sessionstore: Ready");
 
-			_setDefaults( DefaultData ); //TODO: Call this with server-loaded "defaults"
+			//_setDefaults( DefaultData );
 		});
-		
-		//_setDefaults( DefaultData ); //TODO: Call this with server-loaded "defaults"
-		//_test();
+		*/
 
+		var len = DefaultData.tables.length;
+		for(var i = 0; i<len; i++){
+			ReactNativeStore.table( DefaultData.tables[i] ).then(function(_table){
+				//_table.removeAll();
+				console.log("Connecting table "+ _table.tableName );
+				Datastore.tables[_table.tableName] = _table;
+				if( Object.keys(Datastore.tables).length == len ){
+					_process_init_queue();
+				}
+			});
+		}
+		
 	}else{
 		_init_queue.push(cb);
 	}
@@ -199,7 +155,7 @@ function _test(){
 		console.log('Datastore.Country Model', Datastore.Country() );
 	});
 }
-
+/*
 function _setDefaults( _defaults ){
 	//console.log('_setDefaults() Defaults:', _defaults);
 	//console.log('Object.keys(Defaults):', Object.keys(_defaults));
@@ -220,11 +176,8 @@ function _setDefaults( _defaults ){
 			}
 			//console.log('all '+ t +' >  ', Datastore.all(t) );
 		}
+		_process_init_queue();
 	});
-
-	// TODO
-	// resolve mismatch between server and local _id's
-	// if there is rows in localStore NOT present in _defaults, send them to the server
 }
 
 function _populate(_tableNames, cb){
@@ -235,17 +188,17 @@ function _populate(_tableNames, cb){
 			//console.log("created table ", _table, "name:", _table.tableName );
 			Datastore.tables[_table.tableName] = _table;
 			if( Object.keys(Datastore.tables).length == len ){
-				_process_init_queue();
+				//_process_init_queue();
 				cb();
 			}
 		});
 	}
 }
-
+*/
 
 
 // findAll, returns list
-Datastore.all = module.exports.all = function(_table){
+Datastore.all = module.exports.all = function(_table, cb){
 	var table = _findTable(_table);
 	if( table ){
 		// todo: Alpha sort on $orderBy || $name 
@@ -272,9 +225,13 @@ Datastore.all = module.exports.all = function(_table){
                 }
             }
         });
-        return obj;
+        //return obj;
 
-        //return table.findAll();
+        if( typeof cb == 'function'){
+        	cb(obj);
+        }else{
+        	return obj;
+        }
 	}
 }
 
@@ -310,6 +267,15 @@ Datastore.add = module.exports.add = function(_table, _obj){
 		return table.add(obj);
 	}
 }
+
+Datastore.addraw = module.exports.addraw = function(_table, _obj){
+	var table = _findTable(_table);
+	console.log("addraw", _table);
+	if( table ){
+		return table.add(_obj);
+	}
+}
+
 
 // remove, returns insertID(?)
 Datastore.del = module.exports.del = function(_table, _id){

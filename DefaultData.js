@@ -34,3 +34,5 @@ module.exports = {
 
     "items": []
 };
+
+module.exports.tables = ["reg-test", "countries", "locations", "brands", "items", "incomeTypes", "storeTypes"];
