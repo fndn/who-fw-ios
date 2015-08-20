@@ -1,15 +1,12 @@
 /**
- * Created by JacobMac on 19/08/15.
+ * Created by JacobMac on 20/08/15.
  */
 
 'use strict';
 
 var React = require('react-native');
 var GlobalStyles = require('../../Styles/GlobalStyles');
-//var SelectLocation 		= require('./SelectLocation');
 var Datastore = require('../Datastore');
-var SelectProduct = require('./SelectProduct');
-var RegisterProduct = require('./RegisterProduct');
 
 var {
     StyleSheet,
@@ -23,7 +20,7 @@ var {
     } = React;
 
 var navigatorEventListener;
-var SelectBrand = React.createClass ({
+var SelectProduct = React.createClass ({
 
     componentWillMount: function() {
 
@@ -37,7 +34,7 @@ var SelectBrand = React.createClass ({
         // Called when select country will be focused next
         navigatorEventListener = this.props.navigator.navigationContext.addListener('willfocus', (event) =>
         {
-            if(event.data.route.component.displayName === "SelectBrand")
+            if(event.data.route.component.displayName === "SelectProduct")
                 this.fetchData();
             //console.log(event.data.route.component.displayName);
 
@@ -46,7 +43,7 @@ var SelectBrand = React.createClass ({
 
 
     componentDidMount: function() {
-        console.log("SelectLocation:: componentDidMount");
+        console.log("SelectProduct:: componentDidMount");
         this.fetchData();
     },
 
@@ -93,34 +90,25 @@ var SelectBrand = React.createClass ({
     },
     rowPressed: function(rowData) {
         console.log("clicked ", rowData);
-        Datastore.Session.Set('brand', rowData);
-        this.props.navigator.push({
-            leftButtonTitle: '< Back',
-            onLeftButtonPress: () => this.props.navigator.pop(),
-            title: 'Select Product',
-            component: SelectProduct,
-            onRightButtonPress: () => {
-                this.props.navigator.push({
-                    title: 'Register Product',
-                    component: RegisterProduct,
-                    leftButtonTitle: 'Cancel',
-                    onLeftButtonPress: () => { this.props.navigator.pop();}
-                });
-            },
-            rightButtonTitle: 'Add'
+        //Datastore.Session.Set('brand', rowData);
+        /*this.props.navigator.push({
+         leftButtonTitle: '< Back',
+         onLeftButtonPress: () => this.props.navigator.pop(),
+         title: 'Select Product',
+         component: SelectStoreType
 
-        });
+         });*/
     },
 
     fetchData: function() {
 
-        console.log("SelectLocation:: fetchData");
+        console.log("SelectProduct:: fetchData");
 
         //var self = this;
         //Datastore.init(function(){
-        var _data = Datastore.all('brands');
-        //console.log("DATA:");
-        //console.log(_data);
+        var _data = Datastore.all('products');
+        console.log("DATA:");
+        console.log(_data);
         if (_data != null && _data.length > 0) {
             this.setState({
                 isLoading: false,
@@ -159,7 +147,7 @@ var SelectBrand = React.createClass ({
 
 });
 
-module.exports = SelectBrand;
+module.exports = SelectProduct;
 
 //module.exports.FetchData = this.fetchData();
 

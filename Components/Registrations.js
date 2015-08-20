@@ -16,7 +16,7 @@
 var React 			= require('react-native');
 var GlobalStyles 	= require('../Styles/GlobalStyles');
 var SelectCountry 	= require('./Registration/SelectCountry');
-var RegisterCountry = require('./Registration/RegisterCountry');
+var RegisterCountry = require('./Registration/RegisterProduct');
 
 var {
 	StyleSheet,
