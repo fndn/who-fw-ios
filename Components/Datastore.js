@@ -157,7 +157,7 @@ Datastore.all = module.exports.all = function(_table, cb){
 		
 		var obj = table.findAll();
 
-		// todo: Alpha sort on $orderBy || $name 
+		obj = sortByKey(obj, "name");
 
 		if( typeof cb == 'function'){
         	cb(obj);
@@ -233,6 +233,7 @@ Datastore.add = module.exports.add = function(_table, _obj){
 	}
 }
 
+/*
 Datastore.addraw = module.exports.addraw = function(_table, _obj){
 	var table = _findTable(_table);
 	console.log("addraw", _table);
@@ -240,6 +241,7 @@ Datastore.addraw = module.exports.addraw = function(_table, _obj){
 		return table.add(_obj);
 	}
 }
+*/
 
 
 // remove, returns insertID(?)
@@ -316,6 +318,31 @@ function _findTable( _table ){
 	}
 }
 
+/*
+
+http://stackoverflow.com/a/14463464/1993842
+
+function sortByKey(array, key) {
+	return array.sort(function(a, b) {
+		var x = a[key]; var y = b[key];
+		return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+	});
+}
+*/
+function sortByKey(array, key) {
+    return array.sort(function(a, b) {
+        var x = a[key];
+        var y = b[key];
+
+        if (typeof x == "string")
+        {
+            x = x.toLowerCase(); 
+            y = y.toLowerCase();
+        }
+
+        return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+    });
+}
 
 /*
 
