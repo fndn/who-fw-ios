@@ -1,8 +1,9 @@
 'use strict';
 
 var ReactNativeStore	= require('../react-native-store');
-var DefaultData			= require('../DefaultData.js');
-var DatastoreTests 		= require('./DatastoreTests');
+var Config  			= require('./Datastore.Config');
+var DatastoreTests 		= require('./Datastore.Tests');
+var DatastoreSync 		= require('./Datastore.Sync');
 
 
 module.exports.MemoryStore = {};	// shared global store
@@ -30,17 +31,13 @@ function _process_init_queue(){
 	console.log("= Datastore: Ready");
 
 	// Run tests ----------------------------------------------------
-	//_test();
-	//console.log('DS all countries >  ', Datastore.all('countries') );
-	//DatastoreTests.RunDiffTest();
-	//DatastoreTests.RunSessionTests();
-	//DatastoreTests.RunSimpleSessionTests();
-	//or
-	//Session.Start(1); // or the id of an existing session
-	//Session.Show();
 
-	//DatastoreTests.RunNetworkTests();
+	//console.log('DS all countries >  ', Datastore.all('countries') );
+	//DatastoreTests.RunDatastoreTests();
 	//DatastoreTests.RunDiffTest();
+	//DatastoreTests.RunSyncTest();
+	
+	
 }
 
 var init = module.exports.init = function( cb ){
@@ -49,22 +46,12 @@ var init = module.exports.init = function( cb ){
 		_instance = true;
 		_initialized = 0;
 		console.log('= Datastore: initializing Datastore =');
-		console.log('  tables', DefaultData.tables );
 
-		/*
-		// Connect to Session table
-		ReactNativeStore.table( Session.tableName ).then(function(_table){
-			_table.removeAll();
-			Session.table = _table;
-			console.log("= Sessionstore: Ready");
+		ReactNativeStore.setDbName( Config.database );
 
-			//_setDefaults( DefaultData );
-		});
-		*/
-
-		var len = DefaultData.tables.length;
+		var len = Config.tables.length;
 		for(var i = 0; i<len; i++){
-			ReactNativeStore.table( DefaultData.tables[i] ).then(function(_table){
+			ReactNativeStore.table( Config.tables[i] ).then(function(_table){
 				//_table.removeAll(); // reset local store
 				console.log("Connecting table "+ _table.tableName );
 				Datastore.tables[_table.tableName] = _table;
@@ -79,69 +66,14 @@ var init = module.exports.init = function( cb ){
 	}
 }
 
-function _test(){
-	var table = 'test_users';
-	_populate( ['test_users', 'test_countries'], function(){
-		console.log('---');
-		console.log('_populate cb()');
 
-		////console.log('add >  ', Datastore.add(table, {name:'js', age:40}) );
-		////console.log('all >  ', Datastore.all(table) );
-		////console.log('one 2 >', Datastore.one(table, 2) );
-		//console.log('put 3 key >', Datastore.put(table, 3, 'age', 44) );
-		//console.log('put 4 obj >', Datastore.put(table, 3, {'age':55}) );
-		//////console.log('del 1 >', Datastore.del(table, 1) );
-
-		//console.log('all >  ', Datastore.all(table) );
-
-		//console.log('putx >  ', Datastore.putx(table, {name: 'js', age: 155}) );
-
-		//console.log('all >  ', Datastore.all(table) );
-
-		console.log('Datastore.Country Model', Datastore.Country() );
-	});
-}
-/*
-function _setDefaults( _defaults ){
-	//console.log('_setDefaults() Defaults:', _defaults);
-	//console.log('Object.keys(Defaults):', Object.keys(_defaults));
-
-
-	// Load all tables defined in _defaults
-	// Add any rows from _defaults that does not already exist (putx)
-	// if the table does not exist, add all (putx)
-
-	_populate( Object.keys(_defaults), function(){
-		for( var t in _defaults ){
-			//console.log('t', t);
-			for( var item in _defaults[t] ){
-				//console.log("t, item:", t, _defaults[t][item]);
-				if( Datastore.putx(t, _defaults[t][item] ) > -1 ){
-					//console.log("Added ", _defaults[t][item], " to ", t );
-				} 
-			}
-			//console.log('all '+ t +' >  ', Datastore.all(t) );
-		}
-		_process_init_queue();
-	});
-}
-
-function _populate(_tableNames, cb){
-	console.log('= Datastore: Populating from AsyncStorage');
-	var len = _tableNames.length;
-	for(var i = 0; i<len; i++){
-		ReactNativeStore.table( _tableNames[i] ).then(function(_table){
-			//console.log("created table ", _table, "name:", _table.tableName );
-			Datastore.tables[_table.tableName] = _table;
-			if( Object.keys(Datastore.tables).length == len ){
-				//_process_init_queue();
-				cb();
-			}
-		});
+// returns count of items in a table
+Datastore.count = module.exports.count = function(_table){
+	var table = _findTable(_table);
+	if( table ){
+		return table.databaseData[_table].totalrows;
 	}
 }
-*/
-
 
 // findAll, returns list
 Datastore.all = module.exports.all = function(_table, cb){
@@ -198,6 +130,7 @@ Datastore.all = module.exports.all = function(_table, cb){
 	}
 }
 
+
 // findOne, returns item
 Datastore.one = module.exports.one = function(_table, _id){
 	var table = _findTable(_table);
@@ -232,16 +165,6 @@ Datastore.add = module.exports.add = function(_table, _obj){
 		return table.add(_obj);
 	}
 }
-
-/*
-Datastore.addraw = module.exports.addraw = function(_table, _obj){
-	var table = _findTable(_table);
-	console.log("addraw", _table);
-	if( table ){
-		return table.add(_obj);
-	}
-}
-*/
 
 
 // remove, returns insertID(?)
@@ -317,11 +240,11 @@ function _findTable( _table ){
 		return false;	
 	}
 }
+module.exports.findTable = _findTable;
+
+// http://stackoverflow.com/a/14463464/1993842
 
 /*
-
-http://stackoverflow.com/a/14463464/1993842
-
 function sortByKey(array, key) {
 	return array.sort(function(a, b) {
 		var x = a[key]; var y = b[key];
@@ -343,45 +266,3 @@ function sortByKey(array, key) {
         return ((x < y) ? -1 : ((x > y) ? 1 : 0));
     });
 }
-
-/*
-
-discontinued ?!
-
-var Session = {
-	tableName: "session-dev",
-	table: null,	// async store
-	store: {}, 		// memory store
-	sessionID: 0,
-};
-
-
-
-Session.Start = function(id){
-	if( this.table.get(id).length === 0 ){
-		console.log( "sessionID", id, "not found. Starting a new one");
-		this.sessionID = this.table.add({'synced':false});
-	}else{
-		this.sessionID = id;
-	}
-	console.log(" this.sessionID:", this.sessionID );
-}
-
-Session.Set = function(key, value){
-	this.store[key] = value;
-	//console.log( this.store );
-	// persist
-	if( this.sessionID == 0 ){
-		console.log("WARNING: sessionID is zero - did you forget to call Datastore.Session.Start() ?");
-	}
-	this.table.updateById(this.sessionID, this.store);
-}
-Session.Get = function(key){
-	return this.store[key];// || false;
-}
-Session.Show = function(){
-	console.log("Session.store:",  this.store );
-	console.log("Session.table:",  this.table.findAll() );
-}
-module.exports.Session = Session;
-*/

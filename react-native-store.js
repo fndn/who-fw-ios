@@ -20,6 +20,11 @@ var Model = function(tableName, databaseData) {
     return this;
 };
 
+// JS
+reactNativeStore.setDbName = function(_name){
+    dbName = _name;
+    console.log('reactNativeStore Using database:', dbName);
+}
 
 // 创建数据库
 reactNativeStore.createDataBase = function() {
@@ -62,6 +67,7 @@ reactNativeStore.saveTable = function(tableName, tableData) {
 
 // 选择数据表
 reactNativeStore.table = function(tableName) {
+    //console.log('reactNativeStore.table', dbName);
     var self = this;
     return new Promise(function(resolve, reject) {
         return self.getItem(dbName).then(function(databaseData) {

@@ -62,7 +62,7 @@ var SelectCountry = React.createClass ({
 		return (
 			<View style={styles.container}>
 				<ListView
-                    automaticallyAdjustContentInsets={true}
+                    automaticallyAdjustContentInsets={false}
 					dataSource  = {this.state.dataSource}
 					renderRow 	= {this._renderRow} />
 			</View>
@@ -124,8 +124,11 @@ var styles = StyleSheet.create({
 
 	container: {
 		flex: 1,
-		marginTop: 0,
-		flexDirection: 'column'
+		marginTop: 63,
+		marginBottom: 48,
+		flexDirection: 'column',
+		borderColor: "#f00",
+		borderWidth: 1
 	},
 
 	list: {
