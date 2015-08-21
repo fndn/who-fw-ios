@@ -16,8 +16,8 @@ module.exports.uploadOnly = ["registrations"];
 module.exports.auth_token = "fr9a7as792jjd0293hddxonxo0x1309210cpdshcpihvq0823t373e4463";
 
 // Datastore server
-module.exports.server = "http://localhost:8080";
-//module.exports.server = "http://whofw.fndn.dk:8080";
+//module.exports.server = "http://localhost:8080";
+module.exports.server = "http://whofw.fndn.dk:8080";
 
 // Network timeout (browser defaults are typically 2 mins)
 module.exports.timeout = 2 * 60 * 1000;
