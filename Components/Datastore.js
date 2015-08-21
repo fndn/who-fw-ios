@@ -144,6 +144,7 @@ Datastore.add = module.exports.add = function(_table, _obj){
 	var table = _findTable(_table);
 	if( table ){
 
+		console.log('add _obj', _obj, typeof _obj);
 		/*
 		//console.log("adding obj 1:", _obj, typeof _obj, Object.keys(_obj), DefaultData[_table], DefaultData[_table][0]);
 		var schema = DefaultData[_table][0];

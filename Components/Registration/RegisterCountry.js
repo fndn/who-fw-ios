@@ -33,8 +33,7 @@ var RegisterCountry = React.createClass({
     render: function(){
 
         return (
-            <ScrollView /*TODO: Add styling*/
-                >
+            <ScrollView style={styles.container}>
                 <Form
                     ref="form"
                     type={Models.Country()}
@@ -65,8 +64,6 @@ var RegisterCountry = React.createClass({
 
 var styles = StyleSheet.create({
     container: {
-        justifyContent: 'center',
-        marginTop: 50,
         padding: 20,
         backgroundColor: '#ffffff',
     },

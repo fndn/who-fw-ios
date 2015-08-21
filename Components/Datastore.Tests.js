@@ -28,8 +28,12 @@ module.exports.RunDiffTest = function(){
 		xhr({
 			method:'POST',
 			uri: Config.server +'/countries/diff',
-			headers: Config.jsonHeaders,
 			json:{list:items},
+			'headers': {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json',
+				'X-Auth-Token': Config.auth_token
+			},
 
 		},
 		function (err, resp, body){
@@ -82,6 +86,10 @@ module.exports.RunDiffTest = function(){
 module.exports.RunDatastoreTests = function(){
 	console.log('Running DatastoreTests.RunDatastoreTests');
 
+	Datastore.add("countries", {"name":"aa", "countryCode":"bb"});
+	console.log('all >  ', Datastore.all("countries") );
+
+
 	////console.log('add >  ', Datastore.add(table, {name:'js', age:40}) );
 	////console.log('all >  ', Datastore.all(table) );
 	////console.log('one 2 >', Datastore.one(table, 2) );
@@ -95,5 +103,4 @@ module.exports.RunDatastoreTests = function(){
 
 	//console.log('all >  ', Datastore.all(table) );
 
-	console.log('Datastore.Country Model', Datastore.Country() );
 }
