@@ -53,8 +53,10 @@ var RegisterCountry = React.createClass({
 
         var value = this.refs.form.getValue();
         if (value) { // if validation fails, value will be null
-            console.log(value);
-            Datastore.add('countries', value);
+            //var newVal = JSON.parse(JSON.stringify(value));
+            var newVal = Datastore.cloneObject(value); // about 30x faster :)
+            //console.log(newVal);
+            Datastore.add('countries', newVal)
             this.props.navigator.pop();
         }
     }
