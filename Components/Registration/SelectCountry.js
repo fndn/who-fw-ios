@@ -32,29 +32,35 @@ var SelectCountry = React.createClass ({
         // Called when select country will be focused next
         navigatorEventListener = this.props.navigator.navigationContext.addListener('willfocus', (event) =>
         {
-            if(event.data.route.component.displayName === "SelectCountry")
-                this.fetchData();
             //console.log(event.data.route.component.displayName);
-
+            if(event.data.route.component.displayName === "SelectCountry"){
+                Datastore.all('countries', this.dataAvailable);
+            }
+            
         });
 	},
 
     componentDidMount: function(){
-        console.log("SelectCountry:: componentDidMount");
-        this.fetchData();
+		Datastore.all('countries', this.dataAvailable);
     },
 
-    componentWillUnmount: function()
-    {
+	dataAvailable: function(_data){
+		console.log('SelectCountry dataAvailable', _data);
+		this.setState({
+			isLoading:false,
+			message:'loaded',
+			dataSource: this.state.dataSource.cloneWithRows(_data)
+		});
+	},
+
+    componentWillUnmount: function(){
         navigatorEventListener.remove();
     },
 
 	render: function(){
 
 		return (
-
 			<View style={styles.container}>
-
 				<ListView
                     automaticallyAdjustContentInsets={true}
 					dataSource  = {this.state.dataSource}
@@ -108,53 +114,7 @@ var SelectCountry = React.createClass ({
 			//passProps: {countryId: rowData._id, countryName: rowData.name },
 
 		});
-	},
-
-	fetchData: function(){
-
-		console.log("SelectCountry:: fetchData");
-
-		//var self = this;
-		//Datastore.init(function(){
-			var _data = Datastore.all('countries');
-            //console.log("DATA:");
-            //console.log(_data);
-			if( _data != null &&  _data.length > 0 ){
-                this.setState({
-					isLoading:false,
-					message:'loaded',
-					dataSource: this.state.dataSource.cloneWithRows(_data)
-				});
-			}	
-		//});
-
-		
-		/*
-		this.setState({ isLoading: true });
-
-		var query = Network.API + "/v1/category/list" + Network.TOKEN;
-		fetch(query)
-			.then((response) => response.json())
-			.then((responseData) => {
-				this.setState({
-					isLoading:false,
-					message:'loaded',
-					//categories: responseData.categories
-					 dataSource: this.state.dataSource.cloneWithRows(responseData.categories),
-				});
-				console.log('Network onComplete()', responseData, this.state.dataSource);
-			})
-			.catch( error => {
-				var msg = error.message ? error.message : error;
-				this.setState({
-					isLoading: false,
-					message: 'Network Error:\n('+ msg +')'
-				})
-			})
-			.done()
-		*/
 	}
-
 });
 
 module.exports = SelectCountry;

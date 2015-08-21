@@ -22,7 +22,7 @@ var FWA = React.createClass({
 
 	getInitialState: function() {
 		return {
-			selectedTab: 'Introduction',
+			selectedTab: 'Registrations',
 		};
 	},
 	
