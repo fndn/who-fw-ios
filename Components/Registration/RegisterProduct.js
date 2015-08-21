@@ -12,11 +12,51 @@ var t               = require('tcomb-form-native');
 
 var Form = t.form.Form;
 
+Form.i18n = {
+    optional: ' [opt]'
+};
+
 var options = {
     fields:{
-        value:{
-            label:'Some Label'
-
+        name:{
+            label: 'Some name',
+            editable: true
+        },
+        EnergyKj:{
+            label: 'Energy (KJ)'
+        },
+        EnergyKcal:{
+            label: 'Energy (kcal)'
+        },
+        Fat:{
+            label: 'Fat (g)'
+        },
+        FatOfWhichSaturates:{
+            label: 'Fat of which saturates (g)'
+        },
+        FatOfWhichTrans:{
+            label: 'Fat of which trans (g)'
+        },
+        Carbohydrate:{
+            label: 'Carbohydrate (g)'
+        },
+        CarbohydrateOfWhichSugars:{
+            label: 'Carbohydrate of which sugars (g)'
+        },
+        CarbohydrateOfWhichLactose:{
+            label: 'Carbohydrate of which lactose (g)'
+        },
+        Protein:{
+            label: 'Protein (g)'
+        },
+        Salt:{
+            label: 'Salt (g)'
+        },
+        Sodium:{
+            label: 'Sodium (g)'
+        },
+        ServingSize:{
+            label: 'Serving size (g)'
         }
     }
 }; // optional rendering options (see documentation)
@@ -42,38 +82,47 @@ var {
 var RegisterProduct = React.createClass({
 
     getInitialState: function() {
+        var data = null;
+        var hundredData = null;
+        var servingData = null;
+        var nutBoolData = {boolValue:false};
+        if(this.props.getProductData)
+        {
+            var data = JSON.parse(JSON.stringify(Datastore.MemoryStore.product));
+            hundredData = data.nutritionalPr100g;
+            servingData = data.nutritionalPrServing;
+            nutBoolData = {boolValue:true};
+        }
+
         return {
             options: options,
-            value: null,
-            nutBool: {boolValue:false},
-            nutHundredValue: null,
-            nutServingValue: null
+            value: data,
+            nutBool: nutBoolData,
+            nutHundredValue: hundredData,
+            nutServingValue: servingData
         };
     },
 
     render: function(){
-        //console.log(this.state.options);
-        //var forms = "";
 
+        //var forms = "";
         if(this.state.nutBool.boolValue)
         {
             return (
-                <ScrollView/*TODO: Add styling*/>
+                <ScrollView style={GlobalStyles.scrollViewList}>
                     <Form
                         ref="form"
                         type={Models.Product()}
-                        options={this.state.options}
                         value={this.state.value}
+                        options={this.state.options}
                         onChange={this.onChange}
                     />
-
                     <Form
                         type={Models.SimpelBool()}
                         options={nutBoolOptions}
                         value={this.state.nutBool}
                         onChange={this.onNutritionInfoAvailableChange}
                         />
-
                     <Text style={styles.title}>
                         Nutritional Information
                         Pr 100g
@@ -83,15 +132,16 @@ var RegisterProduct = React.createClass({
                         type={Models.Nutrition()}
                         value={this.state.nutHundredValue}
                         onChange={this.onChange2}
+                        options={this.state.options}
                     />
                     <Text style={styles.title}>
-                        Nutritional Information
-                        Pr serving
+                        Per serving
                     </Text>
                     <Form
                         ref="form3"
                         type={Models.NutritionServing()}
                         value={this.state.nutServingValue}
+                        options={this.state.options}
                         onChange={this.onChange3}
                         />
                     <TouchableHighlight style={styles.button} onPress={this.onPress} underlayColor='#99d9f4'>
@@ -102,7 +152,7 @@ var RegisterProduct = React.createClass({
         }
         else {
             return (
-                <ScrollView /*TODO: Add styling*/>
+                <ScrollView style={GlobalStyles.scrollViewList}>
                     <Form
                         ref="form"
                         type={Models.Product()}
@@ -126,17 +176,14 @@ var RegisterProduct = React.createClass({
 
     onChange: function(value)
     {
-        console.log(value);
-
-        this.setState({options: options, value: value});
-
+        //console.log(value);
+        this.setState({value: value});
     },
 
     onNutritionInfoAvailableChange: function(value)
     {
         this.setState({nutBool: value})
     },
-
 
     onChange2: function(value)
     {
@@ -153,22 +200,30 @@ var RegisterProduct = React.createClass({
 
         // call getValue() to get the values of the form
 
-        var value = this.state.value;
+        var value = this.refs.form.getValue();
         if (value) { // if validation fails, value will be null
             // Copy value because it is not extensible, then add "private" values
-            var value2 = this.state.nutHundredValue;
-            var value3 = this.state.nutServingValue;
+            var value2 = this.refs.form2.getValue();
+            var value3 = this.refs.form3.getValue();
+
             var newVal = JSON.parse(JSON.stringify(value));
             newVal.nutritionalPr100g = JSON.parse(JSON.stringify(value2));
             newVal.nutritionalPrServing = JSON.parse(JSON.stringify(value3));
+            newVal.brand = Datastore.MemoryStore.brand.name;
             //newVal.country = Datastore.Session.Get('country')._id;
             //newVal.brand = Datastore.Session.Get('brand')._id;
             console.log("TODO: Store product information and review");
             console.log("product info:", newVal);
-            //Datastore.add('products', value);
+        /*    var entry = Datastore.add('products', newVal);
             //Datastore.Set("name", value.name);
             //Datastore.add('locations', value);
-            //this.props.navigator.pop();
+            if(this.props.getProductData)
+            {
+                Datastore.MemoryStore.product = Datastore.one('products', entry);
+            }
+
+            this.props.navigator.pop();
+            */
         }
     }
 });

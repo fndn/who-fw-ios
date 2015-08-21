@@ -33,7 +33,7 @@ var RegisterBrand = React.createClass({
     render: function(){
 
         return (
-            <ScrollView /*TODO: Add styling*/>
+            <ScrollView style={GlobalStyles.scrollViewList}>
                 <Form
                     ref="form"
                     type={Models.Brand()}
@@ -55,10 +55,10 @@ var RegisterBrand = React.createClass({
         if (value) { // if validation fails, value will be null
             // Copy value because it is not extensible, then add "private" values
             var newVal = JSON.parse(JSON.stringify(value));
-            newVal.country = Datastore.Session.Get('country')._id;
-
-            console.log(newVal);
-            Datastore.add('brands', value);
+            newVal.country = Datastore.MemoryStore.country.name;
+            Datastore.MemoryStore.brand = value
+            console.log("RegisterBrand add: " , newVal);
+            Datastore.add('brands', newVal);
             //Datastore.Set("name", value.name);
             //Datastore.add('locations', value);
             this.props.navigator.pop();

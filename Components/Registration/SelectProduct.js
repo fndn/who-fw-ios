@@ -7,6 +7,7 @@
 var React = require('react-native');
 var GlobalStyles = require('../../Styles/GlobalStyles');
 var Datastore = require('../Datastore');
+var ValidateProduct = require('./ValidateProduct');
 
 var {
     StyleSheet,
@@ -35,7 +36,7 @@ var SelectProduct = React.createClass ({
         navigatorEventListener = this.props.navigator.navigationContext.addListener('willfocus', (event) =>
         {
             if(event.data.route.component.displayName === "SelectProduct")
-                this.fetchData();
+                Datastore.all('products', this.dataAvailable);
             //console.log(event.data.route.component.displayName);
 
         });
@@ -43,8 +44,16 @@ var SelectProduct = React.createClass ({
 
 
     componentDidMount: function() {
-        console.log("SelectProduct:: componentDidMount");
-        this.fetchData();
+        Datastore.all('products', this.dataAvailable);
+    },
+
+    dataAvailable: function(_data){
+        console.log('SelectProduct dataAvailable', _data);
+        this.setState({
+            isLoading:false,
+            message:'loaded',
+            dataSource: this.state.dataSource.cloneWithRows(_data)
+        });
     },
 
     componentWillUnmount: function()
@@ -91,58 +100,14 @@ var SelectProduct = React.createClass ({
     rowPressed: function(rowData) {
         console.log("clicked ", rowData);
         //Datastore.Session.Set('brand', rowData);
-        /*this.props.navigator.push({
+        Datastore.MemoryStore.product = rowData;
+        this.props.navigator.push({
          leftButtonTitle: '< Back',
          onLeftButtonPress: () => this.props.navigator.pop(),
-         title: 'Select Product',
-         component: SelectStoreType
+         title: 'Validate Product',
+         component: ValidateProduct
 
-         });*/
-    },
-
-    fetchData: function() {
-
-        console.log("SelectProduct:: fetchData");
-
-        //var self = this;
-        //Datastore.init(function(){
-        var _data = Datastore.all('products');
-        console.log("DATA:");
-        console.log(_data);
-        if (_data != null && _data.length > 0) {
-            this.setState({
-                isLoading: false,
-                message: 'loaded',
-                dataSource: this.state.dataSource.cloneWithRows(_data)
-            });
-        }
-        //});
-
-
-        /*
-         this.setState({ isLoading: true });
-
-         var query = Network.API + "/v1/category/list" + Network.TOKEN;
-         fetch(query)
-         .then((response) => response.json())
-         .then((responseData) => {
-         this.setState({
-         isLoading:false,
-         message:'loaded',
-         //categories: responseData.categories
-         dataSource: this.state.dataSource.cloneWithRows(responseData.categories),
          });
-         console.log('Network onComplete()', responseData, this.state.dataSource);
-         })
-         .catch( error => {
-         var msg = error.message ? error.message : error;
-         this.setState({
-         isLoading: false,
-         message: 'Network Error:\n('+ msg +')'
-         })
-         })
-         .done()
-         */
     }
 
 });

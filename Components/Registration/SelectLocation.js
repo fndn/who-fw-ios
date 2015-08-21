@@ -33,7 +33,7 @@ var SelectLocation = React.createClass ({
         navigatorEventListener = this.props.navigator.navigationContext.addListener('willfocus', (event) =>
         {
             if(event.data.route.component.displayName === "SelectLocation")
-                this.fetchData();
+                Datastore.all('locations', this.dataAvailable);
             //console.log(event.data.route.component.displayName);
 
         });
@@ -41,10 +41,17 @@ var SelectLocation = React.createClass ({
 
 
     componentDidMount: function() {
-        console.log("SelectLocation:: componentDidMount");
-        this.fetchData();
+        Datastore.all('locations', this.dataAvailable);
     },
 
+    dataAvailable: function(_data){
+        console.log('SelectLocation dataAvailable', _data);
+        this.setState({
+            isLoading:false,
+            message:'loaded',
+            dataSource: this.state.dataSource.cloneWithRows(_data)
+        });
+    },
     componentWillUnmount: function()
     {
         navigatorEventListener.remove();
@@ -78,7 +85,7 @@ var SelectLocation = React.createClass ({
                 <View>
                     <View style={GlobalStyles.listrowContainer}>
                         <View>
-                            <Text style={GlobalStyles.listrowTitle}>{rowData.city}</Text>
+                            <Text style={GlobalStyles.listrowTitle}>{rowData.name}</Text>
                             <Text style={GlobalStyles.listrowSubtitle}>{rowData.neighbourhood}</Text>
                         </View>
                     </View>
@@ -101,51 +108,6 @@ var SelectLocation = React.createClass ({
             component: SelectStoreType
 
         });
-    },
-
-    fetchData: function() {
-
-        console.log("SelectLocation:: fetchData");
-
-        //var self = this;
-        //Datastore.init(function(){
-        var _data = Datastore.all('locations');
-        //console.log("DATA:");
-        //console.log(_data);
-        if (_data != null && _data.length > 0) {
-            this.setState({
-                isLoading: false,
-                message: 'loaded',
-                dataSource: this.state.dataSource.cloneWithRows(_data)
-            });
-        }
-        //});
-
-
-        /*
-         this.setState({ isLoading: true });
-
-         var query = Network.API + "/v1/category/list" + Network.TOKEN;
-         fetch(query)
-         .then((response) => response.json())
-         .then((responseData) => {
-         this.setState({
-         isLoading:false,
-         message:'loaded',
-         //categories: responseData.categories
-         dataSource: this.state.dataSource.cloneWithRows(responseData.categories),
-         });
-         console.log('Network onComplete()', responseData, this.state.dataSource);
-         })
-         .catch( error => {
-         var msg = error.message ? error.message : error;
-         this.setState({
-         isLoading: false,
-         message: 'Network Error:\n('+ msg +')'
-         })
-         })
-         .done()
-         */
     }
 
 });

@@ -21,9 +21,17 @@ var SelectStoreType = React.createClass ({
         }
     },
 
-    componentDidMount: function(){
-        console.log("SelectStoreType:: componentDidMount");
-        this.fetchData();
+    componentDidMount: function() {
+        Datastore.all('storeTypes', this.dataAvailable);
+    },
+
+    dataAvailable: function(_data){
+        console.log('SelectStoreType dataAvailable', _data);
+        this.setState({
+            isLoading:false,
+            message:'loaded',
+            dataSource: this.state.dataSource.cloneWithRows(_data)
+        });
     },
 
     render: function(){
@@ -66,7 +74,7 @@ var SelectStoreType = React.createClass ({
 
     rowPressed: function( rowData ){
         console.log("clicked ", rowData );
-        Datastore.Session.Set('storeType', rowData);
+        Datastore.MemoryStore.storeType = rowData;
 
         this.props.navigator.push({
             leftButtonTitle: '< Back',
@@ -85,53 +93,7 @@ var SelectStoreType = React.createClass ({
             //passProps: {countryId: rowData._id, countryName: rowData.name },
 
         });
-    },
-
-    fetchData: function(){
-
-        console.log("SelectStoreType:: fetchData");
-
-        //var self = this;
-        //Datastore.init(function(){
-        var _data = Datastore.all('storeTypes');
-        //console.log("DATA:");
-        //console.log(_data);
-        if( _data != null &&  _data.length > 0 ){
-            this.setState({
-                isLoading:false,
-                message:'loaded',
-                dataSource: this.state.dataSource.cloneWithRows(_data)
-            });
-        }
-        //});
-
-
-        /*
-         this.setState({ isLoading: true });
-
-         var query = Network.API + "/v1/category/list" + Network.TOKEN;
-         fetch(query)
-         .then((response) => response.json())
-         .then((responseData) => {
-         this.setState({
-         isLoading:false,
-         message:'loaded',
-         //categories: responseData.categories
-         dataSource: this.state.dataSource.cloneWithRows(responseData.categories),
-         });
-         console.log('Network onComplete()', responseData, this.state.dataSource);
-         })
-         .catch( error => {
-         var msg = error.message ? error.message : error;
-         this.setState({
-         isLoading: false,
-         message: 'Network Error:\n('+ msg +')'
-         })
-         })
-         .done()
-         */
     }
-
 });
 
 var Datastore  		= require('../Datastore');
