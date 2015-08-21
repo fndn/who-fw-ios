@@ -37,7 +37,8 @@ module.exports.RunDiffTest = function(){
 
 		},
 		function (err, resp, body){
-			console.log("diff response:", err, resp, body );
+			//console.log("diff response:", err, resp, body );
+			console.log("diff response:", body.msg );
 			// This should be generic, for all lists.
 			// The server should reply with "update-instructions",
 			// we can use to update the local data

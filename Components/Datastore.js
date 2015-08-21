@@ -267,3 +267,15 @@ function sortByKey(array, key) {
         return ((x < y) ? -1 : ((x > y) ? 1 : 0));
     });
 }
+
+var cloneObject = module.exports.cloneObject = function(o){
+	if (o === null || typeof o !== 'object') return o;
+
+	var r = {};
+	for(var k in o)	r[k]=o[k]
+
+	return r;
+};
+
+
+

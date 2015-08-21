@@ -43,6 +43,7 @@ module.exports.Sync = function( progress_cb, completion_cb ){
 	
 	// sync all except those in Config.uploadOnly
 	_tables = Config.tables.filter( function(el){ return Config.uploadOnly.indexOf(el) == -1 });
+	//_tables = ["countries"];
 
 	_steps  = _tables.length;
 	_step   = 0;
@@ -74,9 +75,11 @@ function _next(){
 		return;
 	}
 
-	_progress_cb( (_step+1), _steps, _tables[_step] );
-	_step ++;
 	if( _step < _steps ){
+	
+		_progress_cb( (_step+1), _steps, _tables[_step] );
+	
+	
 		if( _mode == "sync" ){
 			_check( _tables[_step] );
 		}else if( _mode == "upload" ){
@@ -97,6 +100,8 @@ function _next(){
 		}
 		*/
 	}
+
+	_step ++;
 }
 
 function _progress(id, type){
@@ -146,7 +151,7 @@ function _check(_table, cb){
 }
 
 function _apply(cmd){
-	//console.log("Datastore.Sync.Merge: cmd", cmd);
+	console.log("Datastore.Sync.Merge: cmd", cmd);
 
 	/*
 	// Sample response:
