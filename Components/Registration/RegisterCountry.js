@@ -9,6 +9,7 @@ var t               = require('tcomb-form-native');
 
 var Form = t.form.Form;
 
+
 var options = {}; // optional rendering options (see documentation)
 
 var {
@@ -31,17 +32,16 @@ var RegisterCountry = React.createClass({
 
 
     render: function(){
-
         return (
-            <ScrollView style={styles.container}>
+            <ScrollView style={GlobalStyles.scrollViewList}>
                 <Form
                     ref="form"
                     type={Models.Country()}
                     options={options}
                     />
-                <TouchableHighlight style={styles.button} onPress = {this.onPress} underlayColor='#99d9f4'>
-                    <Text style={styles.buttonText}>Save</Text>
-                </TouchableHighlight>
+                    <TouchableHighlight style={styles.button} onPress = {this.onPress} underlayColor='#99d9f4'>
+                        <Text style={styles.buttonText}>Save</Text>
+                    </TouchableHighlight>
             </ScrollView>
         );
     },
@@ -64,8 +64,10 @@ var RegisterCountry = React.createClass({
 
 var styles = StyleSheet.create({
     container: {
-        padding: 20,
+        //justifyContent: 'center',
+        //marginTop: 50,
         backgroundColor: '#ffffff',
+        flexDirection: 'row'
     },
     title: {
         fontSize: 30,
@@ -79,13 +81,15 @@ var styles = StyleSheet.create({
     },
     button: {
         height: 36,
+        flex: 1,
         backgroundColor: '#48BBEC',
         borderColor: '#48BBEC',
         borderWidth: 1,
         borderRadius: 8,
         marginBottom: 10,
+
         alignSelf: 'stretch',
-        justifyContent: 'center'
+        justifyContent: 'space-around'
     }
 });
 

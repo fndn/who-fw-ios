@@ -95,6 +95,11 @@ var styles = React.StyleSheet.create({
 		color: '#fff',
 		fontWeight: 'bold'
 	},
+
+    scrollViewList:{
+        padding: 20
+    }
+
 });
 
 

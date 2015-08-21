@@ -29,10 +29,10 @@ var RegisterLocation = React.createClass({
 
     render: function(){
 
-        console.log("stored country: " + Datastore.all('sessionCountry'));
+        //console.log("stored country: " + Datastore.all('sessionCountry'));
 
         return (
-            <ScrollView /*TODO: Add styling*/>
+            <ScrollView style={GlobalStyles.scrollViewList}>
                 <Form
                     ref="form"
                     type={Models.Location()}
@@ -55,9 +55,9 @@ var RegisterLocation = React.createClass({
             // Copy value because it is not extensible, then add "private" values
             var newVal = JSON.parse(JSON.stringify(value));
             //newVal.country = Datastore.Session.Get('country')._id;
-            newVal.country = Datastore.MemoryStore.country;
+            newVal.country = Datastore.MemoryStore.country.name;
 
-            console.log(newVal);
+            console.log("new location: ", newVal);
             Datastore.add('locations', newVal);
             //Datastore.Set("name", value.name);
             //Datastore.add('locations', value);
