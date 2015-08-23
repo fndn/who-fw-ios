@@ -7,7 +7,7 @@ var DatastoreSync 		= require('./Datastore.Sync');
 var DatastoreInit 		= require('./Datastore.Init.Server');
 
 
-module.exports.MemoryStore = {};	// shared global store
+var MemoryStore = module.exports.MemoryStore = {};	// shared global store
 
 
 var Datastore 	 		= {};
@@ -34,12 +34,16 @@ function _process_init_queue(){
 	// Run tests ----------------------------------------------------
 
 	//console.log('DS all countries >  ', Datastore.all('countries') );
+
+	console.log('DS all locations >  ', Datastore.all('locations') );
+	
+
 	//DatastoreTests.RunDatastoreTests();
 	//DatastoreTests.RunDiffTest();
 	//DatastoreTests.RunSyncTest();
 
-	DatastoreTests.RunNetworkReachabilityTest();
-	DatastoreInit.Run();
+	//DatastoreTests.RunNetworkReachabilityTest();
+	//DatastoreInit.Run();
 	
 	
 }
@@ -83,15 +87,32 @@ Datastore.count = module.exports.count = function(_table){
 Datastore.all = module.exports.all = function(_table, cb){
 
 	if( !_initialized ){
-		console.log("adding ds.all to _init_queue");
+		console.log("adding ds.all@"+ _table +" to _init_queue");
 		_init_queue.push(function(){ Datastore.all(_table, cb) });
 		return;
 	}
 
+	
 	var table = _findTable(_table);
 	if( table ){
 		
-		var obj = table.findAll();
+		var obj;
+
+		if( _table == 'locations'){
+			// filter by country
+			console.log("DATASTORE: FILTERING ", _table, " on MS.COUNTRY", MemoryStore.country.name,  "MemoryStore:", MemoryStore );
+			obj = table.where({'country': MemoryStore.country.name}).find();
+		
+		}else if( _table == 'products' ){
+			// filter by brand
+			console.log("CDATASTORE: FILTERING ", _table, " on MS.BRAND", MemoryStore.brand.name,  "MemoryStore:", MemoryStore );
+			obj = table.where({'brand': MemoryStore.brand.name}).find();
+
+		}else{
+			// un-filtered
+			console.log("DATASTORE: all@"+ _table );
+			obj = table.findAll();
+		}
 
 		obj = sortByKey(obj, "name");
 
@@ -102,6 +123,9 @@ Datastore.all = module.exports.all = function(_table, cb){
         }
 
 		/*
+
+		var obj = table.findAll();
+
         // ignore empty items
         var sl = Object.keys(DefaultData[_table][0]).length;
         //console.log("SL:", sl);
@@ -149,6 +173,9 @@ Datastore.add = module.exports.add = function(_table, _obj){
 	if( table ){
 
 		console.log('add _obj', _obj, typeof _obj);
+
+		//TODO: Duplicate check ?
+
 		/*
 		//console.log("adding obj 1:", _obj, typeof _obj, Object.keys(_obj), DefaultData[_table], DefaultData[_table][0]);
 		var schema = DefaultData[_table][0];
