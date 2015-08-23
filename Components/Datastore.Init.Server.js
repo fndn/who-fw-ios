@@ -18,6 +18,69 @@ var data = [
 		{name: 'Department store'},
 		{name: 'Mini-market'},
 		{name: 'Other'}
+	]},
+
+	{table: 'brands', items: [
+		{name: "Nestle"},
+		{name: "Mead Johnson"},
+		{name: "Numico"},
+		{name: "Kidfresh"},
+		{name: "Cow & Gate"},
+		{name: "Farley's"},
+		{name: "Cereo "},
+		{name: "Earth's Best"},
+		{name: "Plum Organics"},
+		{name: "Happyfamily"},
+		{name: "Ella's Kitchen"},
+		{name: "Sprout"},
+		{name: "Gerber"},
+		{name: "Yummy spoonfuls"},
+		{name: "Hipp"},
+		{name: "Semper"},
+		{name: "Arla"},
+		{name: "Baby love"},
+		{name: "Similac"},
+		{name: "Heinz"},
+		{name: "Abbott"}
+	]},
+
+	{table: 'countries', items: [
+		{name: 'Denmark', 		countryCode:'DK'},
+		{name: 'Germany', 		countryCode:'DE'},
+		{name: 'Greece', 		countryCode:'GR'},
+		{name: 'Italy', 		countryCode:'IT'},
+		{name: 'Moldova', 		countryCode:'MD'},
+		{name: 'Poland', 		countryCode:'PL'},
+		{name: 'Portugal', 		countryCode:'PT'},
+		{name: 'Russia', 		countryCode:'RU'},
+		{name: 'Spain', 		countryCode:'ES'},
+		{name: 'Tajikistan', 	countryCode:'TJ'},
+		{name: 'United Kingdom',countryCode:'UK'},
+		{name: 'Uzbekistan', 	countryCode:'UZ'}
+	]},
+
+	{table: 'ageGroups', items: [
+		{name: '≤ 3'},
+		{name: '4'},
+		{name: '5'},
+		{name: '6'},
+		{name: '7'},
+		{name: '8'},
+		{name: '9'},
+		{name: '10'},
+		{name: '11'},
+		{name: '12'},
+		{name: '13'},
+		{name: '14'},
+		{name: '15'},
+		{name: '16'},
+		{name: '17'},
+		{name: '18'},
+		{name: '19'},
+		{name: '20'},
+		{name: '21'},
+		{name: '22'},
+		{name: '23'}
 	]}
 ];
 
@@ -85,7 +148,7 @@ function _send(type){
 	},
 	function (err, resp, body){
 		if( resp.statusCode == 200 ){
-			console.log('body:', body);
+			//console.log('body:', body);
 			_next();
 		}
 	});
