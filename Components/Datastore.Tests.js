@@ -1,8 +1,12 @@
 
 var Datastore 	= require('./Datastore');
 var Config  	= require('./Datastore.Config');
+var Network 	= require('./Network');
 var xhr 		= require("xhr");
 
+module.exports.RunNetworkReachabilityTest = function(){
+	Network._serverIsReachable();
+}
 
 module.exports.RunSyncTest = function(){
 	console.log('Running DatastoreTests.RunSyncTest');

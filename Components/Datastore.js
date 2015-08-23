@@ -4,6 +4,7 @@ var ReactNativeStore	= require('../react-native-store');
 var Config  			= require('./Datastore.Config');
 var DatastoreTests 		= require('./Datastore.Tests');
 var DatastoreSync 		= require('./Datastore.Sync');
+var DatastoreInit 		= require('./Datastore.Init.Server');
 
 
 module.exports.MemoryStore = {};	// shared global store
@@ -36,6 +37,9 @@ function _process_init_queue(){
 	//DatastoreTests.RunDatastoreTests();
 	//DatastoreTests.RunDiffTest();
 	//DatastoreTests.RunSyncTest();
+
+	DatastoreTests.RunNetworkReachabilityTest();
+	DatastoreInit.Run();
 	
 	
 }
