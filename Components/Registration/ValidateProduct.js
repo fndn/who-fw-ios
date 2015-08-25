@@ -106,14 +106,15 @@ var {
     TouchableHighlight,
     ActivityIndicatorIOS,
     NavigatorIOS,
-    ScrollView
+    ScrollView,
+    AlertIOS
     } = React;
 
 var ValidateProduct = React.createClass({
 
     getInitialState: function() {
 
-        var data = JSON.parse(JSON.stringify(Datastore.MemoryStore.product));
+        var data = Datastore.cloneObject(Datastore.MemoryStore.product);
         //Models.storeTypes.meta.map["SUP"]
         console.log("getInitialState, ", data);
         data.foodType = Models.foodTypes.meta.map[data.foodType];
@@ -196,28 +197,31 @@ var ValidateProduct = React.createClass({
     {
 
         // call getValue() to get the values of the form
-
+        console.log("Valid!");
         var value = this.refs.form.getValue();
-        if (value && this.state.validateBool.boolValue) { // if validation fails, value will be null
+        if (value) { // if validation fails, value will be null
             // Copy value because it is not extensible, then add "private" values
-            var value2 = this.refs.form2.getValue();
-            var value3 = this.refs.form3.getValue();
+            if(!Datastore.MemoryStore.credentials || !Datastore.MemoryStore.credentials.name || !Datastore.MemoryStore.credentials.affiliation )
+                AlertIOS.alert('Credentials needed!', 'Please go to \"Introduction\" and fill in the information', [{text: 'OK'}] );
+            else {
+                var value2 = this.refs.form2.getValue();
+                var value3 = this.refs.form3.getValue();
+                var newVal = {};
+                newVal.product = Datastore.cloneObject(value);
+                newVal.product.nutritionalPr100g = Datastore.cloneObject(value2);
+                newVal.product.nutritionalPrServing = Datastore.cloneObject(value3);
+                newVal.brand = Datastore.MemoryStore.brand;
+                newVal.country = Datastore.MemoryStore.country;
+                newVal.location = Datastore.MemoryStore.location;
+                newVal.storeType = Datastore.MemoryStore.storeType;
+                newVal.credentials = Datastore.MemoryStore.credentials;
+                newVal.timeOfRegistration = Date.now(); // UTC in seconds
 
-            var newVal = JSON.parse(JSON.stringify(value));
-            newVal.nutritionalPr100g = JSON.parse(JSON.stringify(value2));
-            newVal.nutritionalPrServing = JSON.parse(JSON.stringify(value3));
-            newVal.brand = Datastore.MemoryStore.brand;
-            newVal.country = Datastore.MemoryStore.country;
-            newVal.location = Datastore.MemoryStore.location;
-            newVal.storeType = Datastore.MemoryStore.storeType;
-            //newVal.country = Datastore.Session.Get('country')._id;
-            //newVal.brand = Datastore.Session.Get('brand')._id;
-            console.log("TODO: Store product information and review");
-            console.log("product info validated:", newVal);
-            //Datastore.add('products', newVal);
-            //Datastore.Set("name", value.name);
-            //Datastore.add('locations', value);
-            //this.props.navigator.pop();
+                console.log("TODO: Register product in registrations");
+                console.log("product info validated:", newVal);
+
+                //this.props.navigator.pop();
+            }
         }
     },
 

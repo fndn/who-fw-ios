@@ -12,9 +12,6 @@ var t               = require('tcomb-form-native');
 
 var Form = t.form.Form;
 
-Form.i18n = {
-    optional: ' [opt]'
-};
 
 var options = {
     fields:{
@@ -206,15 +203,15 @@ var RegisterProduct = React.createClass({
             var value2 = this.refs.form2.getValue();
             var value3 = this.refs.form3.getValue();
 
-            var newVal = JSON.parse(JSON.stringify(value));
-            newVal.nutritionalPr100g = JSON.parse(JSON.stringify(value2));
-            newVal.nutritionalPrServing = JSON.parse(JSON.stringify(value3));
+            var newVal = Datastore.cloneObject(value);
+            newVal.nutritionalPr100g = Datastore.cloneObject(value2);
+            newVal.nutritionalPrServing = Datastore.cloneObject(value3);
             newVal.brand = Datastore.MemoryStore.brand.name;
             //newVal.country = Datastore.Session.Get('country')._id;
             //newVal.brand = Datastore.Session.Get('brand')._id;
             console.log("TODO: Store product information and review");
             console.log("product info:", newVal);
-        /*    var entry = Datastore.add('products', newVal);
+            var entry = Datastore.add('products', newVal);
             //Datastore.Set("name", value.name);
             //Datastore.add('locations', value);
             if(this.props.getProductData)
@@ -223,7 +220,7 @@ var RegisterProduct = React.createClass({
             }
 
             this.props.navigator.pop();
-            */
+
         }
     }
 });

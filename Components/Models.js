@@ -98,7 +98,7 @@ module.exports.Brand = function(){
 
 module.exports.Product = function(){
     return t.struct({
-        name: t.maybe(t.Str),
+        name: t.Str,
         foodType: foodTypes,
         ageGroup: ageGroups
     });
@@ -125,7 +125,7 @@ module.exports.Nutrition = function(){
         'Protein': t.maybe(t.Num),
         'Salt': t.maybe(t.Num),
         'Sodium': t.maybe(t.Num)
-    })
+    });
 };
 
 module.exports.NutritionServing = function(){
@@ -142,5 +142,12 @@ module.exports.NutritionServing = function(){
         'Protein': t.maybe(t.Num),
         'Salt': t.maybe(t.Num),
         'Sodium': t.maybe(t.Num)
-    })
+    });
+};
+
+module.exports.Responent = function(){
+    return t.struct({
+        name: t.Str,
+        affiliation: t.Str
+    });
 };

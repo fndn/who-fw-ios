@@ -9,7 +9,7 @@ module.exports = {
     "storeTypes" : [
         {'name': 'Supermarket'},
         {'name': 'Pharmacy'},
-        {'name': 'Convinience store/corner shop'},
+        {'name': 'Convenience store/corner shop'},
         {'name': 'Health Food store'},
         {'name': 'Department Store'},
         {'name': 'Mini-market'},
@@ -36,4 +36,15 @@ module.exports = {
     "items": []
 };
 */
-module.exports.tables = ["reg-test", "countries", "locations", "brands", "items", "incomeTypes", "storeTypes"];
+
+var storeTypes = {"storeTypes" : [
+    {'name': 'Supermarket'},
+    {'name': 'Pharmacy'},
+    {'name': 'Convenience store/corner shop'},
+    {'name': 'Health Food store'},
+    {'name': 'Department Store'},
+    {'name': 'Mini-market'},
+    {'name': 'Other'}
+]};
+
+module.exports.tables = ["reg-test", "countries", "locations", "brands", "products", "incomeTypes", "storeTypes"];

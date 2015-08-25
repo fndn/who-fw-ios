@@ -19,6 +19,8 @@ var SelectStoreType = React.createClass ({
             message: 'init',
             dataSource: dataSource
         }
+
+        //Datastore.add('storeTypes', {'name': 'Supermarket'})
     },
 
     componentDidMount: function() {

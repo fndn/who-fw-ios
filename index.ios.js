@@ -11,7 +11,7 @@ var {
 	StyleSheet,
 	TabBarIOS,
 	Text,
-	View,
+	View
 } = React;
 
 
@@ -22,11 +22,12 @@ var FWA = React.createClass({
 
 	getInitialState: function() {
 		return {
-			selectedTab: 'Registrations',
+			selectedTab: 'Introduction',
 		};
 	},
 	
 	render: function(){
+
 		return (
 			<TabBarIOS>
 				<TabBarIOS.Item 
