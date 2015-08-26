@@ -114,7 +114,8 @@ var {
     ActivityIndicatorIOS,
     NavigatorIOS,
     ScrollView,
-    AlertIOS
+    AlertIOS,
+    Image
     } = React;
 var navigatorEventListener;
 var ValidateProduct = React.createClass({
@@ -144,15 +145,20 @@ var ValidateProduct = React.createClass({
         data.foodType = Models.foodTypes.meta.map[data.foodType];
         data.ageGroup = Models.ageGroups.meta.map[data.ageGroup];
 
+        if(!data.images)
+        {
+            data.images = {
+                front: null,
+                back: null,
+                right: null,
+                left: null
+            };
+        }
+
         //console.log(Models.ageGroups.meta.map["FOUR"]);
         return {
             options: options,
-            value: data,
-            validateBool: {boolValue:false},
-            nutBool: {boolValue:true},
-            nutHundredValue: data.nutritionalPr100g,
-            nutServingValue: data.nutritionalPrServing,
-            visualInfo: data.visualInformation
+            value: data
         };
     },
 
@@ -175,7 +181,7 @@ var ValidateProduct = React.createClass({
                     ref="form2"
                     type={Models.Nutrition()}
                     options={this.state.options}
-                    value={this.state.nutHundredValue}
+                    value={this.state.value.nutritionalPr100g}
                     />
                 <Text style={styles.title}>
                     Pr serving
@@ -184,7 +190,7 @@ var ValidateProduct = React.createClass({
                     ref="form3"
                     type={Models.NutritionServing()}
                     options={this.state.options}
-                    value={this.state.nutServingValue}
+                    value={this.state.value.nutritionalPrServing}
                     />
                 <Text style={styles.title}>
                     Visual information
@@ -193,8 +199,31 @@ var ValidateProduct = React.createClass({
                     ref="form4"
                     type={Models.VisualInformation()}
                     options={options}
-                    value={this.state.visualInfo}
+                    value={this.state.value.visualInformation}
                     />
+
+                <Text style={styles.title}>
+                    Pictures
+                </Text>
+
+                <View style={styles.imageGrid}>
+                    <Text style={styles.imageText}>Front</Text>
+                    <Image style={styles.image} source={{ uri: this.state.value.images.front }} />
+                </View>
+                <View style={styles.imageGrid}>
+                    <Text style={styles.imageText}>Back</Text>
+                    <Image style={styles.image} source={{ uri: this.state.value.images.back }} />
+
+                </View>
+                <View style={styles.imageGrid}>
+                    <Text style={styles.imageText}>Left</Text>
+                    <Image style={styles.image} source={{ uri: this.state.value.images.left }} />
+                </View>
+                <View style={styles.imageGrid}>
+                    <Text style={styles.imageText}>Right</Text>
+                    <Image style={styles.image} source={{ uri: this.state.value.images.right }} />
+                </View>
+
                 <View style={styles.container}>
                     <TouchableHighlight style={[styles.button,styles.button_notlast]} onPress = {this.onPress} underlayColor='#ABF499'>
                         <Text style={styles.buttonText}>Use this</Text>
@@ -221,10 +250,12 @@ var ValidateProduct = React.createClass({
             else {
 
                 var newVal = {};
-                newVal.product = Datastore.cloneObject(value);
-                newVal.product.nutritionalPr100g = Datastore.cloneObject(this.refs.form2.getValue());
-                newVal.product.nutritionalPrServing = Datastore.cloneObject(this.refs.form3.getValue());
-                newVal.product.visualInformation = Datastore.cloneObject(this.refs.form4.getValue());
+                //newVal.product = Datastore.cloneObject(this.state.value); // foodType and ageGroup gets name
+                newVal.product = Datastore.cloneObject(Datastore.MemoryStore.product); // foodType and ageGroup are abbreviations
+                //newVal.product.nutritionalPr100g = Datastore.cloneObject(this.refs.form2.getValue());
+                //newVal.product.nutritionalPrServing = Datastore.cloneObject(this.refs.form3.getValue());
+                //newVal.product.visualInformation = Datastore.cloneObject(this.refs.form4.getValue());
+                //newVal.product.images =
                 newVal.brand = Datastore.MemoryStore.brand;
                 newVal.country = Datastore.MemoryStore.country;
                 newVal.location = Datastore.MemoryStore.location;
@@ -286,6 +317,24 @@ var styles = StyleSheet.create({
         backgroundColor: '#A0D16F',
         borderColor: '#A0D16F',
         marginRight: 10
+    },
+    imageGrid: {
+        flex: 1,
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'center'
+    },
+    image: {
+        width: 100,
+        height: 100,
+        margin: 10,
+        borderColor: 'black',
+        borderWidth: 2
+    },
+    imageText:{
+        fontSize: 18,
+        color: 'black',
+        alignSelf: 'center'
     }
 });
 

@@ -108,6 +108,8 @@ var RegisterProduct = React.createClass({
             servingData = data.nutritionalPrServing;
             nutBoolData = {boolValue:true};
             visualData = data.visualInformation;
+            if(data.images)
+                images = data.images;
         }
 
         return {
@@ -362,8 +364,9 @@ var RegisterProduct = React.createClass({
         if (value) { // if validation fails, value will be null
             // Copy value because it is not extensible, then add "private" values
             var newVal = Datastore.cloneObject(value);
-            newVal.nutritionalPrServing = null
-            newVal.nutritionalPr100g = null
+            newVal.nutritionalPr100g = null;
+            newVal.nutritionalPrServing = null;
+
             if(this.refs.form2)
             {
                 newVal.nutritionalPr100g = Datastore.cloneObject(this.refs.form2.getValue());
@@ -372,7 +375,8 @@ var RegisterProduct = React.createClass({
                 newVal.nutritionalPrServing = Datastore.cloneObject(this.refs.form3.getValue());
             }
 
-            newVal.visualInformation = Datastore.cloneObject(his.refs.form4.getValue());
+            newVal.visualInformation = Datastore.cloneObject(this.refs.form4.getValue());
+            newVal.images = Datastore.cloneObject(this.state.images);
             newVal.brand = Datastore.MemoryStore.brand.name;
 
 
