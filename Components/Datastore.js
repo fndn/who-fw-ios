@@ -1,10 +1,21 @@
 'use strict';
 
 var ReactNativeStore	= require('../react-native-store');
+
 var Config  			= require('./Datastore.Config');
-var DatastoreTests 		= require('./Datastore.Tests');
+module.exports.Config   = Config;
+
+var Remote  			= require('./Datastore.Remote');
+module.exports.Remote   = Remote;
+
 var DatastoreSync 		= require('./Datastore.Sync');
+module.exports.Sync   	= DatastoreSync.Sync;
+
+var DatastoreUpload 	= require('./Datastore.Upload');
+module.exports.Upload 	= DatastoreUpload.Upload;
+
 var DatastoreInit 		= require('./Datastore.Init.Server');
+var DatastoreTests 		= require('./Datastore.Tests');
 
 
 var MemoryStore = module.exports.MemoryStore = {};	// shared global store
@@ -16,6 +27,10 @@ Datastore.tables 		= {}; 	// memorymapped async store
 var _instance = false; 	// ensure singleton
 var _initialized = -1; 	// -1: not ready, 0:loading, 1: ready
 var _init_queue = [];
+
+
+
+
 function _process_init_queue(){
 
 	_initialized = 1;
@@ -33,18 +48,21 @@ function _process_init_queue(){
 
 	// Run tests ----------------------------------------------------
 
-	//console.log('DS all countries >  ', Datastore.all('countries') );
+	console.log('DS all countries >  ', Datastore.all('countries') );
 
-	console.log('DS all locations >  ', Datastore.all('locations') );
+	//console.log('DS all locations >  ', Datastore.all('locations') );
 	
+	//DatastoreInit.Run();
 
 	//DatastoreTests.RunDatastoreTests();
 	//DatastoreTests.RunDiffTest();
-	//DatastoreTests.RunSyncTest();
-
-	//DatastoreTests.RunNetworkReachabilityTest();
-	//DatastoreInit.Run();
 	
+
+	DatastoreTests.RunNetworkReachabilityTest();
+	
+
+	//DatastoreTests.RunSyncTest();
+	//DatastoreTests.RunUploadTest();
 	
 }
 

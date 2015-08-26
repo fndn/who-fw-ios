@@ -1,10 +1,9 @@
 'use strict';
 
 var React 			= require('react-native');
-var GlobalStyles 	= require('../Styles/GlobalStyles');
 var Datastore       = require('./Datastore');
-var DatastoreSync 	= require('./Datastore.Sync');
-var Config  		= require('./Datastore.Config');
+
+var GlobalStyles 	= require('../Styles/GlobalStyles');
 var ProgressBar 	= require('./Parts/ProgressBar');
 
 var {
@@ -32,7 +31,7 @@ var Sync = React.createClass({
 
 	render: function(){
 
-		var tables = Config.tables.filter( function(el){ return Config.uploadOnly.indexOf(el) == -1 }).join(", ");
+		var tables = Datastore.Config.tables.filter( function(el){ return Datastore.Config.uploadOnly.indexOf(el) == -1 }).join(", ");
 
 		var num_regs = Datastore.count("registrations");
 		
@@ -115,7 +114,7 @@ var Sync = React.createClass({
 		var self = this;
 		var _buffer = "";
 		this.setState({working:true, has_log:true});
-		DatastoreSync.Sync(
+		Datastore.Sync(
 			// progress:
 			function(step, steps, table){
 				console.log("[Calee] SyncProgress: ", step, steps, table);

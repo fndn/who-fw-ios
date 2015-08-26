@@ -1,3 +1,4 @@
+/*
 var xhr 	= require("xhr");
 var Config 	= require('./Datastore.Config');
 
@@ -28,3 +29,4 @@ var _serverIsReachable = module.exports._serverIsReachable = function(){
 		}
 	);
 }
+*/
