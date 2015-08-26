@@ -268,7 +268,7 @@ var RegisterProduct = React.createClass({
                         <Image style={styles.image} source={{ uri: this.state.images.right }} />
                     </View>
 
-                    <TouchableHighlight style={styles.button} onPress={this.onTakeLeft} underlayColor='#99d9f4'>
+                    <TouchableHighlight style={styles.button} onPress={this.onPress} underlayColor='#99d9f4'>
                         <Text style={styles.buttonText}>Save</Text>
                     </TouchableHighlight>
                 </ScrollView>
@@ -371,13 +371,8 @@ var RegisterProduct = React.createClass({
             if (this.refs.form3) {
                 newVal.nutritionalPrServing = Datastore.cloneObject(this.refs.form3.getValue());
             }
-            //var value3 = this.refs.form3.getValue();
-            var value4 = this.refs.form4.getValue();
 
-
-
-
-            newVal.visualInformation = Datastore.cloneObject(value4);
+            newVal.visualInformation = Datastore.cloneObject(his.refs.form4.getValue());
             newVal.brand = Datastore.MemoryStore.brand.name;
 
 
