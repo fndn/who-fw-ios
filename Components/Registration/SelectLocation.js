@@ -61,10 +61,11 @@ var SelectLocation = React.createClass ({
 
         return (
 
-            <View style={styles.container}>
+            <View style={GlobalStyles.scrollViewContainer}>
 
                 <ListView
-                    automaticallyAdjustContentInsets={true}
+                    style={GlobalStyles.list}
+                    automaticallyAdjustContentInsets={false}
                     dataSource={this.state.dataSource}
                     renderRow={this._renderRow}/>
             </View>
@@ -119,13 +120,4 @@ module.exports = SelectLocation;
 // Local styles
 var styles = StyleSheet.create({
 
-    container: {
-        flex: 1,
-        marginTop: 0,
-        flexDirection: 'column'
-    },
-
-    list: {
-        flex: 1
-    }
 });

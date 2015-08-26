@@ -158,8 +158,17 @@ var ValidateProduct = React.createClass({
         //console.log(Models.ageGroups.meta.map["FOUR"]);
         return {
             options: options,
-            value: data
+            value: data,
+            initialPosition: null
         };
+    },
+
+    componentDidMount: function() {
+        navigator.geolocation.getCurrentPosition(
+            (initialPosition) => this.setState({initialPosition}),
+            (error) => alert(error.message),
+            {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
+        );
     },
 
 
@@ -173,7 +182,7 @@ var ValidateProduct = React.createClass({
                     options={this.state.options}
                     value={this.state.value}
                     />
-                <Text style={styles.title}>
+                <Text style={GlobalStyles.title}>
                     Nutritional Information
                     Pr 100g
                 </Text>
@@ -183,7 +192,7 @@ var ValidateProduct = React.createClass({
                     options={this.state.options}
                     value={this.state.value.nutritionalPr100g}
                     />
-                <Text style={styles.title}>
+                <Text style={GlobalStyles.title}>
                     Pr serving
                 </Text>
                 <Form
@@ -192,7 +201,7 @@ var ValidateProduct = React.createClass({
                     options={this.state.options}
                     value={this.state.value.nutritionalPrServing}
                     />
-                <Text style={styles.title}>
+                <Text style={GlobalStyles.title}>
                     Visual information
                 </Text>
                 <Form
@@ -202,34 +211,34 @@ var ValidateProduct = React.createClass({
                     value={this.state.value.visualInformation}
                     />
 
-                <Text style={styles.title}>
+                <Text style={GlobalStyles.title}>
                     Pictures
                 </Text>
 
-                <View style={styles.imageGrid}>
-                    <Text style={styles.imageText}>Front</Text>
-                    <Image style={styles.image} source={{ uri: this.state.value.images.front }} />
+                <View style={GlobalStyles.imageGrid}>
+                    <Text style={GlobalStyles.imageText}>Front</Text>
+                    <Image style={GlobalStyles.image} source={{ uri: this.state.value.images.front }} />
                 </View>
-                <View style={styles.imageGrid}>
-                    <Text style={styles.imageText}>Back</Text>
-                    <Image style={styles.image} source={{ uri: this.state.value.images.back }} />
+                <View style={GlobalStyles.imageGrid}>
+                    <Text style={GlobalStyles.imageText}>Back</Text>
+                    <Image style={GlobalStyles.image} source={{ uri: this.state.value.images.back }} />
 
                 </View>
-                <View style={styles.imageGrid}>
-                    <Text style={styles.imageText}>Left</Text>
-                    <Image style={styles.image} source={{ uri: this.state.value.images.left }} />
+                <View style={GlobalStyles.imageGrid}>
+                    <Text style={GlobalStyles.imageText}>Left</Text>
+                    <Image style={GlobalStyles.image} source={{ uri: this.state.value.images.left }} />
                 </View>
-                <View style={styles.imageGrid}>
-                    <Text style={styles.imageText}>Right</Text>
-                    <Image style={styles.image} source={{ uri: this.state.value.images.right }} />
+                <View style={GlobalStyles.imageGrid}>
+                    <Text style={GlobalStyles.imageText}>Right</Text>
+                    <Image style={GlobalStyles.image} source={{ uri: this.state.value.images.right }} />
                 </View>
 
-                <View style={styles.container}>
+                <View style={styles.doubleButtonContainer}>
                     <TouchableHighlight style={[styles.button,styles.button_notlast]} onPress = {this.onPress} underlayColor='#ABF499'>
-                        <Text style={styles.buttonText}>Use this</Text>
+                        <Text style={GlobalStyles.buttonText}>Use this</Text>
                     </TouchableHighlight>
                     <TouchableHighlight style={styles.button} onPress = {this.onEdit} underlayColor='#F4B599'>
-                        <Text style={styles.buttonText}>Use as new</Text>
+                        <Text style={GlobalStyles.buttonText}>Use as new</Text>
                     </TouchableHighlight>
                 </View>
             </ScrollView>
@@ -262,6 +271,7 @@ var ValidateProduct = React.createClass({
                 newVal.storeType = Datastore.MemoryStore.storeType;
                 newVal.credentials = Datastore.MemoryStore.credentials;
                 newVal.timeOfRegistration = Date.now(); // UTC in seconds
+                newVal.gpsLocation = this.state.initialPosition.coords;
 
                 console.log("TODO: Register product in registrations");
                 console.log("product info validated:", newVal);
@@ -287,18 +297,8 @@ var ValidateProduct = React.createClass({
 
 
 var styles = StyleSheet.create({
-    container: {
+    doubleButtonContainer: {
         flexDirection: 'row'
-    },
-    title: {
-        fontSize: 30,
-        alignSelf: 'center',
-        marginBottom: 30
-    },
-    buttonText: {
-        fontSize: 18,
-        color: 'white',
-        alignSelf: 'center'
     },
     // Red button (Copy)
     button: {
@@ -317,24 +317,6 @@ var styles = StyleSheet.create({
         backgroundColor: '#A0D16F',
         borderColor: '#A0D16F',
         marginRight: 10
-    },
-    imageGrid: {
-        flex: 1,
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        justifyContent: 'center'
-    },
-    image: {
-        width: 100,
-        height: 100,
-        margin: 10,
-        borderColor: 'black',
-        borderWidth: 2
-    },
-    imageText:{
-        fontSize: 18,
-        color: 'black',
-        alignSelf: 'center'
     }
 });
 

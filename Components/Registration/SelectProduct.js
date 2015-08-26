@@ -21,6 +21,7 @@ var {
     } = React;
 
 var navigatorEventListener;
+var productNames = {};
 var SelectProduct = React.createClass ({
 
     componentWillMount: function() {
@@ -65,10 +66,11 @@ var SelectProduct = React.createClass ({
 
         return (
 
-            <View style={styles.container}>
+            <View style={GlobalStyles.scrollViewContainer}>
 
                 <ListView
-                    automaticallyAdjustContentInsets={true}
+                    style={GlobalStyles.list}
+                    automaticallyAdjustContentInsets={false}
                     dataSource={this.state.dataSource}
                     renderRow={this._renderRow}/>
             </View>
@@ -108,6 +110,20 @@ var SelectProduct = React.createClass ({
          component: ValidateProduct
 
          });
+    },
+
+    // Maybe use this to make diff?? it returns the values that are different on a compared to b
+    diff: function(a,b) {
+        var r = {};
+        _.each(a, function(v,k) {
+            if(b[k] === v) return;
+            // but what if it returns an empty object? still attach?
+            r[k] = _.isObject(v)
+                ? _.diff(v, b[k])
+                : v
+            ;
+        });
+        return r;
     }
 
 });
@@ -119,13 +135,4 @@ module.exports = SelectProduct;
 // Local styles
 var styles = StyleSheet.create({
 
-    container: {
-        flex: 1,
-        marginTop: 0,
-        flexDirection: 'column'
-    },
-
-    list: {
-        flex: 1
-    }
 });

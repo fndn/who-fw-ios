@@ -60,8 +60,9 @@ var SelectCountry = React.createClass ({
 	render: function(){
 
 		return (
-			<View style={styles.container}>
+			<View style={GlobalStyles.scrollViewContainer}>
 				<ListView
+                    style={GlobalStyles.list}
                     automaticallyAdjustContentInsets={false}
 					dataSource  = {this.state.dataSource}
 					renderRow 	= {this._renderRow} />
@@ -122,16 +123,4 @@ module.exports = SelectCountry;
 // Local styles
 var styles = StyleSheet.create({
 
-	container: {
-		flex: 1,
-		marginTop: 63,
-		marginBottom: 48,
-		flexDirection: 'column',
-		borderColor: "#f00",
-		borderWidth: 1
-	},
-
-	list: {
-		flex:1
-	}
 });

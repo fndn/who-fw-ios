@@ -14,6 +14,8 @@ Form.i18n = {
     optional: '',
     required: ' *'
 };
+Form.stylesheet = GlobalStyles.formStyle;
+
 
 var {
 	StyleSheet,
@@ -43,7 +45,7 @@ var Introduction = React.createClass ({
 
 	render: function(){
 		return (
-			<View style={styles.container}>
+			<View style={GlobalStyles.container}>
 				<View style={styles.imagewrap}>
 					<Image
 						style={styles.logo}
@@ -63,10 +65,7 @@ var Introduction = React.createClass ({
                         onChange={this.onChange}
                         />
                 </View>
-
 			</View>
-
-
 		);
 	},
 
@@ -82,10 +81,6 @@ module.exports = Introduction;
 
 // Local styles
 var styles = StyleSheet.create({
-	container: {
-		backgroundColor: '#fff',
-		alignItems: 'center',
-    },
     login: {
         padding: 20,
         width: 300
@@ -98,7 +93,6 @@ var styles = StyleSheet.create({
     },
     logo: {
 		width: 250,
-    	
 	},
 
 	text : {

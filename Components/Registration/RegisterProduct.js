@@ -17,52 +17,52 @@ var Form = t.form.Form;
 var options = {
     fields:{
         energyKj:{
-            
-            label: 'Energy (KJ)'
+            label: 'Energy (KJ)',
+            keyboardType: 'numeric'
         },
         energyKcal:{
-            
-            label: 'Energy (kcal)'
+            label: 'Energy (kcal)',
+            keyboardType: 'numeric'
         },
         fat:{
-            
-            label: 'Fat (g)'
+            label: 'Fat (g)',
+            keyboardType: 'numeric'
         },
         fatOfWhichSaturates:{
-            
-            label: 'Fat of which saturates (g)'
+            label: 'Fat of which saturates (g)',
+            keyboardType: 'numeric'
         },
         fatOfWhichTrans:{
-            
-            label: 'Fat of which trans (g)'
+            label: 'Fat of which trans (g)',
+            keyboardType: 'numeric'
         },
         carbohydrate:{
-            
-            label: 'Carbohydrate (g)'
+            label: 'Carbohydrate (g)',
+            keyboardType: 'numeric'
         },
         carbohydrateOfWhichSugars:{
-            
-            label: 'Carbohydrate of which sugars (g)'
+            label: 'Carbohydrate of which sugars (g)',
+            keyboardType: 'numeric'
         },
         carbohydrateOfWhichLactose:{
-            
-            label: 'Carbohydrate of which lactose (g)'
+            label: 'Carbohydrate of which lactose (g)',
+            keyboardType: 'numeric'
         },
         protein:{
-            
-            label: 'Protein (g)'
+            label: 'Protein (g)',
+            keyboardType: 'numeric'
         },
         salt:{
-            
-            label: 'Salt (g)'
+            label: 'Salt (g)',
+            keyboardType: 'numeric'
         },
         sodium:{
-            
-            label: 'Sodium (g)'
+            label: 'Sodium (g)',
+            keyboardType: 'numeric'
         },
         servingSize:{
-            
-            label: 'Serving size (g)'
+            label: 'Serving size (g)',
+            keyboardType: 'numeric'
         }
     }
 }; // optional rendering options (see documentation)
@@ -151,7 +151,7 @@ var RegisterProduct = React.createClass({
                         value={this.state.nutBool}
                         onChange={this.onNutritionInfoAvailableChange}
                         />
-                    <Text style={styles.title}>
+                    <Text style={GlobalStyles.title}>
                         Nutritional Information
                         Pr 100g
                     </Text>
@@ -162,7 +162,7 @@ var RegisterProduct = React.createClass({
                         onChange={this.onChange2}
                         options={this.state.options}
                     />
-                    <Text style={styles.title}>
+                    <Text style={GlobalStyles.title}>
                         Per serving
                     </Text>
                     <Form
@@ -172,7 +172,7 @@ var RegisterProduct = React.createClass({
                         options={this.state.options}
                         onChange={this.onChange3}
                         />
-                    <Text style={styles.title}>
+                    <Text style={GlobalStyles.title}>
                         Visual information
                     </Text>
                     <Form
@@ -183,34 +183,34 @@ var RegisterProduct = React.createClass({
                         value={this.state.visualInfo}
                         />
 
-                    <Text style={styles.title}>
+                    <Text style={GlobalStyles.title}>
                         Pictures
                     </Text>
-                    <TouchableHighlight style={styles.button} onPress = {this.onTakeFront} underlayColor='#99d9f4'>
-                        <Text style={styles.buttonText}>Capture product images</Text>
+                    <TouchableHighlight style={GlobalStyles.button} onPress = {this.onTakeFront} underlayColor='#99d9f4'>
+                        <Text style={GlobalStyles.buttonText}>Capture product images</Text>
                     </TouchableHighlight>
 
 
-                    <View style={styles.imageGrid}>
-                        <Text style={styles.imageText}>Front</Text>
-                        <Image style={styles.image} source={{ uri: this.state.images.front }} />
+                    <View style={GlobalStyles.imageGrid}>
+                        <Text style={GlobalStyles.imageText}>Front</Text>
+                        <Image style={GlobalStyles.image} source={{ uri: this.state.images.front }} />
                     </View>
-                    <View style={styles.imageGrid}>
-                        <Text style={styles.imageText}>Back</Text>
-                        <Image style={styles.image} source={{ uri: this.state.images.back }} />
+                    <View style={GlobalStyles.imageGrid}>
+                        <Text style={GlobalStyles.imageText}>Back</Text>
+                        <Image style={GlobalStyles.image} source={{ uri: this.state.images.back }} />
 
                     </View>
-                    <View style={styles.imageGrid}>
-                        <Text style={styles.imageText}>Left</Text>
-                        <Image style={styles.image} source={{ uri: this.state.images.left }} />
+                    <View style={GlobalStyles.imageGrid}>
+                        <Text style={GlobalStyles.imageText}>Left</Text>
+                        <Image style={GlobalStyles.image} source={{ uri: this.state.images.left }} />
                     </View>
-                    <View style={styles.imageGrid}>
-                        <Text style={styles.imageText}>Right</Text>
-                        <Image style={styles.image} source={{ uri: this.state.images.right }} />
+                    <View style={GlobalStyles.imageGrid}>
+                        <Text style={GlobalStyles.imageText}>Right</Text>
+                        <Image style={GlobalStyles.image} source={{ uri: this.state.images.right }} />
                     </View>
 
-                    <TouchableHighlight style={styles.button} onPress={this.onPress} underlayColor='#99d9f4'>
-                        <Text style={styles.buttonText}>Save</Text>
+                    <TouchableHighlight style={GlobalStyles.button} onPress={this.onPress} underlayColor='#99d9f4'>
+                        <Text style={GlobalStyles.buttonText}>Save</Text>
                     </TouchableHighlight>
 
                 </ScrollView>
@@ -232,7 +232,7 @@ var RegisterProduct = React.createClass({
                         value={this.state.nutBool}
                         onChange={this.onNutritionInfoAvailableChange}
                         />
-                    <Text style={styles.title}>
+                    <Text style={GlobalStyles.title}>
                         Visual information
                     </Text>
                     <Form
@@ -243,7 +243,7 @@ var RegisterProduct = React.createClass({
                         value={this.state.visualInfo}
                         />
 
-                    <Text style={styles.title}>
+                    <Text style={GlobalStyles.title}>
                         Pictures
                     </Text>
 
@@ -252,26 +252,26 @@ var RegisterProduct = React.createClass({
                     </TouchableHighlight>
 
 
-                    <View style={styles.imageGrid}>
-                            <Text style={styles.imageText}>Front</Text>
-                        <Image style={styles.image} source={{ uri: this.state.images.front }} />
+                    <View style={GlobalStyles.imageGrid}>
+                        <Text style={GlobalStyles.imageText}>Front</Text>
+                        <Image style={GlobalStyles.image} source={{ uri: this.state.images.front }} />
                     </View>
-                    <View style={styles.imageGrid}>
-                            <Text style={styles.imageText}>Back</Text>
-                        <Image style={styles.image} source={{ uri: this.state.images.back }} />
+                    <View style={GlobalStyles.imageGrid}>
+                        <Text style={GlobalStyles.imageText}>Back</Text>
+                        <Image style={GlobalStyles.image} source={{ uri: this.state.images.back }} />
 
                     </View>
-                    <View style={styles.imageGrid}>
-                            <Text style={styles.imageText}>Left</Text>
-                        <Image style={styles.image} source={{ uri: this.state.images.left }} />
+                    <View style={GlobalStyles.imageGrid}>
+                        <Text style={GlobalStyles.imageText}>Left</Text>
+                        <Image style={GlobalStyles.image} source={{ uri: this.state.images.left }} />
                     </View>
-                    <View style={styles.imageGrid}>
-                            <Text style={styles.imageText}>Right</Text>
-                        <Image style={styles.image} source={{ uri: this.state.images.right }} />
+                    <View style={GlobalStyles.imageGrid}>
+                        <Text style={GlobalStyles.imageText}>Right</Text>
+                        <Image style={GlobalStyles.image} source={{ uri: this.state.images.right }} />
                     </View>
 
-                    <TouchableHighlight style={styles.button} onPress={this.onPress} underlayColor='#99d9f4'>
-                        <Text style={styles.buttonText}>Save</Text>
+                    <TouchableHighlight style={GlobalStyles.button} onPress={this.onPress} underlayColor='#99d9f4'>
+                        <Text style={GlobalStyles.buttonText}>Save</Text>
                     </TouchableHighlight>
                 </ScrollView>
             );
@@ -398,50 +398,7 @@ var RegisterProduct = React.createClass({
 
 
 var styles = StyleSheet.create({
-    container: {
-        justifyContent: 'center',
-        marginTop: 0,
-        padding: 20,
-        backgroundColor: '#ffffff'
-    },
-    title: {
-        fontSize: 30,
-        alignSelf: 'center',
-        marginBottom: 30
-    },
-    buttonText: {
-        fontSize: 18,
-        color: 'white',
-        alignSelf: 'center'
-    },
-    button: {
-        height: 36,
-        backgroundColor: '#48BBEC',
-        borderColor: '#48BBEC',
-        borderWidth: 1,
-        borderRadius: 8,
-        marginBottom: 10,
-        alignSelf: 'stretch',
-        justifyContent: 'center'
-    },
-    imageGrid: {
-        flex: 1,
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        justifyContent: 'center'
-    },
-    image: {
-        width: 100,
-        height: 100,
-        margin: 10,
-        borderColor: 'black',
-        borderWidth: 2
-    },
-    imageText:{
-        fontSize: 18,
-        color: 'black',
-        alignSelf: 'center'
-    }
+
 });
 
 
