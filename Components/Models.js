@@ -22,6 +22,21 @@ var storeTypes = t.enums({
 
 module.exports.storeTypes = storeTypes;
 
+/*
+var visualInfo = t.enums({
+    VICA: 'Cartoons',
+    VIPC: 'Pictures of infants/young children',
+    PM: 'Pictures of mothers',
+    CC: 'Comparative claims',
+    NCC: 'Nutrient content claims',
+    HC: 'Health claims',
+    OTHER: 'Other'
+});
+
+module.exports.visualInfo = visualInfo;*/
+
+
+
 var ageGroups = t.enums({
     THREE: '≤ 3 month',
     FOUR: '4 month',
@@ -114,34 +129,47 @@ module.exports.ProductEvaluation = function(){
 
 module.exports.Nutrition = function(){
     return t.struct({
-        'EnergyKj': t.maybe(t.Num),
-        'EnergyKcal': t.maybe(t.Num),
-        'Fat': t.maybe(t.Num),
-        'FatOfWhichSaturates': t.maybe(t.Num),
-        'FatOfWhichTrans': t.maybe(t.Num),
-        'Carbohydrate': t.maybe(t.Num),
-        'CarbohydrateOfWhichSugars': t.maybe(t.Num),
-        'CarbohydrateOfWhichLactose': t.maybe(t.Num),
-        'Protein': t.maybe(t.Num),
-        'Salt': t.maybe(t.Num),
-        'Sodium': t.maybe(t.Num)
+        energyKj: t.maybe(t.Num),
+        energyKcal: t.maybe(t.Num),
+        fat: t.maybe(t.Num),
+        fatOfWhichSaturates: t.maybe(t.Num),
+        fatOfWhichTrans: t.maybe(t.Num),
+        carbohydrate: t.maybe(t.Num),
+        carbohydrateOfWhichSugars: t.maybe(t.Num),
+        carbohydrateOfWhichLactose: t.maybe(t.Num),
+        protein: t.maybe(t.Num),
+        salt: t.maybe(t.Num),
+        sodium: t.maybe(t.Num)
     });
 };
 
 module.exports.NutritionServing = function(){
     return t.struct({
-        'ServingSize': t.maybe(t.Num),
-        'EnergyKj': t.maybe(t.Num),
-        'EnergyKcal': t.maybe(t.Num),
-        'Fat': t.maybe(t.Num),
-        'FatOfWhichSaturates': t.maybe(t.Num),
-        'FatOfWhichTrans': t.maybe(t.Num),
-        'Carbohydrate': t.maybe(t.Num),
-        'CarbohydrateOfWhichSugars': t.maybe(t.Num),
-        'CarbohydrateOfWhichLactose': t.maybe(t.Num),
-        'Protein': t.maybe(t.Num),
-        'Salt': t.maybe(t.Num),
-        'Sodium': t.maybe(t.Num)
+        servingSize: t.maybe(t.Num),
+        energyKj: t.maybe(t.Num),
+        energyKcal: t.maybe(t.Num),
+        fat: t.maybe(t.Num),
+        fatOfWhichSaturates: t.maybe(t.Num),
+        fatOfWhichTrans: t.maybe(t.Num),
+        carbohydrate: t.maybe(t.Num),
+        carbohydrateOfWhichSugars: t.maybe(t.Num),
+        carbohydrateOfWhichLactose: t.maybe(t.Num),
+        protein: t.maybe(t.Num),
+        salt: t.maybe(t.Num),
+        sodium: t.maybe(t.Num)
+    });
+};
+
+
+module.exports.VisualInformation = function(){
+    return t.struct({
+        cartoons: t.Bool,
+        picturesOfInfantsOrYoungChildren: t.Bool,
+        picturesOfMothers: t.Bool,
+        comparativeClaims: t.Bool,
+        nutrientContentClaims: t.Bool,
+        healthClaims: t.Bool,
+        other: t.Bool
     });
 };
 

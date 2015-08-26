@@ -28,54 +28,61 @@ var options = {
         ageGroup:{
             editable: false
         },
-        EnergyKj:{
+        energyKj:{
             editable: false,
             label: 'Energy (KJ)'
         },
-        EnergyKcal:{
+        energyKcal:{
             editable: false,
             label: 'Energy (kcal)'
         },
-        Fat:{
+        fat:{
             editable: false,
             label: 'Fat (g)'
         },
-        FatOfWhichSaturates:{
+        fatOfWhichSaturates:{
             editable: false,
             label: 'Fat of which saturates (g)'
         },
-        FatOfWhichTrans:{
+        fatOfWhichTrans:{
             editable: false,
             label: 'Fat of which trans (g)'
         },
-        Carbohydrate:{
+        carbohydrate:{
             editable: false,
             label: 'Carbohydrate (g)'
         },
-        CarbohydrateOfWhichSugars:{
+        carbohydrateOfWhichSugars:{
             editable: false,
             label: 'Carbohydrate of which sugars (g)'
         },
-        CarbohydrateOfWhichLactose:{
+        carbohydrateOfWhichLactose:{
             editable: false,
             label: 'Carbohydrate of which lactose (g)'
         },
-        Protein:{
+        protein:{
             editable: false,
             label: 'Protein (g)'
         },
-        Salt:{
+        salt:{
             editable: false,
             label: 'Salt (g)'
         },
-        Sodium:{
+        sodium:{
             editable: false,
             label: 'Sodium (g)'
         },
-        ServingSize:{
+        servingSize:{
             editable: false,
             label: 'Serving size (g)'
-        }
+        },
+        cartoons: {disabled: true},
+        picturesOfInfantsOrYoungChildren: {disabled : true},
+        picturesOfMothers: {disabled: true},
+        comparativeClaims: {disabled: true},
+        nutrientContentClaims: {disabled: true},
+        healthClaims: {disabled: true},
+        other: {disabled: true}
     }
 }; // optional rendering options (see documentation)
 
@@ -109,14 +116,31 @@ var {
     ScrollView,
     AlertIOS
     } = React;
-
+var navigatorEventListener;
 var ValidateProduct = React.createClass({
 
     getInitialState: function() {
 
+
+
+        navigatorEventListener = this.props.navigator.navigationContext.addListener('willfocus', (event) =>
+        {
+            if(event.data.route.component.displayName === "ValidateProduct") {
+                console.log("DATA: " , this.fillData());
+                this.setState(this.fillData());
+            }
+            //console.log(event.data.route.component.displayName);
+
+        });
+
+        return this.fillData();
+    },
+
+    fillData: function()
+    {
         var data = Datastore.cloneObject(Datastore.MemoryStore.product);
         //Models.storeTypes.meta.map["SUP"]
-        console.log("getInitialState, ", data);
+        //console.log("getInitialState, ", data);
         data.foodType = Models.foodTypes.meta.map[data.foodType];
         data.ageGroup = Models.ageGroups.meta.map[data.ageGroup];
 
@@ -127,14 +151,13 @@ var ValidateProduct = React.createClass({
             validateBool: {boolValue:false},
             nutBool: {boolValue:true},
             nutHundredValue: data.nutritionalPr100g,
-            nutServingValue: data.nutritionalPrServing
+            nutServingValue: data.nutritionalPrServing,
+            visualInfo: data.visualInformation
         };
     },
 
-    render: function(){
-        //console.log(this.state.options);
-        //var forms = "";
 
+    render: function(){
 
         return (
             <ScrollView style={GlobalStyles.scrollViewList}>
@@ -143,7 +166,6 @@ var ValidateProduct = React.createClass({
                     type={Models.ProductEvaluation()}
                     options={this.state.options}
                     value={this.state.value}
-                    onChange={this.onChange}
                     />
                 <Text style={styles.title}>
                     Nutritional Information
@@ -154,7 +176,6 @@ var ValidateProduct = React.createClass({
                     type={Models.Nutrition()}
                     options={this.state.options}
                     value={this.state.nutHundredValue}
-                    onChange={this.onChange2}
                     />
                 <Text style={styles.title}>
                     Pr serving
@@ -164,7 +185,15 @@ var ValidateProduct = React.createClass({
                     type={Models.NutritionServing()}
                     options={this.state.options}
                     value={this.state.nutServingValue}
-                    onChange={this.onChange3}
+                    />
+                <Text style={styles.title}>
+                    Visual information
+                </Text>
+                <Form
+                    ref="form4"
+                    type={Models.VisualInformation()}
+                    options={options}
+                    value={this.state.visualInfo}
                     />
                 <View style={styles.container}>
                     <TouchableHighlight style={[styles.button,styles.button_notlast]} onPress = {this.onPress} underlayColor='#ABF499'>
@@ -178,20 +207,6 @@ var ValidateProduct = React.createClass({
         );
     },
 
-    onChange: function(value)
-    {
-        this.setState({options: options, value: value});
-    },
-
-    onChange2: function(value)
-    {
-        this.setState({nutHundredValue: value});
-    },
-
-    onChange3: function(value)
-    {
-        this.setState({nutServingValue: value});
-    },
 
     onPress: function()
     {
@@ -204,12 +219,12 @@ var ValidateProduct = React.createClass({
             if(!Datastore.MemoryStore.credentials || !Datastore.MemoryStore.credentials.name || !Datastore.MemoryStore.credentials.affiliation )
                 AlertIOS.alert('Credentials needed!', 'Please go to \"Introduction\" and fill in the information', [{text: 'OK'}] );
             else {
-                var value2 = this.refs.form2.getValue();
-                var value3 = this.refs.form3.getValue();
+
                 var newVal = {};
                 newVal.product = Datastore.cloneObject(value);
-                newVal.product.nutritionalPr100g = Datastore.cloneObject(value2);
-                newVal.product.nutritionalPrServing = Datastore.cloneObject(value3);
+                newVal.product.nutritionalPr100g = Datastore.cloneObject(this.refs.form2.getValue());
+                newVal.product.nutritionalPrServing = Datastore.cloneObject(this.refs.form3.getValue());
+                newVal.product.visualInformation = Datastore.cloneObject(this.refs.form4.getValue());
                 newVal.brand = Datastore.MemoryStore.brand;
                 newVal.country = Datastore.MemoryStore.country;
                 newVal.location = Datastore.MemoryStore.location;

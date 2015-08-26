@@ -9,50 +9,59 @@ var GlobalStyles 	= require('../../Styles/GlobalStyles');
 var Datastore       = require('../Datastore');
 var Models          = require('../Models');
 var t               = require('tcomb-form-native');
+//var CameraCapture   = require('./CameraCapture');
 
 var Form = t.form.Form;
 
 
 var options = {
     fields:{
-        name:{
-            label: 'Some name',
-            editable: true
-        },
-        EnergyKj:{
+        energyKj:{
+            
             label: 'Energy (KJ)'
         },
-        EnergyKcal:{
+        energyKcal:{
+            
             label: 'Energy (kcal)'
         },
-        Fat:{
+        fat:{
+            
             label: 'Fat (g)'
         },
-        FatOfWhichSaturates:{
+        fatOfWhichSaturates:{
+            
             label: 'Fat of which saturates (g)'
         },
-        FatOfWhichTrans:{
+        fatOfWhichTrans:{
+            
             label: 'Fat of which trans (g)'
         },
-        Carbohydrate:{
+        carbohydrate:{
+            
             label: 'Carbohydrate (g)'
         },
-        CarbohydrateOfWhichSugars:{
+        carbohydrateOfWhichSugars:{
+            
             label: 'Carbohydrate of which sugars (g)'
         },
-        CarbohydrateOfWhichLactose:{
+        carbohydrateOfWhichLactose:{
+            
             label: 'Carbohydrate of which lactose (g)'
         },
-        Protein:{
+        protein:{
+            
             label: 'Protein (g)'
         },
-        Salt:{
+        salt:{
+            
             label: 'Salt (g)'
         },
-        Sodium:{
+        sodium:{
+            
             label: 'Sodium (g)'
         },
-        ServingSize:{
+        servingSize:{
+            
             label: 'Serving size (g)'
         }
     }
@@ -73,6 +82,7 @@ var {
     TouchableHighlight,
     ActivityIndicatorIOS,
     NavigatorIOS,
+    Image,
     ScrollView
     } = React;
 
@@ -83,12 +93,21 @@ var RegisterProduct = React.createClass({
         var hundredData = null;
         var servingData = null;
         var nutBoolData = {boolValue:false};
+        var visualData = null;
+
+        var images = {
+            front: null,
+            back: null,
+            right: null,
+            left: null
+        };
         if(this.props.getProductData)
         {
-            var data = JSON.parse(JSON.stringify(Datastore.MemoryStore.product));
+            var data = Datastore.cloneObject(Datastore.MemoryStore.product);
             hundredData = data.nutritionalPr100g;
             servingData = data.nutritionalPrServing;
             nutBoolData = {boolValue:true};
+            visualData = data.visualInformation;
         }
 
         return {
@@ -96,13 +115,23 @@ var RegisterProduct = React.createClass({
             value: data,
             nutBool: nutBoolData,
             nutHundredValue: hundredData,
-            nutServingValue: servingData
+            nutServingValue: servingData,
+            visualInfo: visualData,
+            initialPosition: null,
+            images: images
         };
+    },
+
+    componentDidMount: function() {
+        navigator.geolocation.getCurrentPosition(
+            (initialPosition) => this.setState({initialPosition}),
+            (error) => alert(error.message),
+            {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
+        );
     },
 
     render: function(){
 
-        //var forms = "";
         if(this.state.nutBool.boolValue)
         {
             return (
@@ -141,9 +170,50 @@ var RegisterProduct = React.createClass({
                         options={this.state.options}
                         onChange={this.onChange3}
                         />
+                    <Text style={styles.title}>
+                        Visual information
+                    </Text>
+                    <Form
+                        ref="form4"
+                        type={Models.VisualInformation()}
+                        options={options}
+                        onChange={this.onChange4}
+                        value={this.state.visualInfo}
+                        />
+
+                    <Text style={styles.title}>
+                        Pictures
+                    </Text>
+                    <TouchableHighlight style={styles.button} onPress = {this.onOpenCamera} underlayColor='#99d9f4'>
+                        <Text style={styles.buttonText}>Add front</Text>
+                    </TouchableHighlight>
+                    <TouchableHighlight style={styles.button} onPress = {this.onOpenCamera} underlayColor='#99d9f4'>
+                        <Text style={styles.buttonText}>Add back</Text>
+                    </TouchableHighlight>
+                    <TouchableHighlight style={styles.button} onPress = {this.onOpenCamera} underlayColor='#99d9f4'>
+                        <Text style={styles.buttonText}>Add left side</Text>
+                    </TouchableHighlight>
+                    <TouchableHighlight style={styles.button} onPress = {this.onOpenCamera} underlayColor='#99d9f4'>
+                        <Text style={styles.buttonText}>Add right side</Text>
+                    </TouchableHighlight>
+
+                    <View style={styles.imageGrid}>
+                        <Image style={styles.image} source={{ uri: this.state.images.front }} />
+                    </View>
+                    <View style={styles.imageGrid}>
+                        <Image style={styles.image} source={{ uri: this.state.images.back }} />
+                    </View>
+                    <View style={styles.imageGrid}>
+                        <Image style={styles.image} source={{ uri: this.state.images.left }} />
+                    </View>
+                    <View style={styles.imageGrid}>
+                        <Image style={styles.image} source={{ uri: this.state.images.right }} />
+                    </View>
+
                     <TouchableHighlight style={styles.button} onPress={this.onPress} underlayColor='#99d9f4'>
                         <Text style={styles.buttonText}>Save</Text>
                     </TouchableHighlight>
+
                 </ScrollView>
             );
         }
@@ -163,12 +233,116 @@ var RegisterProduct = React.createClass({
                         value={this.state.nutBool}
                         onChange={this.onNutritionInfoAvailableChange}
                         />
-                    <TouchableHighlight style={styles.button} onPress={this.onPress} underlayColor='#99d9f4'>
+                    <Text style={styles.title}>
+                        Visual information
+                    </Text>
+                    <Form
+                        ref="form4"
+                        type={Models.VisualInformation()}
+                        options={options}
+                        onChange={this.onChange4}
+                        value={this.state.visualInfo}
+                        />
+
+                    <Text style={styles.title}>
+                        Pictures
+                    </Text>
+
+                    <TouchableHighlight style={styles.button} onPress = {this.onTakeFront} underlayColor='#99d9f4'>
+                        <Text style={styles.buttonText}>Capture product images</Text>
+                    </TouchableHighlight>
+
+
+                    <View style={styles.imageGrid}>
+                            <Text style={styles.buttonText}>Front</Text>
+                        <Image style={styles.image} source={{ uri: this.state.images.front }} />
+                    </View>
+                    <View style={styles.imageGrid}>
+                            <Text style={styles.buttonText}>Back</Text>
+                        <Image style={styles.image} source={{ uri: this.state.images.back }} />
+
+                    </View>
+                    <View style={styles.imageGrid}>
+                            <Text style={styles.buttonText}>Left</Text>
+                        <Image style={styles.image} source={{ uri: this.state.images.left }} />
+                    </View>
+                    <View style={styles.imageGrid}>
+                            <Text style={styles.buttonText}>Right</Text>
+                        <Image style={styles.image} source={{ uri: this.state.images.right }} />
+                    </View>
+
+                    <TouchableHighlight style={styles.button} onPress={this.onTakeLeft} underlayColor='#99d9f4'>
                         <Text style={styles.buttonText}>Save</Text>
                     </TouchableHighlight>
                 </ScrollView>
             );
         }
+    },
+
+    onTakeFront: function () {
+        this.onOpenCamera("front");
+    },
+    onTakeBack: function () {
+        this.onOpenCamera2("back");
+    },
+    onTakeRight: function () {
+        this.onOpenCamera("right");
+    },
+    onTakeLeft: function () {
+        this.onOpenCamera("left");
+    },
+
+    onOpenCamera: function(position){
+
+        this.props.navigator.push({
+            leftButtonTitle: 'Cancel',
+            onLeftButtonPress: () => this.props.navigator.pop(),
+            title: 'Capture Picture',
+            component: require('./CameraCapture'), //CameraCapture,
+            passProps: {
+                location: this.state.initialPosition,
+                camCallback: this.onReturnedFromCamera,
+                productPosition: position
+            }
+
+        });
+    },
+    onOpenCamera2: function(position){
+
+        this.props.navigator.push({
+            leftButtonTitle: 'Cancel',
+            onLeftButtonPress: () => this.props.navigator.pop(),
+            title: 'Capture Picture',
+            component: require('./CameraCapture2'), //CameraCapture,
+            passProps: {
+                location: this.state.initialPosition,
+                camCallback: this.onReturnedFromCamera,
+                productPosition: position
+            }
+
+        });
+    },
+
+    onReturnedFromCamera: function (imageUri, productPos) {
+        console.log("IMAGE FROM", productPos, imageUri);
+        //var images = this.state.images;
+
+        /*switch (productPos)
+        {
+            case "front":
+                images.front = imageUri;
+                break;
+            case "back":
+                images.back = imageUri;
+                break;
+            case "right":
+                images.right = imageUri;
+                break;
+            case "left":
+                images.left = imageUri;
+                break;
+        }*/
+        this.setState({images: imageUri});
     },
 
     onChange: function(value)
@@ -192,6 +366,11 @@ var RegisterProduct = React.createClass({
         this.setState({nutServingValue: value});
     },
 
+    onChange4: function(value){
+        this.setState({visualInfo: value});
+    },
+
+
     onPress: function()
     {
 
@@ -200,23 +379,33 @@ var RegisterProduct = React.createClass({
         var value = this.refs.form.getValue();
         if (value) { // if validation fails, value will be null
             // Copy value because it is not extensible, then add "private" values
-            var value2 = this.refs.form2.getValue();
-            var value3 = this.refs.form3.getValue();
-
             var newVal = Datastore.cloneObject(value);
-            newVal.nutritionalPr100g = Datastore.cloneObject(value2);
-            newVal.nutritionalPrServing = Datastore.cloneObject(value3);
+            newVal.nutritionalPrServing = null
+            newVal.nutritionalPr100g = null
+            if(this.refs.form2)
+            {
+                newVal.nutritionalPr100g = Datastore.cloneObject(this.refs.form2.getValue());
+            }
+            if (this.refs.form3) {
+                newVal.nutritionalPrServing = Datastore.cloneObject(this.refs.form3.getValue());
+            }
+            //var value3 = this.refs.form3.getValue();
+            var value4 = this.refs.form4.getValue();
+
+
+
+
+            newVal.visualInformation = Datastore.cloneObject(value4);
             newVal.brand = Datastore.MemoryStore.brand.name;
-            //newVal.country = Datastore.Session.Get('country')._id;
-            //newVal.brand = Datastore.Session.Get('brand')._id;
-            console.log("TODO: Store product information and review");
-            console.log("product info:", newVal);
+
+
+            //console.log("product info:", newVal);
             var entry = Datastore.add('products', newVal);
             //Datastore.Set("name", value.name);
             //Datastore.add('locations', value);
             if(this.props.getProductData)
             {
-                Datastore.MemoryStore.product = Datastore.one('products', entry);
+                Datastore.MemoryStore.product = newVal;
             }
 
             this.props.navigator.pop();
@@ -253,6 +442,17 @@ var styles = StyleSheet.create({
         marginBottom: 10,
         alignSelf: 'stretch',
         justifyContent: 'center'
+    },
+    imageGrid: {
+        flex: 1,
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'center'
+    },
+    image: {
+        width: 100,
+        height: 100,
+        margin: 10,
     }
 });
 

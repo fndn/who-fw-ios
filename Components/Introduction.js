@@ -11,8 +11,8 @@ var Form = t.form.Form;
 
 // This is global
 Form.i18n = {
-    optional: ' (?)',
-    required: ''
+    optional: '',
+    required: ' *'
 };
 
 var {
