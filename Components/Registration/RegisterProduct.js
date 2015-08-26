@@ -9,7 +9,7 @@ var GlobalStyles 	= require('../../Styles/GlobalStyles');
 var Datastore       = require('../Datastore');
 var Models          = require('../Models');
 var t               = require('tcomb-form-native');
-//var CameraCapture   = require('./CameraCapture');
+var CameraCapture   = require('./CameraCapture');
 
 var Form = t.form.Form;
 
@@ -184,29 +184,26 @@ var RegisterProduct = React.createClass({
                     <Text style={styles.title}>
                         Pictures
                     </Text>
-                    <TouchableHighlight style={styles.button} onPress = {this.onOpenCamera} underlayColor='#99d9f4'>
-                        <Text style={styles.buttonText}>Add front</Text>
-                    </TouchableHighlight>
-                    <TouchableHighlight style={styles.button} onPress = {this.onOpenCamera} underlayColor='#99d9f4'>
-                        <Text style={styles.buttonText}>Add back</Text>
-                    </TouchableHighlight>
-                    <TouchableHighlight style={styles.button} onPress = {this.onOpenCamera} underlayColor='#99d9f4'>
-                        <Text style={styles.buttonText}>Add left side</Text>
-                    </TouchableHighlight>
-                    <TouchableHighlight style={styles.button} onPress = {this.onOpenCamera} underlayColor='#99d9f4'>
-                        <Text style={styles.buttonText}>Add right side</Text>
+                    <TouchableHighlight style={styles.button} onPress = {this.onTakeFront} underlayColor='#99d9f4'>
+                        <Text style={styles.buttonText}>Capture product images</Text>
                     </TouchableHighlight>
 
+
                     <View style={styles.imageGrid}>
+                        <Text style={styles.imageText}>Front</Text>
                         <Image style={styles.image} source={{ uri: this.state.images.front }} />
                     </View>
                     <View style={styles.imageGrid}>
+                        <Text style={styles.imageText}>Back</Text>
                         <Image style={styles.image} source={{ uri: this.state.images.back }} />
+
                     </View>
                     <View style={styles.imageGrid}>
+                        <Text style={styles.imageText}>Left</Text>
                         <Image style={styles.image} source={{ uri: this.state.images.left }} />
                     </View>
                     <View style={styles.imageGrid}>
+                        <Text style={styles.imageText}>Right</Text>
                         <Image style={styles.image} source={{ uri: this.state.images.right }} />
                     </View>
 
@@ -254,20 +251,20 @@ var RegisterProduct = React.createClass({
 
 
                     <View style={styles.imageGrid}>
-                            <Text style={styles.buttonText}>Front</Text>
+                            <Text style={styles.imageText}>Front</Text>
                         <Image style={styles.image} source={{ uri: this.state.images.front }} />
                     </View>
                     <View style={styles.imageGrid}>
-                            <Text style={styles.buttonText}>Back</Text>
+                            <Text style={styles.imageText}>Back</Text>
                         <Image style={styles.image} source={{ uri: this.state.images.back }} />
 
                     </View>
                     <View style={styles.imageGrid}>
-                            <Text style={styles.buttonText}>Left</Text>
+                            <Text style={styles.imageText}>Left</Text>
                         <Image style={styles.image} source={{ uri: this.state.images.left }} />
                     </View>
                     <View style={styles.imageGrid}>
-                            <Text style={styles.buttonText}>Right</Text>
+                            <Text style={styles.imageText}>Right</Text>
                         <Image style={styles.image} source={{ uri: this.state.images.right }} />
                     </View>
 
@@ -298,22 +295,7 @@ var RegisterProduct = React.createClass({
             leftButtonTitle: 'Cancel',
             onLeftButtonPress: () => this.props.navigator.pop(),
             title: 'Capture Picture',
-            component: require('./CameraCapture'), //CameraCapture,
-            passProps: {
-                location: this.state.initialPosition,
-                camCallback: this.onReturnedFromCamera,
-                productPosition: position
-            }
-
-        });
-    },
-    onOpenCamera2: function(position){
-
-        this.props.navigator.push({
-            leftButtonTitle: 'Cancel',
-            onLeftButtonPress: () => this.props.navigator.pop(),
-            title: 'Capture Picture',
-            component: require('./CameraCapture2'), //CameraCapture,
+            component: CameraCapture,
             passProps: {
                 location: this.state.initialPosition,
                 camCallback: this.onReturnedFromCamera,
@@ -453,6 +435,13 @@ var styles = StyleSheet.create({
         width: 100,
         height: 100,
         margin: 10,
+        borderColor: 'black',
+        borderWidth: 2
+    },
+    imageText:{
+        fontSize: 18,
+        color: 'black',
+        alignSelf: 'center'
     }
 });
 
