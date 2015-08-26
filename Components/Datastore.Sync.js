@@ -1,7 +1,7 @@
 
+// integrates with fndn-mirror on the server
 
 var Datastore 	= require('./Datastore');
-var Config  	= require('./Datastore.Config');
 var xhr 		= require("xhr");
 
 
@@ -15,10 +15,11 @@ var _tables = [];
 var _stopped = false;
 var _mode = "sync";
 
+
 var jsonHeaders = {
 	'Accept': 'application/json',
 	'Content-Type': 'application/json',
-	'X-Auth-Token': Config.auth_token
+	'X-Auth-Token': Datastore.Config.auth_token
 };
 
 module.exports.Cancel = function(){
@@ -41,8 +42,8 @@ module.exports.Sync = function( progress_cb, completion_cb ){
 	_progress_cb = progress_cb;
 	_completion_cb = completion_cb;
 	
-	// sync all except those in Config.uploadOnly
-	_tables = Config.tables.filter( function(el){ return Config.uploadOnly.indexOf(el) == -1 });
+	// sync all except those in Datastore.Config.uploadOnly
+	_tables = Datastore.Config.tables.filter( function(el){ return Datastore.Config.uploadOnly.indexOf(el) == -1 });
 	//_tables = ["countries"];
 
 	_steps  = _tables.length;
@@ -93,10 +94,10 @@ function _next(){
 		//_start_upload();
 
 		/*
-		for(var t in Config.tables){
+		for(var t in Datastore.Config.tables){
 			console.log("");
-			console.log('Local data in '+ Config.tables[t] +":");
-			console.log( Datastore.all( Config.tables[t] ) );
+			console.log('Local data in '+ Datastore.Config.tables[t] +":");
+			console.log( Datastore.all( Datastore.Config.tables[t] ) );
 		}
 		*/
 	}
@@ -123,13 +124,13 @@ function _check(_table, cb){
 		var x = xhr({
 			'method':'POST', 
 			'json':{list: items},
-			'uri': Config.server +'/'+ _table +'/diff',
+			'uri': Datastore.Config.server +'/'+ _table +'/diff',
 			'headers': {
 				'Accept': 'application/json',
 				'Content-Type': 'application/json',
-				'X-Auth-Token': Config.auth_token
+				'X-Auth-Token': Datastore.Config.auth_token
 			},
-			'timeout': Config.timeout
+			'timeout': Datastore.Config.timeout
 		}, function (err, resp, body){
 				_progress("% Received response for ", _table );
 				//console.log("diff err, resp, body:", err, resp, body );
@@ -192,10 +193,14 @@ function _apply(cmd){
 	_next();
 }
 
+//// upload all Registrations
+
+
+/*
 function _start_upload(){
 	console.log("Starting upload");
 
-	_tables = Config.uploadOnly;
+	_tables = Datastore.Config.uploadOnly;
 	_steps  = _tables.length;
 	_step   = 0;
 	_mode   = "upload";
@@ -203,6 +208,6 @@ function _start_upload(){
 }
 
 function _upload(){
-	console.log('uploading entries in', Config.uploadOnly );
+	console.log('uploading entries in', Datastore.Config.uploadOnly );
 }
-
+*/

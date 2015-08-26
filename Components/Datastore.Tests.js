@@ -1,27 +1,21 @@
 
 var Datastore 	= require('./Datastore');
-var Config  	= require('./Datastore.Config');
-var Network 	= require('./Network');
 var xhr 		= require("xhr");
 
 module.exports.RunNetworkReachabilityTest = function(){
-	Network._serverIsReachable();
+	console.log('');
+	console.log('RunNetworkReachabilityTest');
+	Datastore.Remote.OnReachableStateChanged( function(state){
+		console.log('[Datastore.Tests] OnReachableStateChanged()');
+		console.log('[Datastore.Tests] Datastore.Remote.Reachable: '+ Datastore.Remote.Reachable() );
+		console.log('[Datastore.Tests] Datastore.Remote.ResponseTime: '+ Datastore.Remote.ResponseTime() );
+
+	});
+
+	console.log('[Datastore.Tests] Remote.Reachable: '+ Datastore.Remote.Reachable() );
 }
 
-module.exports.RunSyncTest = function(){
-	console.log('Running DatastoreTests.RunSyncTest');
 
-	DatastoreSync.Sync(
-		// progress:
-		function(step, steps, table){
-			console.log("[Calee] SyncProgress: ", step, steps, table);
-		},
-		// completion
-		function(msg){
-			console.log("[Calee] SyncComplete: ", msg );
-		}
-	);
-}
 
 module.exports.RunDiffTest = function(){
 	console.log('Running DatastoreTests.RunDiffTest');
@@ -31,12 +25,12 @@ module.exports.RunDiffTest = function(){
 
 		xhr({
 			method:'POST',
-			uri: Config.server +'/countries/diff',
+			uri: Datastore.Config.server +'/countries/diff',
 			json:{list:items},
 			'headers': {
 				'Accept': 'application/json',
 				'Content-Type': 'application/json',
-				'X-Auth-Token': Config.auth_token
+				'X-Auth-Token': Datastore.Config.auth_token
 			},
 
 		},
@@ -109,3 +103,66 @@ module.exports.RunDatastoreTests = function(){
 	//console.log('all >  ', Datastore.all(table) );
 
 }
+
+
+module.exports.RunSyncTest = function(){
+	console.log('Running DatastoreTests.RunSyncTest');
+
+	Datastore.Sync(
+		// progress:
+		function(step, steps, table){
+			console.log("[Calee] SyncProgress: ", step, steps, table);
+		},
+		// completion
+		function(msg){
+			console.log("[Calee] SyncComplete: ", msg );
+		}
+	);
+}
+
+
+module.exports.RunUploadTest = function(){
+	console.log('Running DatastoreTests.RunUploadTest');
+	/*var table = "test-uploads";
+
+	var prog_cb = function(msg, i, t){
+		console.log('PROG_CB', msg, i, t);
+	}
+	var comp_cb = function(msg, i, t){
+		console.log('COMP_CB', msg, i, t);
+	}
+
+	RunUploadTest_createSampleData();
+
+	Uploader.upload(table, prog_cb, comp_cb);
+	*/
+
+	Datastore.Upload(
+		// progress:
+		function(step, steps, table){
+			console.log("[Calee] UploadProgress: ", step, steps, table);
+		},
+		// completion
+		function(msg){
+			console.log("[Calee] Uploadcomplete: ", msg );
+		}
+	);
+}
+
+/*
+function RunUploadTest_createSampleData(table){
+	var skel = {"name":"", front:"", back:"", side1:"", side2:""};
+
+	for(var i=0; i<3; i++){
+		var o = Datastore.cloneObject(skel);
+		o.name = "tn_"+ Date.now();
+		o.front = "upload_test_image.jpeg";
+
+		Datastore.put(table, o);
+		console.log('RunUploadTest_createSampleData @ i:', i);
+	}
+
+}
+*/
+
+
