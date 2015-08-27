@@ -109,7 +109,7 @@ var SelectCountry = React.createClass ({
         Datastore.MemoryStore.country = rowData;
 
 		this.props.navigator.push({
-			leftButtonTitle: '< Back',
+			leftButtonTitle: 'Back',
 			onLeftButtonPress: () => this.props.navigator.pop(),
 			title: 'Select Location',
 			component: SelectLocation,

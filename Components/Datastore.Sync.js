@@ -73,7 +73,7 @@ function _stop(){
 
 function _done(){
 	_running = false;
-	_completion_cb("Sync done!", null);
+	_completion_cb("", null);
 }
 
 function _next(){

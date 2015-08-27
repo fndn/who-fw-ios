@@ -4,10 +4,13 @@ var React         	= require('react-native');
 var {
 	AppRegistry,
 	StyleSheet,
-	TabBarIOS,
+	//TabBarIOS,
 	Text,
 	View
 } = React;
+
+var { TabBarIOS, } = require('react-native-icons');
+var TabBarItemIOS = TabBarIOS.Item;
 
 var Introduction  	= require('./Components/Introduction');
 var Registrations 	= require('./Components/Registrations');
@@ -40,7 +43,7 @@ introStyles.controlLabel.normal = {
     fontSize: 17,
     marginBottom: 7,
     fontWeight: '500'
-};//
+};
 
 
 var Datastore = require('./Components/Datastore');
@@ -49,8 +52,16 @@ Datastore.init();
 var FWA = React.createClass({
 
 	getInitialState: function() {
+
+		var self = this;
+		Datastore.Remote.OnReachableStateChanged( function(state){
+			console.log('[index.ios] OnReachableStateChanged()');
+			self.setState({regs: Datastore.countWhereNo("registrations", "uploaded")});
+		});
+
 		return {
-			selectedTab: 'Introduction',
+			selectedTab: 'Sync',
+			regs: 0,
 		};
 	},
 	
@@ -58,21 +69,33 @@ var FWA = React.createClass({
 
 		if( this.state.selectedTab == 'Introduction' ){
 			Form.stylesheet = introStyles;
+			React.StatusBarIOS.setStyle(1, false); // use white statusbar
 		}else{
 			Form.stylesheet = GlobalStyles.formStyle;
+			React.StatusBarIOS.setStyle(0, false); // use dark statusbar 
 		}
 
+		// icons: http://ionicons.com/
+
 		return (
-			<TabBarIOS>
-				<TabBarIOS.Item 
+			<TabBarIOS
+				tintColor={'#4B92DB'}
+				barTintColor={'#ffffff'}
+				>
+				<TabBarIOS.Item
+					iconName={'ion|ios-person'}
+					iconSize={40}
+
 					title='Introduction'
 					selected={this.state.selectedTab === 'Introduction'}
 					onPress={() => {this.setState({ selectedTab: 'Introduction' }) }}>
-
 					<Introduction/>
 				</TabBarIOS.Item>
 				
 				<TabBarIOS.Item 
+					iconName={'ion|pricetag'}
+					iconSize={28}
+
 					title='Registrations'
 					selected={this.state.selectedTab === 'Registrations'}
 					onPress={() => {this.setState({ selectedTab: 'Registrations' }) }}>
@@ -80,14 +103,19 @@ var FWA = React.createClass({
 				</TabBarIOS.Item>
 
 				<TabBarIOS.Item
+					iconName={'ion|ios-cloud-upload'}
+					iconSize={0}
+					systemIcon="history"
+					badgeValue={this.state.regs > 0 ? this.state.regs : undefined}
+
 					title='Sync'
 					selected={this.state.selectedTab === 'Sync'}					
 					onPress={() => {this.setState({ selectedTab: 'Sync' }) }}>
 					<Sync/>
-				</TabBarIOS.Item>								
+				</TabBarIOS.Item>	
+							
 			</TabBarIOS>		
-		)
-
+		);
 	}
 });
 
@@ -111,4 +139,4 @@ var styles = StyleSheet.create({
 });
 
 AppRegistry.registerComponent('FWA', () => FWA);
-//React.StatusBarIOS.setStyle(1, true); // use white statusbar ("light-content")
+React.StatusBarIOS.setStyle(1, true); // use white statusbar ("light-content")

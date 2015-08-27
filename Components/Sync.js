@@ -6,6 +6,8 @@ var Datastore       = require('./Datastore');
 var GlobalStyles 	= require('../Styles/GlobalStyles');
 var ProgressBar 	= require('./Parts/ProgressBar');
 
+var { Icon, } 		= require('react-native-icons');
+
 var {
 	AppRegistry,
 	StyleSheet,
@@ -25,70 +27,107 @@ var Sync = React.createClass({
 	componentDidMount: function(){
 		var self = this;
 		Datastore.Remote.OnReachableStateChanged( function(state){
-			//console.log('[Datastore.Tests] OnReachableStateChanged()');
+			console.log('[Sync] OnReachableStateChanged()');
 			//console.log('[Datastore.Tests] Datastore.Remote.Reachable: '+ Datastore.Remote.Reachable() );
 			//console.log('[Datastore.Tests] Datastore.Remote.ResponseTime: '+ Datastore.Remote.ResponseTime() );
-			var reach = Datastore.Remote.Reachable() ? 'true' : 'false';
-			self.setState({remote_reachable:reach, remote_responseTime: Datastore.Remote.ResponseTime() });
+
+			console.log('[Sync] Datastore.countWhereNo: '+ Datastore.countWhereNo("registrations", "uploaded") );
+			
+
+			self.setState({
+				remote_reachable:    Datastore.Remote.Reachable(),
+				remote_responseTime: Datastore.Remote.ResponseTime()
+			});
 		});
 	},
 
 	getInitialState: function() {
+
+		var _tables = Datastore.Config.tables.filter( function(el){ return Datastore.Config.uploadOnly.indexOf(el) == -1 });//.join(", ");
+		var _last_table = _tables.pop();
+		var tables_str = _tables.join(", ") + " and "+ _last_table;
+
 		return {
-			progress_message: "alo",
+			progress_message: "idle",
 			working: false,
 			has_log: false,
 			progress: 0,
-			remote_reachable: '-',
+			remote_reachable: false,
 			remote_responseTime: '-',
+			tables_str: tables_str
 		};
+	},
+
+	_render_noreach: function(){
+		return (
+			<View style={styles.container}>
+				<View style={styles.page}>
+					<View
+						style={[styles.nr_icontxtlabel_wrap, {marginTop:200}]}>
+						<Icon
+							name='ion|arrow-swap'
+							size={100}
+							color='#DEDEDE'
+							style={styles.nr_icontxtlabel_icon} />
+						<Text style={styles.nr_icontxtlabel_text}>
+							No route to server
+						</Text>
+						<Text style={styles.nr_icontxtlabel_text_p}>
+							The application needs to connect to the internet {"\n"}
+							to upload registrations.{"\n"}
+
+						</Text>
+					</View>
+				</View>
+			</View>
+		);
 	},
 
 	render: function(){
 
-		var tables = Datastore.Config.tables.filter( function(el){ return Datastore.Config.uploadOnly.indexOf(el) == -1 }).join(", ");
+		if( !this.state.remote_reachable ){
+			return this._render_noreach();
+		}
 
-		//var num_regs = Datastore.count("registrations");
 		var num_regs = Datastore.countWhereNo("registrations", "uploaded");
 
-		var num_regs_string = "All registrations has been uploaded.";
-		if( num_regs > 0 ){
-			num_regs_string = 'and upload all your '+ num_regs +' ';
-			num_regs_string += (num_regs == 1) ? 'registration' : 'registrations';
-			num_regs_string += ' to the datastore.'
+		var num_regs_str = "You have no unsaved registrations.";
+		if( num_regs == 1 ){
+			num_regs_str = "You have 1 unsaved registration.";
+		}
+		if( num_regs > 1 ){
+			num_regs_str = "You have "+ num_regs +" unsaved registrations.";
 		}
 
 		var btnORprog = this.state.working
-			? (<TouchableHighlight style={[styles.button, styles.button_active]} onPress = {this.onPressCancelSync} underlayColor='#aaa'>
-				  <Text style={styles.buttonText}>Cancel</Text>
-			 	</TouchableHighlight>)
+				? (<TouchableHighlight style={[styles.button, styles.button_active]} onPress = {this.onPressCancelSync} underlayColor='#aaa'>
+					  <Text style={styles.buttonText}>Cancel</Text>
+				 	</TouchableHighlight>)
 
-			: ( <TouchableHighlight style={styles.button} onPress = {this.onPressSync} underlayColor='#99d9f4'>
-				  <Text style={styles.buttonText}>Sync</Text>
-			 	</TouchableHighlight> );
-
+				: ( <TouchableHighlight style={styles.button} onPress = {this.onPressSync} underlayColor='#99d9f4'>
+					  <Text style={styles.buttonText}>Sync</Text>
+				 	</TouchableHighlight> );
 
 
 		var logview = this.state.has_log 
-			? ( 
-				<View>
-					<Text style={styles.infotext_title}>
-						PROGRESS
-					</Text>
+				? ( <View>
+						<Text style={styles.infotext_title}>
+							PROGRESS
+						</Text>
 
-					<View style={styles.progressbar}><ProgressBar
-						completePercentage={this.state.progress}
-						color={'#48BBEC'}
-						backgroundColor={'#eee'} /></View>
+						<View style={styles.progressbar}><ProgressBar
+							completePercentage={this.state.progress}
+							color={'#48BBEC'}
+							backgroundColor={'#eee'} /></View>
 
-					<ScrollView style={styles.logview} 
-						showsVerticalScrollIndicator={true}
-						automaticallyAdjustContentInsets={false}>
-						<Text style={styles.progress_text_body}>{this.state.progress_message}</Text>
-					</ScrollView>
-				</View>)
+						<ScrollView style={styles.logview} 
+							showsVerticalScrollIndicator={true}
+							automaticallyAdjustContentInsets={false}>
+							<Text style={styles.progress_text_body}>{this.state.progress_message}</Text>
+						</ScrollView>
+					</View>)
 
-			: (<View></View>);
+				: (<View></View>);
 
 
 
@@ -96,33 +135,43 @@ var Sync = React.createClass({
 			<View style={styles.container}>
 			  <View style={styles.page}>
 
-			  	<Text style={styles.infotext}> {/* spacer */} </Text>
-
-			  	<Text style={styles.infotext}>
-					Text about how the Sync function(s) work.{"\n"}
-					The app needs to connect to the internet to... {"\n"}{"\n"}
+				<View
+					style={[styles.nr_icontxtlabel_wrap, {marginTop:25}]}>
+					<Icon
+						name='ion|arrow-swap'
+						size={100}
+						color='#DEDEDE'
+						style={styles.nr_icontxtlabel_icon} />
 					
-					Reachable: {this.state.remote_reachable}{"\n"}
-					ResponseTime: {this.state.remote_responseTime}{"\n"}
-				</Text>
-
-				
-				<View style={styles.infobox}>
-					<Text style={styles.infotext_title}>
-						SYNCHRONISE WITH SERVER
+					<Text style={styles.nr_icontxtlabel_text}>
+						Current response-time: {this.state.remote_responseTime}
 					</Text>
 					
-					<Text style={styles.infotext_body}>This will update</Text>	
-					<Text style={[styles.infotext_body, styles.infotext_tables]}>{tables}</Text>
-					<Text style={styles.infotext_body}>{num_regs_string}</Text>
+					<Text style={styles.nr_icontxtlabel_text_p}>
+						{"\n"}
+						This will synchronise
+					</Text>
+					
+					<Text style={styles.nr_icontxtlabel_text_em}>
+						{this.state.tables_str}
+					</Text>
 
-					{btnORprog}
+					<Text style={styles.nr_icontxtlabel_text_p}>
+						and upload your registrations to the server.{"\n"}
+					</Text>
+					
+					<Text style={styles.nr_icontxtlabel_text_em}>
+						{num_regs_str}{"\n"}
+					</Text>
 
-					{logview}
 				</View>
 
-              </View>
-			</View>);	
+				{btnORprog}
+
+				{logview}
+
+			</View>
+		</View>);	
 	},
 
 	onPressCancelSync: function(){
@@ -211,6 +260,68 @@ module.exports = Sync;
 
 // Local styles
 var styles = StyleSheet.create({
+
+	nr_icontxtlabel_wrap:{
+		flexDirection: 'column',
+		alignItems: 'center',
+		justifyContent: 'center',
+		padding: 5,
+	},
+
+	icontxtlabel_wrap_margintop: {
+		marginTop: 100,
+	},
+
+	nr_icontxtlabel_icon:{
+		width: 100,
+		height: 100,
+	},
+	nr_icontxtlabel_text:{
+		color: '#555',
+		marginTop: 20,
+		fontFamily: 'HelveticaNeue-Medium',
+		fontSize: 15
+	},
+	nr_icontxtlabel_text_p:{
+		flex: 1,
+		color: '#555',
+		fontFamily: 'HelveticaNeue',
+		fontSize: 13,
+		textAlign: 'center'
+	},
+	nr_icontxtlabel_text_em:{
+		flex: 1,
+		color: '#555',
+		fontFamily: 'HelveticaNeue-Medium',
+		fontSize: 13,
+		textAlign: 'center'
+	},
+
+	icontxtlabel_wrap:{
+		backgroundColor: '#ccc',
+		flexDirection: 'row',
+		alignItems: 'center',
+		justifyContent: 'flex-start',
+		padding: 5,
+		marginBottom: 20,
+	},
+	icontxtlabel_icon:{
+		width: 24,
+		height: 24,
+		marginLeft: 5
+	},
+	icontxtlabel_text:{
+		marginLeft: 7,
+		fontFamily: 'HelveticaNeue-Medium',
+		fontSize: 15
+	},
+	icontxtlabel_color_ok: {
+		color: '#555',
+	},
+	icontxtlabel_color_warn: {
+		color: '#FF2851',
+	},
+
 	welcome : {
 		fontSize: 30,
 		color: '#09F'
@@ -222,6 +333,8 @@ var styles = StyleSheet.create({
     page: {
     	padding: 20,
     },
+
+
     button: {
         height: 36,
         backgroundColor: '#48BBEC',
@@ -236,6 +349,10 @@ var styles = StyleSheet.create({
     	backgroundColor: '#ccc',
         borderColor: '#ccc',
     },
+    button_disabled: {
+    	backgroundColor: '#eee',
+        borderColor: '#ccc',
+    },
 
     title: {
         fontSize: 30,
@@ -245,8 +362,16 @@ var styles = StyleSheet.create({
     buttonText: {
         fontSize: 18,
         color: 'white',
-        alignSelf: 'center'
+        alignSelf: 'center',
+        fontFamily: 'HelveticaNeue-Medium',
     },
+    buttonText_noroute: {
+        fontSize: 18,
+        color: '#B3B3B3',
+        alignSelf: 'center',
+        fontFamily: 'HelveticaNeue-Medium',
+    },
+    
 	infotext: {
     	fontSize: 12,
     	marginBottom: 10,
@@ -284,13 +409,15 @@ var styles = StyleSheet.create({
     },
 
     logview: {
-    	backgroundColor: '#B8B8B8',
+    	backgroundColor: '#ccc',
 		padding: 10,
-    	height: 200,
+    	height: 130,
     },
     progress_text_body: {
-    	color: "#666",
+    	fontSize: 13,
+    	color: "#444",
     },
+
     progressbar: {
     }
 
