@@ -28,7 +28,6 @@ var _initialized 		= -1; 	// -1: not ready, 0:loading, 1: ready
 var _init_queue 		= [];
 
 
-
 function _process_init_queue(){
 
 	_initialized = 1;
@@ -52,7 +51,7 @@ function _process_init_queue(){
 
 	//console.log('DS all registrations >  ', Datastore.all('registrations') );
 
-	//console.log('DS all credentials >  ', Datastore.all('credentials') );
+	console.log('DS all credentials >  ', Datastore.all('credentials') );
 
 
 	//DatastoreInit.Run();
@@ -76,16 +75,10 @@ var init = module.exports.init = function( cb ){
 		_initialized = 0;
 		console.log('= Datastore: initializing Datastore');
 
-		var _tables = new Array();
-		_tables = _tables.concat(Config.tables);
-		_tables = _tables.concat(Config.uploadOnly);
-		_tables = _tables.concat(Config.localOnly);
-
 		ReactNativeStore.setDbName( Config.database );
-		ReactNativeStore.createDataBase().then(function(ev){
-			console.log('= Datastore: Created DataBase');
-			_setup();
-		});
+
+		_setup();
+
 	}else{
 		_init_queue.push(cb);
 	}
@@ -93,6 +86,12 @@ var init = module.exports.init = function( cb ){
 
 function _setup(){
 	console.log('= Datastore: Creating Tables');
+
+	var _tables = new Array();
+	_tables = _tables.concat(Config.tables);
+	_tables = _tables.concat(Config.uploadOnly);
+	_tables = _tables.concat(Config.localOnly);
+
 	var len = _tables.length;
 	for(var i = 0; i<len; i++){
 		ReactNativeStore.table( _tables[i] ).then(function(_table){
@@ -358,7 +357,7 @@ function _findTable( _table ){
 	if( Object.keys(Datastore.tables).indexOf(_table) > -1 ){
 		return Datastore.tables[_table];
 	}else{
-		console.log('_findTable '+ _table +' : NOT FOUND');
+		//console.log('_findTable '+ _table +' : NOT FOUND');
 		return false;	
 	}
 }

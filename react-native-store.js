@@ -24,6 +24,7 @@ var Model = function(tableName, databaseData) {
 reactNativeStore.setDbName = function(_name){
     dbName = _name;
     console.log('reactNativeStore Using database:', dbName);
+    
 }
 
 // 创建数据库

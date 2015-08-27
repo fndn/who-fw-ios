@@ -240,10 +240,10 @@ var ValidateProduct = React.createClass({
                 </View>
 
                 <View style={styles.doubleButtonContainer}>
-                    <TouchableHighlight style={[styles.button,styles.button_notlast]} onPress = {this.onPress} underlayColor='#ABF499'>
+                    <TouchableHighlight style={[styles.button,styles.button_notlast]} onPress = {this.onPress} underlayColor='#C8E5F3'>
                         <Text style={GlobalStyles.buttonText}>Submit</Text>
                     </TouchableHighlight>
-                    <TouchableHighlight style={styles.button} onPress = {this.onEdit} underlayColor='#F4B599'>
+                    <TouchableHighlight style={styles.button} onPress = {this.onEdit} underlayColor='#FF92A6'>
                         <Text style={GlobalStyles.buttonText}>Clone & Edit</Text>
                     </TouchableHighlight>
                 </View>
@@ -293,7 +293,7 @@ var ValidateProduct = React.createClass({
 
                 Datastore.add("registrations", newVal);
 
-                //this.props.navigator.pop();
+                this.props.navigator.pop();
             }
         }
     },
@@ -323,7 +323,7 @@ var styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#FF2851',
         borderColor: '#FF2851',
-        borderWidth: 1,
+        borderWidth: 0,
         borderRadius: 8,
         marginBottom: 10,
         alignSelf: 'stretch',

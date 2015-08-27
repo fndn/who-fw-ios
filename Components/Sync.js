@@ -52,7 +52,7 @@ var Sync = React.createClass({
 			working: false,
 			has_log: false,
 			progress: 0,
-			remote_reachable: false,
+			remote_reachable: true,
 			remote_responseTime: '-',
 			tables_str: tables_str
 		};

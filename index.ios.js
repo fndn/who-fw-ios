@@ -56,6 +56,9 @@ var FWA = React.createClass({
 		var self = this;
 		Datastore.Remote.OnReachableStateChanged( function(state){
 			console.log('[index.ios] OnReachableStateChanged()');
+			console.log('[index.ios all credentials >  ', Datastore.all('credentials') );
+			console.log('[index.ios last credentials > ', Datastore.last('credentials') );
+
 			self.setState({regs: Datastore.countWhereNo("registrations", "uploaded")});
 		});
 
