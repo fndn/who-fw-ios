@@ -59,11 +59,20 @@ var styles = React.StyleSheet.create({
 
     },
 
+    /*
     title: {
         fontSize: 30,
         alignSelf: 'center',
         marginBottom: 30
     },
+    */
+    title: {
+        fontSize: 19,
+        marginTop: 40,
+        marginBottom: 20,
+        fontWeight: '500',
+    },
+
     buttonText: {
         fontSize: 18,
         color: 'white',
@@ -89,20 +98,21 @@ var styles = React.StyleSheet.create({
         flex: 1,
         flexDirection: 'row',
         flexWrap: 'wrap',
-        justifyContent: 'center'
+        justifyContent: 'flex-start',
+        width: 300,
     },
     image: {
         width: 100,
         height: 100,
         margin: 10,
-        borderColor: 'black',
+        borderColor: '#555',
         borderWidth: 1,
-        borderRadius: 2
+        borderRadius: 0
     },
     imageText:{
-        fontSize: 18,
-        color: 'black',
-        alignSelf: 'center'
+        fontFamily: 'HelveticaNeue-Medium',
+        fontSize: 15,
+        marginTop: 50,
     },
 
 
@@ -185,7 +195,7 @@ var BORDER_COLOR = '#cccccc';
 var DISABLED_COLOR = '#777777';
 var DISABLED_BACKGROUND_COLOR = '#eeeeee';
 var FONT_SIZE = 17;
-var FONT_WEIGHT = '500';
+var FONT_WEIGHT = '400';
 
 var formStyleSheet = {
     fieldset: {},

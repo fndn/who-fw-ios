@@ -9,8 +9,8 @@ var {
 	View
 } = React;
 
-var { TabBarIOS, } = require('react-native-icons');
-var TabBarItemIOS = TabBarIOS.Item;
+var { TabBarIOS, } 	= require('react-native-icons');
+var TabBarItemIOS 	= TabBarIOS.Item;
 
 var Introduction  	= require('./Components/Introduction');
 var Registrations 	= require('./Components/Registrations');
@@ -60,7 +60,7 @@ var FWA = React.createClass({
 		});
 
 		return {
-			selectedTab: 'Sync',
+			selectedTab: 'Introduction',
 			regs: 0,
 		};
 	},

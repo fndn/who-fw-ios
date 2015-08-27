@@ -36,10 +36,10 @@ var SelectProduct = React.createClass ({
         // Called when select country will be focused next
         navigatorEventListener = this.props.navigator.navigationContext.addListener('willfocus', (event) =>
         {
-            if(event.data.route.component.displayName === "SelectProduct")
+            if(event.data.route.component.displayName === "SelectProduct"){
                 Datastore.all('products', this.dataAvailable);
+            }
             //console.log(event.data.route.component.displayName);
-
         });
     },
 

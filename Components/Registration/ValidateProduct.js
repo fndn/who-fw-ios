@@ -223,29 +223,28 @@ var ValidateProduct = React.createClass({
                 </Text>
 
                 <View style={GlobalStyles.imageGrid}>
-                    <Text style={GlobalStyles.imageText}>Front</Text>
                     <Image style={GlobalStyles.image} source={{ uri: this.state.value.images.front }} />
+                    <Text style={GlobalStyles.imageText}>Front</Text>
                 </View>
                 <View style={GlobalStyles.imageGrid}>
-                    <Text style={GlobalStyles.imageText}>Back</Text>
                     <Image style={GlobalStyles.image} source={{ uri: this.state.value.images.back }} />
-
+                    <Text style={GlobalStyles.imageText}>Back</Text>
                 </View>
                 <View style={GlobalStyles.imageGrid}>
-                    <Text style={GlobalStyles.imageText}>Left</Text>
                     <Image style={GlobalStyles.image} source={{ uri: this.state.value.images.left }} />
+                    <Text style={GlobalStyles.imageText}>Left</Text>
                 </View>
                 <View style={GlobalStyles.imageGrid}>
-                    <Text style={GlobalStyles.imageText}>Right</Text>
                     <Image style={GlobalStyles.image} source={{ uri: this.state.value.images.right }} />
+                    <Text style={GlobalStyles.imageText}>Right</Text>
                 </View>
 
                 <View style={styles.doubleButtonContainer}>
                     <TouchableHighlight style={[styles.button,styles.button_notlast]} onPress = {this.onPress} underlayColor='#ABF499'>
-                        <Text style={GlobalStyles.buttonText}>Use this</Text>
+                        <Text style={GlobalStyles.buttonText}>Submit</Text>
                     </TouchableHighlight>
                     <TouchableHighlight style={styles.button} onPress = {this.onEdit} underlayColor='#F4B599'>
-                        <Text style={GlobalStyles.buttonText}>Use as new</Text>
+                        <Text style={GlobalStyles.buttonText}>Clone & Edit</Text>
                     </TouchableHighlight>
                 </View>
             </ScrollView>
@@ -322,8 +321,8 @@ var styles = StyleSheet.create({
     button: {
         height: 36,
         flex: 1,
-        backgroundColor: '#F56E6E',
-        borderColor: '#F56E6E',
+        backgroundColor: '#FF2851',
+        borderColor: '#FF2851',
         borderWidth: 1,
         borderRadius: 8,
         marginBottom: 10,
@@ -332,8 +331,8 @@ var styles = StyleSheet.create({
     },
     // Green button (Use)
     button_notlast: {
-        backgroundColor: '#A0D16F',
-        borderColor: '#A0D16F',
+        backgroundColor: '#54C7FC',
+        borderColor: '#54C7FC',
         marginRight: 10
     }
 });
