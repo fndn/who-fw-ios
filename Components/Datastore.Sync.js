@@ -3,6 +3,7 @@
 
 var Datastore 	= require('./Datastore');
 var xhr 		= require("xhr");
+var shortid 	= require('shortid');
 
 
 var _running = false;
@@ -29,26 +30,35 @@ module.exports.Cancel = function(){
 	}
 }
 
-module.exports.Sync = function( progress_cb, completion_cb ){
+module.exports.Sync = function( progress_cb, completion_cb, mode ){
 	if( _running ){
 		console.log( "Sync already running" );
 		return;
 	}
 
-	console.log('= Datastore.Sync Starting');
-	_running = true;
-	
+	_running 		= true;
+	_mode   		= mode || "sync";
+	_progress_cb   	= progress_cb;
+	_completion_cb 	= completion_cb;
+	_tables 		= [];
 
-	_progress_cb = progress_cb;
-	_completion_cb = completion_cb;
+	if( _mode == "sync" ){
+		// sync all except those in Datastore.Config.uploadOnly
+		//_tables = Datastore.Config.tables.filter( function(el){ return Datastore.Config.uploadOnly.indexOf(el) == -1 });
+		_tables = Datastore.Config.tables;
 	
-	// sync all except those in Datastore.Config.uploadOnly
-	_tables = Datastore.Config.tables.filter( function(el){ return Datastore.Config.uploadOnly.indexOf(el) == -1 });
-	//_tables = ["countries"];
+	}else if( _mode == "upload" ){
+		_tables = Datastore.Config.uploadOnly;
+	}
 
 	_steps  = _tables.length;
 	_step   = 0;
-	_mode   = "sync";
+
+	console.log("= Datastore.Sync "+ _mode +" starting for ",_tables);
+	if( _tables.length == 0 ){
+		console.log('No tables, calling Done()');
+		_done();
+	}
 
 	_next();
 }
@@ -67,7 +77,7 @@ function _done(){
 }
 
 function _next(){
-	
+
 	if( _stopped ){
 		_stop();
 		return;
@@ -84,22 +94,11 @@ function _next(){
 		if( _mode == "sync" ){
 			_check( _tables[_step] );
 		}else if( _mode == "upload" ){
-			_upload();
+			_upload_table( _tables[_step] );
 		}
 	}else{
-		//_running = false;
-		//_completion_cb("Sync done!", null);
+		
 		_done();
-
-		//_start_upload();
-
-		/*
-		for(var t in Datastore.Config.tables){
-			console.log("");
-			console.log('Local data in '+ Datastore.Config.tables[t] +":");
-			console.log( Datastore.all( Datastore.Config.tables[t] ) );
-		}
-		*/
 	}
 
 	_step ++;
@@ -109,7 +108,130 @@ function _progress(id, type){
 	console.log("_progress:", id, type);
 }
 
-function _check(_table, cb){
+///////////////////////////////////////
+
+var _upl_table = '';
+var _upl_items = [];
+var _upl_steps = 0;
+var _upl_step  = 0;
+
+function _upload_table(_table){
+
+	_step++;
+
+	if( !Datastore.findTable(_table) ){
+		console.log("Datastore.Sync.Check: Unknown table", _table);
+		return _next();
+	}
+
+	// A registration is a composit of other objects
+	// so we create a unique name for them (so they can be stored and indexed like the other datatypes)
+	
+	// Upload each item sequencially to the server
+	// add $uploaded=true on response=ok
+	// and save back to localstorage
+	
+	// then solve its images
+
+	_upl_table = _table;
+
+	Datastore.all(_table, function(items){
+
+
+		console.log('## unfiltered:', items);
+
+		_upl_items = items.filter( function(el){ return !el.uploaded } );
+		_upl_steps = _upl_items.length;
+		_upl_step  = 0;
+
+		console.log('## filtered:', _upl_items);
+		console.log('## filtered _upl_steps:', _upl_steps, "_upl_step:", _upl_step);
+
+		_upl_steps
+
+		if( _upl_steps == 0 ){
+			console.log('Upload: No items to upload in table ', _table);
+			_next();
+
+		}else{
+			console.log("% Starting _upload_items ", items);
+			console.log("_upl_steps:", _upl_steps );
+			_upload_next();
+		}
+	});
+}
+
+function _upload_next(){
+	_progress_cb( (_upl_step+1), _upl_steps, _upl_table );
+
+	if( _upl_step < _upl_steps ){
+		_upload_item( _upl_items[_upl_step] )
+	}else{
+		console.log('all ', _upl_steps, ' records in table ', _upl_table ," uploaded!");
+
+		Datastore.all("registrations", function(items){	
+			items.forEach( function(el){
+				console.log('## Listing Table "registrations":', el.name, "uploaded:", el.uploaded);	
+			});			
+		});
+
+		_next();
+	}
+}
+function _upload_item_uploaded( _item, _response ){
+	//console.log('_upload_item_uploaded: ', _item, _response);
+
+	// Flag as uploaded:
+	_item.uploaded = true;
+
+	// Save it
+	console.log('### _upload_item_uploaded >> MARK AS UPLOADED:', _upl_table, _item._id, _item.name );
+	Datastore.put(_upl_table, _item._id, _item);
+
+
+	_upl_step ++;
+	_upload_next();
+}
+
+function _upload_item( _item){
+	//console.log('## _upload_item', _item);
+
+	xhr({
+		'method':'PUT', 
+		'json':{name: _item.name, data:_item},
+		'uri': Datastore.Config.server +'/'+ _upl_table,
+		'headers': {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json',
+			'X-Auth-Token': Datastore.Config.auth_token
+		},
+		'timeout': Datastore.Config.timeout
+	}, function (err, resp, body){
+			console.log("% Received response for ", _upl_table, body.msg );
+			//console.log("diff err, resp, body:", err, resp, body );
+
+			if( err ){
+				_completion_cb("Network error", true);
+			}else{
+				_upload_item_uploaded( _item, body.msg );
+			}
+			/*
+			}else if( body.status == 'error' ){
+				//_completion_cb("Error: "+ body.msg, true);
+			
+			}else if( body.status == 'ok' ){
+				//_apply( body.msg );
+				console.log('############ upload response', body.msg);
+				_upload_item_uploaded( _item, body.msg );
+ 			}
+ 			*/	
+		}
+	);
+}	
+
+///////////////////////////////////////
+
+function _check(_table){
 	if( !Datastore.findTable(_table) ){
 		console.log("Datastore.Sync.Check: Unknown table", _table);
 		return _next();
@@ -121,7 +243,7 @@ function _check(_table, cb){
 
 		//console.log('%% local items in table', _table, ":", items);
 
-		var x = xhr({
+		xhr({
 			'method':'POST', 
 			'json':{list: items},
 			'uri': Datastore.Config.server +'/'+ _table +'/diff',
@@ -145,14 +267,11 @@ function _check(_table, cb){
      			}
 			}
 		);
-
-		//console.log('############ x', x);
-
 	});
 }
 
 function _apply(cmd){
-	console.log("Datastore.Sync.Merge: cmd", cmd);
+	//console.log("Datastore.Sync.Merge: cmd", cmd);
 
 	/*
 	// Sample response:
@@ -190,24 +309,8 @@ function _apply(cmd){
 	}
 
 	_progress("% Diffing completed for ", table );
+
+	//console.log('_apply:: all in '+ table, Datastore.all(table) );
+
 	_next();
 }
-
-//// upload all Registrations
-
-
-/*
-function _start_upload(){
-	console.log("Starting upload");
-
-	_tables = Datastore.Config.uploadOnly;
-	_steps  = _tables.length;
-	_step   = 0;
-	_mode   = "upload";
-	_progress_cb( _steps, _steps, _tables[_step] );
-}
-
-function _upload(){
-	console.log('uploading entries in', Datastore.Config.uploadOnly );
-}
-*/

@@ -1,16 +1,4 @@
-/**
 
-1. Select Country
-2. Select Area (city, addres, neighbourhood)
-3. List Stores (chain, type)
-4. List Brands (+)
-5. List Products (+)
-5.1 Enter Product info (.....)
-
-
-
-
-**/
 'use strict';
 
 var React 			= require('react-native');
@@ -19,6 +7,7 @@ var SelectCountry 	= require('./Registration/SelectCountry');
 var RegisterCountry = require('./Registration/RegisterCountry');
 
 var {
+	AppRegistry,
 	StyleSheet,
 	View,
 	Text,
@@ -62,10 +51,3 @@ var Registrations = React.createClass ({
 
 module.exports = Registrations;
 
-// Local styles
-var styles = StyleSheet.create({
-	welcome : {
-		fontSize: 30,
-		color: '#444'
-	}
-});

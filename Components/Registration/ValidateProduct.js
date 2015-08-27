@@ -166,9 +166,16 @@ var ValidateProduct = React.createClass({
     componentDidMount: function() {
         navigator.geolocation.getCurrentPosition(
             (initialPosition) => this.setState({initialPosition}),
-            (error) => alert(error.message),
+            (error) => { this._noGPS(error)},
             {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
         );
+    },
+
+    _noGPS: function(err){
+        alert(err.message);
+        //this.setState({'initialPosition':{'coords':{}} });
+        this.setState({'initialPosition':{} });
+
     },
 
 
@@ -259,22 +266,33 @@ var ValidateProduct = React.createClass({
             else {
 
                 var newVal = {};
-                //newVal.product = Datastore.cloneObject(this.state.value); // foodType and ageGroup gets name
-                newVal.product = Datastore.cloneObject(Datastore.MemoryStore.product); // foodType and ageGroup are abbreviations
-                //newVal.product.nutritionalPr100g = Datastore.cloneObject(this.refs.form2.getValue());
-                //newVal.product.nutritionalPrServing = Datastore.cloneObject(this.refs.form3.getValue());
-                //newVal.product.visualInformation = Datastore.cloneObject(this.refs.form4.getValue());
-                //newVal.product.images =
+                newVal.product = Datastore.cloneObject(this.state.value); // foodType and ageGroup gets name
+                //newVal.product = Datastore.cloneObject(Datastore.MemoryStore.product); // foodType and ageGroup are abbreviations
+
                 newVal.brand = Datastore.MemoryStore.brand;
                 newVal.country = Datastore.MemoryStore.country;
                 newVal.location = Datastore.MemoryStore.location;
                 newVal.storeType = Datastore.MemoryStore.storeType;
                 newVal.credentials = Datastore.MemoryStore.credentials;
                 newVal.timeOfRegistration = Date.now(); // UTC in seconds
-                newVal.gpsLocation = this.state.initialPosition.coords;
 
-                console.log("TODO: Register product in registrations");
+                console.log("  this,state", this.state );
+                
+                if( this.state.hasOwnProperty('initialPosition')){
+                    newVal.gpsLocation = this.state.initialPosition;
+                }else{
+                    newVal.gpsLocation = {};
+                }
+
                 console.log("product info validated:", newVal);
+
+                // Create a unique "name":
+                newVal.name = Datastore.ShortID.generate();
+
+                // Strip local _id fields
+                newVal = Datastore.removeIDs( newVal );
+
+                Datastore.add("registrations", newVal);
 
                 //this.props.navigator.pop();
             }

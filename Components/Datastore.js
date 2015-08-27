@@ -11,29 +11,29 @@ module.exports.Remote   = Remote;
 var DatastoreSync 		= require('./Datastore.Sync');
 module.exports.Sync   	= DatastoreSync.Sync;
 
-var DatastoreUpload 	= require('./Datastore.Upload');
-module.exports.Upload 	= DatastoreUpload.Upload;
-
 var DatastoreInit 		= require('./Datastore.Init.Server');
 var DatastoreTests 		= require('./Datastore.Tests');
 
+var shortid 			= require('shortid');
+module.exports.ShortID  = shortid;
 
-var MemoryStore = module.exports.MemoryStore = {};	// shared global store
+var MemoryStore 		= module.exports.MemoryStore = {};	// shared global store
 
 
 var Datastore 	 		= {};
 Datastore.tables 		= {}; 	// memorymapped async store
 
-var _instance = false; 	// ensure singleton
-var _initialized = -1; 	// -1: not ready, 0:loading, 1: ready
-var _init_queue = [];
-
+var _instance 			= false; 	// ensure singleton
+var _initialized 		= -1; 	// -1: not ready, 0:loading, 1: ready
+var _init_queue 		= [];
 
 
 
 function _process_init_queue(){
 
 	_initialized = 1;
+
+	//console.log("= Datastore: _process_init_queue", _init_queue);
 
 	if( _init_queue.length ){
 		console.log("= Datastore: Processing Queue");
@@ -48,17 +48,20 @@ function _process_init_queue(){
 
 	// Run tests ----------------------------------------------------
 
-	console.log('DS all countries >  ', Datastore.all('countries') );
+	//console.log('DS all countries >  ', Datastore.all('countries') );
 
-	//console.log('DS all locations >  ', Datastore.all('locations') );
-	
+	//console.log('DS all registrations >  ', Datastore.all('registrations') );
+
+	//console.log('DS all credentials >  ', Datastore.all('credentials') );
+
+
 	//DatastoreInit.Run();
 
 	//DatastoreTests.RunDatastoreTests();
 	//DatastoreTests.RunDiffTest();
 	
 
-	DatastoreTests.RunNetworkReachabilityTest();
+	//DatastoreTests.RunNetworkReachabilityTest();
 	
 
 	//DatastoreTests.RunSyncTest();
@@ -73,12 +76,24 @@ var init = module.exports.init = function( cb ){
 		_initialized = 0;
 		console.log('= Datastore: initializing Datastore =');
 
+		var _tables = new Array();
+		_tables = _tables.concat(Config.tables);
+		_tables = _tables.concat(Config.uploadOnly);
+		_tables = _tables.concat(Config.localOnly);
+
 		ReactNativeStore.setDbName( Config.database );
 
-		var len = Config.tables.length;
+		var len = _tables.length;
 		for(var i = 0; i<len; i++){
-			ReactNativeStore.table( Config.tables[i] ).then(function(_table){
+			ReactNativeStore.table( _tables[i] ).then(function(_table){
+
+				//console.log('_table', _table);
+
+				if( _table.tableName == "registrations"){
+					//_table.removeAll();	
+				}
 				//_table.removeAll(); // reset local store
+
 				console.log("Connecting table "+ _table.tableName );
 				Datastore.tables[_table.tableName] = _table;
 				if( Object.keys(Datastore.tables).length == len ){
@@ -101,6 +116,17 @@ Datastore.count = module.exports.count = function(_table){
 	}
 }
 
+Datastore.countWhereNo = module.exports.countWhereNo = function(_table, key){
+	var table = _findTable(_table);
+	if( table ){
+		var items = table.findAll();
+		items = items.filter( function(el){ return !el[key] } );
+		return items.length;
+	}
+}
+
+
+
 // findAll, returns list
 Datastore.all = module.exports.all = function(_table, cb){
 
@@ -116,23 +142,33 @@ Datastore.all = module.exports.all = function(_table, cb){
 		
 		var obj;
 
-		if( _table == 'locations'){
-			// filter by country
-			console.log("DATASTORE: FILTERING ", _table, " on MS.COUNTRY", MemoryStore.country.name,  "MemoryStore:", MemoryStore );
-			obj = table.where({'country': MemoryStore.country.name}).find();
-		
-		}else if( _table == 'products' ){
-			// filter by brand
-			console.log("CDATASTORE: FILTERING ", _table, " on MS.BRAND", MemoryStore.brand.name,  "MemoryStore:", MemoryStore );
-			obj = table.where({'brand': MemoryStore.brand.name}).find();
+		if( _table == 'registrations' ){
+			
+			//console.log('### registrations DBB', table );
+			obj = table.findAll();
 
 		}else{
-			// un-filtered
-			console.log("DATASTORE: all@"+ _table );
-			obj = table.findAll();
-		}
 
-		obj = sortByKey(obj, "name");
+			if( _table == 'locations' &&  MemoryStore.country ){
+				// filter by country
+				console.log("DATASTORE: FILTERING ", _table, " on MS.COUNTRY", MemoryStore.country.name,  "MemoryStore:", MemoryStore );
+				obj = table.where({'country': MemoryStore.country.name}).find();
+			
+			}else if( _table == 'products' &&  MemoryStore.brand ){
+				// filter by brand
+				console.log("CDATASTORE: FILTERING ", _table, " on MS.BRAND", MemoryStore.brand.name,  "MemoryStore:", MemoryStore );
+				obj = table.where({'brand': MemoryStore.brand.name}).find();
+
+			}else{
+				// un-filtered
+				//console.log("DATASTORE: all@"+ _table );
+				obj = table.findAll();
+			}
+
+			obj = sortByKey(obj, "name");
+
+		}
+		
 
 		if( typeof cb == 'function'){
         	cb(obj);
@@ -181,18 +217,28 @@ Datastore.all = module.exports.all = function(_table, cb){
 Datastore.one = module.exports.one = function(_table, _id){
 	var table = _findTable(_table);
 	if( table ){
-		return table.get(_id);
+		return table.get(_id)[0];
 	}
 }
+
+
+// returns the record with highest _id
+Datastore.last = module.exports.last = function(_table){
+	var table = _findTable(_table);
+	if( table ){
+		return (table.findAll()).slice(-1)[0];
+	}
+}
+
 
 // create, returns insertID
 Datastore.add = module.exports.add = function(_table, _obj){
 	var table = _findTable(_table);
 	if( table ){
 
-		console.log('add _obj', _obj, typeof _obj);
+		//console.log('DS '+ _table +' add _obj', typeof _obj, _obj, "name:", _obj.name);
 
-		//TODO: Duplicate check ?
+		//TODO: Do we need a Duplicate check ?
 
 		/*
 		//console.log("adding obj 1:", _obj, typeof _obj, Object.keys(_obj), DefaultData[_table], DefaultData[_table][0]);
@@ -211,8 +257,9 @@ Datastore.add = module.exports.add = function(_table, _obj){
 		});
 		console.log('Adding', obj, 'to', _table);
 		*/
-
-		return table.add(_obj);
+		var ok = table.add(_obj);
+		console.log('DS '+ _table +' add _obj >> ', ok);
+		return ok;
 	}
 }
 
@@ -228,30 +275,50 @@ Datastore.del = module.exports.del = function(_table, _id){
 
 // findOneAndUpdate, updates key (single or object) in an existing record 
 Datastore.put = module.exports.put = function(_table, _id, _key, _val){
+	console.log("Datastore.put() called with", _table, _id, _key, _val);
 	var table = _findTable(_table);
 	if( table ){
-		var data = table.get(_id)[0];
-		if( typeof _key === 'string'){
-			data[_key] = _val;
-		}else{
-			// assume key is an object
-			for( var k in _key){
-				data[k] = _key[k];
-			}
+		var data;
+		try {
+			data = table.get(_id);
+		}catch(e){
+			console.log('FIRST PUT Error', e);
+			console.log('  table', table);
+			console.log('  this.databaseData[this.tableName]:', this.databaseData[this.tableName]);
+			//return table.add(_key);
+			return;
 		}
-		return table.updateById(_id, data);
+
+		console.log("Datastore.put:", _table, data, typeof data );
+		if( data == undefined ){
+			console.log("Datastore.put ADDING");
+			return table.add(_key);
+		}else{
+			if( data.length > 0 ) data = data[0];
+			console.log("Datastore.put UPDATING");
+			if( typeof _key === 'string'){
+				data[_key] = _val;
+			}else{
+				// assume key is an object
+				for( var k in _key){
+					data[k] = _key[k];
+				}
+			}
+			return table.updateById(_id, data);
+		}
 	}
 }
 
 // Internal
 
 // Creates a new record if it does not exist
-Datastore.putx = function(_table, _obj){
+Datastore.putx = module.exports.putx = function(_table, _obj){
 	var table = _findTable(_table);
 	if( table ){
 		var data = table.where( _obj  ).limit(1).find();
-		//console.log(_table, '@1 data', data, data.length);
-		if( data.length == 0 ){
+		console.log("Datastore.putx:", _table, '@1 data', data, data.length);
+		//if( data.length == 0 ){
+		if( data == undefined ){
 			// item does not exist. Add it.
 			return table.add(_obj);
 		}else{
@@ -292,6 +359,8 @@ function _findTable( _table ){
 }
 module.exports.findTable = _findTable;
 
+
+
 // http://stackoverflow.com/a/14463464/1993842
 
 /*
@@ -304,6 +373,11 @@ function sortByKey(array, key) {
 */
 function sortByKey(array, key) {
     return array.sort(function(a, b) {
+
+    	if( !a.hasOwnProperty(key) || !a.hasOwnProperty(key) ){
+    		return false;
+    	}
+
         var x = a[key];
         var y = b[key];
 
@@ -326,5 +400,47 @@ var cloneObject = module.exports.cloneObject = function(o){
 	return r;
 };
 
+function remove_ids(objArr){
 
+	//console.log('---------- IN ----------');
+	//console.log(objArr);
+	//console.log('------------------------');
 
+	var rarr = {};
+	for(var a in objArr){
+		var robj = {};
+		//console.log('remove_ids > typeof objArr[a]', typeof objArr[a], objArr[a]);
+		if( objArr[a] == null || typeof objArr[a] != 'object' ){
+			rarr[a] = objArr[a];
+		}else{
+			var keys = Object.keys( objArr[a] );
+			for( var k in keys ){
+				var key = keys[k] 
+				if( key != '_id' ){
+					robj[ key ] = _remove_ids( objArr[a][key] ); 
+				}
+			}
+			rarr[a] = robj;
+		}
+	}
+	//console.log('---------- OUT ----------');
+	//console.log(rarr);
+	//console.log('--------------------------');
+
+	return rarr;
+}
+function _remove_ids(obj){
+	//console.log('_remove_ids > typeof obj', typeof obj, obj);
+	if( obj == null || typeof obj != 'object' ) return obj;
+	
+	var robj = {};
+	var keys = Object.keys( obj );
+	for( var k in keys ){
+		var key = keys[k];
+		if( key != '_id' ){
+			robj[ key ] = obj[key]; 
+		}
+	}
+	return robj;
+}
+module.exports.removeIDs = remove_ids;

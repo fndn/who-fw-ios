@@ -7,6 +7,7 @@ var GlobalStyles 	= require('../Styles/GlobalStyles');
 var ProgressBar 	= require('./Parts/ProgressBar');
 
 var {
+	AppRegistry,
 	StyleSheet,
 	View,
 	ScrollView,
@@ -17,15 +18,29 @@ var {
 	ActivityIndicatorIOS
 } = React;
 
+var _buffer = "";
 
 var Sync = React.createClass({
+
+	componentDidMount: function(){
+		var self = this;
+		Datastore.Remote.OnReachableStateChanged( function(state){
+			//console.log('[Datastore.Tests] OnReachableStateChanged()');
+			//console.log('[Datastore.Tests] Datastore.Remote.Reachable: '+ Datastore.Remote.Reachable() );
+			//console.log('[Datastore.Tests] Datastore.Remote.ResponseTime: '+ Datastore.Remote.ResponseTime() );
+			var reach = Datastore.Remote.Reachable() ? 'true' : 'false';
+			self.setState({remote_reachable:reach, remote_responseTime: Datastore.Remote.ResponseTime() });
+		});
+	},
 
 	getInitialState: function() {
 		return {
 			progress_message: "alo",
 			working: false,
 			has_log: false,
-			progress: 0
+			progress: 0,
+			remote_reachable: '-',
+			remote_responseTime: '-',
 		};
 	},
 
@@ -33,9 +48,10 @@ var Sync = React.createClass({
 
 		var tables = Datastore.Config.tables.filter( function(el){ return Datastore.Config.uploadOnly.indexOf(el) == -1 }).join(", ");
 
-		var num_regs = Datastore.count("registrations");
-		
-		var num_regs_string = "You have not made any registrations.";
+		//var num_regs = Datastore.count("registrations");
+		var num_regs = Datastore.countWhereNo("registrations", "uploaded");
+
+		var num_regs_string = "All registrations has been uploaded.";
 		if( num_regs > 0 ){
 			num_regs_string = 'and upload all your '+ num_regs +' ';
 			num_regs_string += (num_regs == 1) ? 'registration' : 'registrations';
@@ -84,7 +100,10 @@ var Sync = React.createClass({
 
 			  	<Text style={styles.infotext}>
 					Text about how the Sync function(s) work.{"\n"}
-					The app needs to connect to the internet to... {"\n"}
+					The app needs to connect to the internet to... {"\n"}{"\n"}
+					
+					Reachable: {this.state.remote_reachable}{"\n"}
+					ResponseTime: {this.state.remote_responseTime}{"\n"}
 				</Text>
 
 				
@@ -111,8 +130,18 @@ var Sync = React.createClass({
 	},
 
 	onPressSync: function(){
+
+		//console.log('DS all registrations >  ', Datastore.all('registrations') );
+
+		_buffer = "";
+
+		this._startSync();
+	},
+
+	_startSync: function(){
+		_buffer += "Starting Two-way Sync\n";
+		
 		var self = this;
-		var _buffer = "";
 		this.setState({working:true, has_log:true});
 		Datastore.Sync(
 			// progress:
@@ -131,13 +160,50 @@ var Sync = React.createClass({
 				if( error ){
 					_buffer = msg;
 				}else{
-					_buffer += msg +"\n";	
+					//_buffer += msg +"\n";
+					_buffer += "Sync done.\n\n";
+				}
+				
+				//self.setState({progress_message:_buffer, working:false, progress:0});
+				self._startUpload();
+			},
+			// mode:
+			"sync"
+		);
+	},
+
+	_startUpload: function(){
+		_buffer += "Starting Upload\n";
+
+		var self = this;
+		this.setState({working:true, has_log:true});
+		Datastore.Sync(
+			// progress:
+			function(step, steps, table){
+				console.log("[Calee] UploadProgress: ", step, steps, table);
+				_buffer += step +"/"+ steps +" : "+ table +"\n";
+
+				// 3 / 6 = 50
+				var percent =  (step / steps) * 100;
+
+				self.setState({progress_message:_buffer, progress:percent});
+			},
+			// completion
+			function(msg, error){
+				console.log("[Calee] UploadComplete: ", msg );
+				if( error ){
+					_buffer = msg;
+				}else{
+					//_buffer += msg +"\n";	
+					_buffer += "Upload done.\n";
 				}
 				
 				self.setState({progress_message:_buffer, working:false, progress:0});
-			}
+			},
+			// mode:
+			"upload"
 		);
-	},
+	}
 
 });
 

@@ -30,7 +30,6 @@ var RegisterCountry = React.createClass({
     //    super(props);
     //}
 
-
     render: function(){
         return (
             <ScrollView style={GlobalStyles.scrollViewList}>

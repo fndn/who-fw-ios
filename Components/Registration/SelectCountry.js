@@ -18,9 +18,16 @@ var {
 } = React;
 
 var navigatorEventListener;
+
 var SelectCountry = React.createClass ({
 
+	getInitialState: function() {
+		//console.log('SelectCountry getInitialState');
+		return null;
+	},
+
 	componentWillMount: function(){
+		//console.log('SelectCountry componentWillMount');
 		//super(props);
 		var dataSource = new ListView.DataSource({rowHasChanged: (r1, r2) => r1["_id"] !== r2["_id"] });
 		this.state = {
@@ -38,14 +45,17 @@ var SelectCountry = React.createClass ({
             }
             
         });
+
+        Datastore.all('countries', this.dataAvailable);
 	},
 
     componentDidMount: function(){
+    	//console.log('SelectCountry componentDidMount');
 		Datastore.all('countries', this.dataAvailable);
     },
 
 	dataAvailable: function(_data){
-		console.log('SelectCountry dataAvailable', _data);
+		//console.log('SelectCountry dataAvailable', _data);
 		this.setState({
 			isLoading:false,
 			message:'loaded',

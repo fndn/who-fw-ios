@@ -116,7 +116,9 @@ module.exports.RunSyncTest = function(){
 		// completion
 		function(msg){
 			console.log("[Calee] SyncComplete: ", msg );
-		}
+		},
+		// mode:
+		"sync"
 	);
 }
 
@@ -137,7 +139,7 @@ module.exports.RunUploadTest = function(){
 	Uploader.upload(table, prog_cb, comp_cb);
 	*/
 
-	Datastore.Upload(
+	Datastore.Sync(
 		// progress:
 		function(step, steps, table){
 			console.log("[Calee] UploadProgress: ", step, steps, table);
@@ -145,7 +147,9 @@ module.exports.RunUploadTest = function(){
 		// completion
 		function(msg){
 			console.log("[Calee] Uploadcomplete: ", msg );
-		}
+		},
+		// mode:
+		"upload"
 	);
 }
 

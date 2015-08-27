@@ -49,7 +49,7 @@ var jsonHeaders = {
 	'X-Auth-Token': Datastore.Config.auth_token
 };
 
-module.exports.upload = function(table, progress_cb, completion_cb){
+module.exports.Upload = function(table, progress_cb, completion_cb){
 	if( _running ){
 		console.log( "Upload already running" );
 		return;
