@@ -74,7 +74,7 @@ var init = module.exports.init = function( cb ){
 	if( !_instance ){
 		_instance = true;
 		_initialized = 0;
-		console.log('= Datastore: initializing Datastore =');
+		console.log('= Datastore: initializing Datastore');
 
 		var _tables = new Array();
 		_tables = _tables.concat(Config.tables);
@@ -82,31 +82,36 @@ var init = module.exports.init = function( cb ){
 		_tables = _tables.concat(Config.localOnly);
 
 		ReactNativeStore.setDbName( Config.database );
-
-		var len = _tables.length;
-		for(var i = 0; i<len; i++){
-			ReactNativeStore.table( _tables[i] ).then(function(_table){
-
-				//console.log('_table', _table);
-
-				if( _table.tableName == "registrations"){
-					//_table.removeAll();	
-				}
-				//_table.removeAll(); // reset local store
-
-				console.log("Connecting table "+ _table.tableName );
-				Datastore.tables[_table.tableName] = _table;
-				if( Object.keys(Datastore.tables).length == len ){
-					_process_init_queue();
-				}
-			});
-		}
-		
+		ReactNativeStore.createDataBase().then(function(ev){
+			console.log('= Datastore: Created DataBase');
+			_setup();
+		});
 	}else{
 		_init_queue.push(cb);
 	}
 }
 
+function _setup(){
+	console.log('= Datastore: Creating Tables');
+	var len = _tables.length;
+	for(var i = 0; i<len; i++){
+		ReactNativeStore.table( _tables[i] ).then(function(_table){
+
+			//console.log('_table', _table);
+
+			if( _table.tableName == "registrations"){
+				//_table.removeAll();	
+			}
+			//_table.removeAll(); // reset local store
+
+			console.log("Connecting table "+ _table.tableName );
+			Datastore.tables[_table.tableName] = _table;
+			if( Object.keys(Datastore.tables).length == len ){
+				_process_init_queue();
+			}
+		});
+	}
+}
 
 // returns count of items in a table
 Datastore.count = module.exports.count = function(_table){

@@ -72,7 +72,7 @@ var Introduction = React.createClass ({
     onChange: function(value){
         Datastore.MemoryStore.credentials = value;
         this.setState({value:value});
-        Datastore.put("credentials", 1, value);
+        Datastore.add("credentials", value);
     }
 
 
