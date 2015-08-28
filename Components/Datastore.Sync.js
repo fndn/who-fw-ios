@@ -44,8 +44,10 @@ module.exports.Sync = function( progress_cb, completion_cb, mode ){
 
 	if( _mode == "sync" ){
 		// sync all except those in Datastore.Config.uploadOnly
-		//_tables = Datastore.Config.tables.filter( function(el){ return Datastore.Config.uploadOnly.indexOf(el) == -1 });
+		
 		_tables = Datastore.Config.tables;
+		//_tables = ["countries"]; // for testing 
+
 	
 	}else if( _mode == "upload" ){
 		_tables = Datastore.Config.uploadOnly;

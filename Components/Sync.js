@@ -31,9 +31,18 @@ var Sync = React.createClass({
 			//console.log('[Datastore.Tests] Datastore.Remote.Reachable: '+ Datastore.Remote.Reachable() );
 			//console.log('[Datastore.Tests] Datastore.Remote.ResponseTime: '+ Datastore.Remote.ResponseTime() );
 
-			console.log('[Sync] Datastore.countWhereNo: '+ Datastore.countWhereNo("registrations", "uploaded") );
+			//console.log('[Sync] Datastore.countWhereNo: '+ Datastore.countWhereNo("registrations", "uploaded") );
 			
+			self.setState({
+				remote_reachable:    Datastore.Remote.Reachable(),
+				remote_responseTime: Datastore.Remote.ResponseTime()
+			});
 
+		});
+
+		Datastore.OnChange( "registrations", function(data){
+			console.log('[Sync] Datastore registrations OnChange() > countWhereNo: '+ Datastore.countWhereNo("registrations", "uploaded") );
+			
 			self.setState({
 				remote_reachable:    Datastore.Remote.Reachable(),
 				remote_responseTime: Datastore.Remote.ResponseTime()
@@ -185,6 +194,13 @@ var Sync = React.createClass({
 		_buffer = "";
 
 		this._startSync();
+		//this._startImageUpload(); // move to completion handler in _startUpload
+	},
+
+	_startImageUpload: function(){
+		_buffer += "Starting Image upload\n";
+		console.log('DS all registrations >  ', Datastore.all('registrations') );
+
 	},
 
 	_startSync: function(){
@@ -213,7 +229,7 @@ var Sync = React.createClass({
 					_buffer += "Sync done.\n\n";
 				}
 				
-				//self.setState({progress_message:_buffer, working:false, progress:0});
+				self.setState({progress_message:_buffer, working:false, progress:0});
 				self._startUpload();
 			},
 			// mode:
@@ -223,9 +239,10 @@ var Sync = React.createClass({
 
 	_startUpload: function(){
 		_buffer += "Starting Upload\n";
+		this.setState({working:true, has_log:true});
 
 		var self = this;
-		this.setState({working:true, has_log:true});
+		
 		Datastore.Sync(
 			// progress:
 			function(step, steps, table){
@@ -248,6 +265,7 @@ var Sync = React.createClass({
 				}
 				
 				self.setState({progress_message:_buffer, working:false, progress:0});
+				self._startImageUpload();
 			},
 			// mode:
 			"upload"

@@ -29,6 +29,13 @@
 		4B37ED141B849680005F7E6F /* Material-Design-Iconic-Font.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4B37ED0F1B849680005F7E6F /* Material-Design-Iconic-Font.ttf */; };
 		4B37ED151B849680005F7E6F /* zocial-regular-webfont.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4B37ED101B849680005F7E6F /* zocial-regular-webfont.ttf */; };
 		4B6A50551B8DEDB70066C4E5 /* libRCTCamera.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B6A50541B8DED9E0066C4E5 /* libRCTCamera.a */; };
+		4B88C6151B904D71006228A5 /* libTestFairy.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B88C6121B904D71006228A5 /* libTestFairy.a */; };
+		4B88C6161B904D71006228A5 /* upload-dsym.sh in Resources */ = {isa = PBXBuildFile; fileRef = 4B88C6141B904D71006228A5 /* upload-dsym.sh */; };
+		4B88C6191B904D8D006228A5 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B88C6171B904D8D006228A5 /* CoreMedia.framework */; };
+		4B88C61A1B904D8D006228A5 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B88C6181B904D8D006228A5 /* CoreMotion.framework */; };
+		4B88C61C1B904D94006228A5 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B88C61B1B904D94006228A5 /* AVFoundation.framework */; };
+		4B88C61E1B904D9C006228A5 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B88C61D1B904D9C006228A5 /* SystemConfiguration.framework */; };
+		4B88C6201B904DA4006228A5 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B88C61F1B904DA4006228A5 /* OpenGLES.framework */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 /* End PBXBuildFile section */
 
@@ -153,6 +160,14 @@
 		4B37ED0F1B849680005F7E6F /* Material-Design-Iconic-Font.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Material-Design-Iconic-Font.ttf"; path = "node_modules/react-native-icons/ios/ReactNativeIcons/Libraries/FontAwesomeKit/Material-Design-Iconic-Font.ttf"; sourceTree = "<group>"; };
 		4B37ED101B849680005F7E6F /* zocial-regular-webfont.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "zocial-regular-webfont.ttf"; path = "node_modules/react-native-icons/ios/ReactNativeIcons/Libraries/FontAwesomeKit/zocial-regular-webfont.ttf"; sourceTree = "<group>"; };
 		4B6A504F1B8DED9E0066C4E5 /* RCTCamera.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTCamera.xcodeproj; path = "node_modules/react-native-camera/RCTCamera.xcodeproj"; sourceTree = "<group>"; };
+		4B88C6121B904D71006228A5 /* libTestFairy.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libTestFairy.a; sourceTree = "<group>"; };
+		4B88C6131B904D71006228A5 /* TestFairy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestFairy.h; sourceTree = "<group>"; };
+		4B88C6141B904D71006228A5 /* upload-dsym.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = "upload-dsym.sh"; sourceTree = "<group>"; };
+		4B88C6171B904D8D006228A5 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
+		4B88C6181B904D8D006228A5 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
+		4B88C61B1B904D94006228A5 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		4B88C61D1B904D9C006228A5 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		4B88C61F1B904DA4006228A5 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -169,6 +184,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4B88C6201B904DA4006228A5 /* OpenGLES.framework in Frameworks */,
+				4B88C61E1B904D9C006228A5 /* SystemConfiguration.framework in Frameworks */,
+				4B88C61C1B904D94006228A5 /* AVFoundation.framework in Frameworks */,
+				4B88C6191B904D8D006228A5 /* CoreMedia.framework in Frameworks */,
+				4B88C61A1B904D8D006228A5 /* CoreMotion.framework in Frameworks */,
 				4B6A50551B8DEDB70066C4E5 /* libRCTCamera.a in Frameworks */,
 				4B37ED0B1B849632005F7E6F /* libReactNativeIcons.a in Frameworks */,
 				146834051AC3E58100842450 /* libReact.a in Frameworks */,
@@ -177,6 +197,7 @@
 				00C302E81ABCBA2D00DB3ED1 /* libRCTImage.a in Frameworks */,
 				133E29F31AD74F7200F7D852 /* libRCTLinking.a in Frameworks */,
 				00C302E91ABCBA2D00DB3ED1 /* libRCTNetwork.a in Frameworks */,
+				4B88C6151B904D71006228A5 /* libTestFairy.a in Frameworks */,
 				139105C61AF99C1200B5F7CC /* libRCTSettings.a in Frameworks */,
 				832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */,
 				00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */,
@@ -298,6 +319,33 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		4B88C6111B904D71006228A5 /* TestFairySDK-1.4.6 */ = {
+			isa = PBXGroup;
+			children = (
+				4B88C61F1B904DA4006228A5 /* OpenGLES.framework */,
+				4B88C61D1B904D9C006228A5 /* SystemConfiguration.framework */,
+				4B88C61B1B904D94006228A5 /* AVFoundation.framework */,
+				4B88C6171B904D8D006228A5 /* CoreMedia.framework */,
+				4B88C6181B904D8D006228A5 /* CoreMotion.framework */,
+				4B88C6121B904D71006228A5 /* libTestFairy.a */,
+				4B88C6131B904D71006228A5 /* TestFairy.h */,
+				4B88C6141B904D71006228A5 /* upload-dsym.sh */,
+			);
+			path = "TestFairySDK-1.4.6";
+			sourceTree = "<group>";
+		};
+		4B88C6211B904DC5006228A5 /* Assets */ = {
+			isa = PBXGroup;
+			children = (
+				4B37ED0C1B849680005F7E6F /* FontAwesome.otf */,
+				4B37ED0D1B849680005F7E6F /* foundation-icons.ttf */,
+				4B37ED0E1B849680005F7E6F /* ionicons.ttf */,
+				4B37ED0F1B849680005F7E6F /* Material-Design-Iconic-Font.ttf */,
+				4B37ED101B849680005F7E6F /* zocial-regular-webfont.ttf */,
+			);
+			name = Assets;
+			sourceTree = "<group>";
+		};
 		78C398B11ACF4ADC00677621 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -336,13 +384,10 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				4B37ED0C1B849680005F7E6F /* FontAwesome.otf */,
-				4B37ED0D1B849680005F7E6F /* foundation-icons.ttf */,
-				4B37ED0E1B849680005F7E6F /* ionicons.ttf */,
-				4B37ED0F1B849680005F7E6F /* Material-Design-Iconic-Font.ttf */,
-				4B37ED101B849680005F7E6F /* zocial-regular-webfont.ttf */,
 				13B07FAE1A68108700A75B9A /* FWA */,
+				4B88C6211B904DC5006228A5 /* Assets */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
+				4B88C6111B904D71006228A5 /* TestFairySDK-1.4.6 */,
 				00E356EF1AD99517003FC87E /* FWATests */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 			);
@@ -387,6 +432,7 @@
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
+				4B88C6221B904E49006228A5 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -584,6 +630,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4B37ED111B849680005F7E6F /* FontAwesome.otf in Resources */,
+				4B88C6161B904D71006228A5 /* upload-dsym.sh in Resources */,
 				4B37ED121B849680005F7E6F /* foundation-icons.ttf in Resources */,
 				4B37ED131B849680005F7E6F /* ionicons.ttf in Resources */,
 				4B37ED141B849680005F7E6F /* Material-Design-Iconic-Font.ttf in Resources */,
@@ -595,6 +642,22 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		4B88C6221B904E49006228A5 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "#sh \"$(SRCROOT)/TestFairySDK-1.4.6/upload-dsym.sh\" -d 870018c556f3d6dc9e879ac2842f1445f8638693";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		00E356EA1AD99517003FC87E /* Sources */ = {
@@ -689,6 +752,10 @@
 				);
 				INFOPLIST_FILE = iOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/TestFairySDK-1.4.6",
+				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = FWA;
 				PROVISIONING_PROFILE = "";
@@ -710,6 +777,10 @@
 				);
 				INFOPLIST_FILE = iOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/TestFairySDK-1.4.6",
+				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = FWA;
 				PROVISIONING_PROFILE = "";

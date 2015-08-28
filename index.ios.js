@@ -47,23 +47,36 @@ introStyles.controlLabel.normal = {
 
 
 var Datastore = require('./Components/Datastore');
-Datastore.init();
+//Datastore.init();
 
 var FWA = React.createClass({
 
 	getInitialState: function() {
 
 		var self = this;
+
+		Datastore.init(function(){
+			console.log('[index.ios] Datastore init CB');
+			self.setState({regs: Datastore.countWhereNo("registrations", "uploaded")});
+		});
+
+		/*
 		Datastore.Remote.OnReachableStateChanged( function(state){
 			console.log('[index.ios] OnReachableStateChanged()');
-			console.log('[index.ios all credentials >  ', Datastore.all('credentials') );
+			//console.log('[index.ios all credentials >  ', Datastore.all('credentials') );
 			console.log('[index.ios last credentials > ', Datastore.last('credentials') );
 
+			//self.setState({regs: Datastore.countWhereNo("registrations", "uploaded")});
+		});
+		*/
+		
+		Datastore.OnChange( "registrations", function(data){
+			console.log('[index.ios] Datastore registrations OnChange()', data);
 			self.setState({regs: Datastore.countWhereNo("registrations", "uploaded")});
 		});
 
 		return {
-			selectedTab: 'Introduction',
+			selectedTab: 'Introduction', // initial view
 			regs: 0,
 		};
 	},

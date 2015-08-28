@@ -21,12 +21,42 @@ var MemoryStore 		= module.exports.MemoryStore = {};	// shared global store
 
 
 var Datastore 	 		= {};
-Datastore.tables 		= {}; 	// memorymapped async store
+Datastore.tables 		= {}; 		// memorymapped async store
 
 var _instance 			= false; 	// ensure singleton
-var _initialized 		= -1; 	// -1: not ready, 0:loading, 1: ready
+var _initialized 		= -1; 		// -1: not ready, 0:loading, 1: ready
 var _init_queue 		= [];
 
+var _subscribers 		= {};
+var _lastAnnoncement 	= Date.now();
+
+module.exports.OnChange = function(table, fn_subscriber){
+	console.log('[Datastore] 1 ADD OnChanged', table, fn_subscriber );
+
+	if( Object.keys(_subscribers).indexOf(table) < 0 ){
+		_subscribers[table] = [];
+	}
+
+	if( _subscribers[table].indexOf(fn_subscriber) < 0 ){
+		_subscribers[table].push( fn_subscriber );
+		console.log('[Datastore] 2 ADD OnChanged', _subscribers );
+	}
+}
+function _announceChange(table){
+	//console.log('_announceChange() typeof _subscribers[table]:', typeof _subscribers[table], _subscribers[table], "since:", (Date.now() - _lastAnnoncement), "length:", _subscribers[table].length, "Object.keys(_subscribers).indexOf(table):", Object.keys(_subscribers).indexOf(table) );
+
+	if( Object.keys(_subscribers).indexOf(table) < 0 ) return;
+	if( typeof _subscribers[table] != 'object') return;
+	if( _subscribers[table].length == 0) return;
+
+	if( Date.now() - _lastAnnoncement < 1000 ) return;
+
+	for( var fn in _subscribers[table] ){
+		console.log('_announceChange() ANNONUNCING', table, fn, _subscribers[table][fn] );
+		_subscribers[table][fn]( Datastore.last(table) );
+	}
+	_lastAnnoncement = Date.now();
+}
 
 function _process_init_queue(){
 
@@ -74,6 +104,10 @@ var init = module.exports.init = function( cb ){
 		_instance = true;
 		_initialized = 0;
 		console.log('= Datastore: initializing Datastore');
+
+		if( cb ){
+			_init_queue.push(cb);
+		}
 
 		ReactNativeStore.setDbName( Config.database );
 
@@ -263,6 +297,8 @@ Datastore.add = module.exports.add = function(_table, _obj){
 		*/
 		var ok = table.add(_obj);
 		console.log('DS '+ _table +' add _obj >> ', ok);
+
+		setTimeout( function(){ _announceChange(_table) }, 10);
 		return ok;
 	}
 }
@@ -272,6 +308,7 @@ Datastore.add = module.exports.add = function(_table, _obj){
 Datastore.del = module.exports.del = function(_table, _id){
 	var table = _findTable(_table);
 	if( table ){
+		setTimeout( function(){ _announceChange(_table) }, 10);
 		return table.removeById(_id);
 	}
 }
@@ -296,6 +333,7 @@ Datastore.put = module.exports.put = function(_table, _id, _key, _val){
 		console.log("Datastore.put:", _table, data, typeof data );
 		if( data == undefined ){
 			console.log("Datastore.put ADDING");
+			setTimeout( function(){ _announceChange(_table) }, 10);
 			return table.add(_key);
 		}else{
 			if( data.length > 0 ) data = data[0];
@@ -308,6 +346,7 @@ Datastore.put = module.exports.put = function(_table, _id, _key, _val){
 					data[k] = _key[k];
 				}
 			}
+			setTimeout( function(){ _announceChange(_table) }, 10);
 			return table.updateById(_id, data);
 		}
 	}
@@ -324,6 +363,7 @@ Datastore.putx = module.exports.putx = function(_table, _obj){
 		//if( data.length == 0 ){
 		if( data == undefined ){
 			// item does not exist. Add it.
+			setTimeout( function(){ _announceChange(_table) }, 10);
 			return table.add(_obj);
 		}else{
 			return -1;
