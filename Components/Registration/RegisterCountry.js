@@ -36,8 +36,7 @@ var RegisterCountry = React.createClass({
                 <Form
                     ref="form"
                     type={Models.Country()}
-                    options={options}
-                    />
+                    options={options}/>
                     <TouchableHighlight
                         style={GlobalStyles.button}
                         onPress = {this.onPress}

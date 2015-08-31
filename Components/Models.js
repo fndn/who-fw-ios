@@ -38,16 +38,16 @@ module.exports.visualInfo = visualInfo;*/
 
 
 var ageGroups = t.enums({
-    THREE: '≤ 3 month',
-    FOUR: '4 month',
-    FIVE: '5 month',
-    SIX: '6 month',
-    SEVEN: '7 month',
-    EIGHT: '8 month',
-    NINE: '9 month',
-    TEN: '10 month',
-    ELEVEN: '11 month',
-    TWELVE: '12 month',
+    THREE:  '≤ 3 months',
+    FOUR:   '4 months',
+    FIVE:   '5 months',
+    SIX:    '6 months',
+    SEVEN:  '7 months',
+    EIGHT:  '8 months',
+    NINE:   '9 months',
+    TEN:    '10 months',
+    ELEVEN: '11 months',
+    TWELVE: '12 months',
     OTHER: 'Other'
 });
 

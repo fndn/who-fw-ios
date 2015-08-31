@@ -63,13 +63,26 @@ var options = {
         servingSize:{
             label: 'Serving size (g)',
             keyboardType: 'numeric'
-        }
+        },
+        cartoons: {},
+        picturesOfInfantsOrYoungChildren: {},
+        picturesOfMothers: {},
+        comparativeClaims: {},
+        nutrientContentClaims: {},
+        healthClaims: {},
+        other: {}
     }
 }; // optional rendering options (see documentation)
 
+// theme "checkboxes":
+['cartoons', 'picturesOfInfantsOrYoungChildren', 'picturesOfMothers', 'comparativeClaims', 'nutrientContentClaims', 'healthClaims', 'other'].forEach( function(el){
+    options.fields[el]['onTintColor'] = '#4B92DB';
+});
+
+
 var nutBoolOptions = {
     fields:{
-        boolValue:{ label:'Nutritional information available'}
+        boolValue:{ label:'Nutritional information available', onTintColor:'#4B92DB'}
     }
 };
 
@@ -101,15 +114,22 @@ var RegisterProduct = React.createClass({
             right: null,
             left: null
         };
-        if(this.props.getProductData)
-        {
+
+        var uuid = Datastore.ShortID.generate();
+
+        // Q: Should we make a new UUID for it? YES - and we should NOT let it inherit images from the source.
+        // (reason: the images should depict the product *in detail* so it CAN NOT look *exactly* the same as its source)
+
+        if(this.props.getProductData){
+            //was cloned
             var data = Datastore.cloneObject(Datastore.MemoryStore.product);
             hundredData = data.nutritionalPr100g;
             servingData = data.nutritionalPrServing;
             nutBoolData = {boolValue:true};
             visualData = data.visualInformation;
-            if(data.images)
-                images = data.images;
+            //if(data.images) images = data.images;
+
+
         }
 
         return {
@@ -120,7 +140,9 @@ var RegisterProduct = React.createClass({
             nutServingValue: servingData,
             visualInfo: visualData,
             initialPosition: null,
-            images: images
+            images: images,
+            uuid: uuid,
+            imagepaths: {}
         };
     },
 
@@ -186,27 +208,26 @@ var RegisterProduct = React.createClass({
                     <Text style={GlobalStyles.title}>
                         Pictures
                     </Text>
-                    <TouchableHighlight style={GlobalStyles.button} onPress = {this.onTakeFront} underlayColor='#99d9f4'>
+                    <TouchableHighlight style={GlobalStyles.button} onPress={this.onTakeFront} underlayColor='#99d9f4'>
                         <Text style={GlobalStyles.buttonText}>Capture product images</Text>
                     </TouchableHighlight>
 
 
                     <View style={GlobalStyles.imageGrid}>
-                        <Text style={GlobalStyles.imageText}>Front</Text>
                         <Image style={GlobalStyles.image} source={{ uri: this.state.images.front }} />
+                        <Text style={GlobalStyles.imageText}>Front</Text>
                     </View>
                     <View style={GlobalStyles.imageGrid}>
-                        <Text style={GlobalStyles.imageText}>Back</Text>
                         <Image style={GlobalStyles.image} source={{ uri: this.state.images.back }} />
-
+                        <Text style={GlobalStyles.imageText}>Back</Text>
                     </View>
                     <View style={GlobalStyles.imageGrid}>
-                        <Text style={GlobalStyles.imageText}>Left</Text>
                         <Image style={GlobalStyles.image} source={{ uri: this.state.images.left }} />
+                        <Text style={GlobalStyles.imageText}>Left</Text>
                     </View>
                     <View style={GlobalStyles.imageGrid}>
-                        <Text style={GlobalStyles.imageText}>Right</Text>
                         <Image style={GlobalStyles.image} source={{ uri: this.state.images.right }} />
+                        <Text style={GlobalStyles.imageText}>Right</Text>
                     </View>
 
                     <TouchableHighlight style={GlobalStyles.button} onPress={this.onPress} underlayColor='#99d9f4'>
@@ -222,16 +243,14 @@ var RegisterProduct = React.createClass({
                     <Form
                         ref="form"
                         type={Models.Product()}
-                        options={this.state.options}
+                        options={options}
                         value={this.state.value}
-                        onChange={this.onChange}
-                        />
+                        onChange={this.onChange}/>
                     <Form
                         type={Models.SimpelBool()}
                         options={nutBoolOptions}
                         value={this.state.nutBool}
-                        onChange={this.onNutritionInfoAvailableChange}
-                        />
+                        onChange={this.onNutritionInfoAvailableChange}/>
                     <Text style={GlobalStyles.title}>
                         Visual information
                     </Text>
@@ -240,34 +259,32 @@ var RegisterProduct = React.createClass({
                         type={Models.VisualInformation()}
                         options={options}
                         onChange={this.onChange4}
-                        value={this.state.visualInfo}
-                        />
+                        value={this.state.visualInfo}/>
 
                     <Text style={GlobalStyles.title}>
                         Pictures
                     </Text>
 
-                    <TouchableHighlight style={styles.button} onPress = {this.onTakeFront} underlayColor='#99d9f4'>
-                        <Text style={styles.buttonText}>Capture product images</Text>
+                    <TouchableHighlight style={GlobalStyles.button} onPress = {this.onTakeFront} underlayColor='#99d9f4'>
+                        <Text style={GlobalStyles.buttonText}>Capture product images</Text>
                     </TouchableHighlight>
 
 
                     <View style={GlobalStyles.imageGrid}>
-                        <Text style={GlobalStyles.imageText}>Front</Text>
                         <Image style={GlobalStyles.image} source={{ uri: this.state.images.front }} />
+                        <Text style={GlobalStyles.imageText}>Front</Text>
                     </View>
                     <View style={GlobalStyles.imageGrid}>
-                        <Text style={GlobalStyles.imageText}>Back</Text>
                         <Image style={GlobalStyles.image} source={{ uri: this.state.images.back }} />
-
+                        <Text style={GlobalStyles.imageText}>Back</Text>
                     </View>
                     <View style={GlobalStyles.imageGrid}>
-                        <Text style={GlobalStyles.imageText}>Left</Text>
                         <Image style={GlobalStyles.image} source={{ uri: this.state.images.left }} />
+                        <Text style={GlobalStyles.imageText}>Left</Text>
                     </View>
                     <View style={GlobalStyles.imageGrid}>
-                        <Text style={GlobalStyles.imageText}>Right</Text>
                         <Image style={GlobalStyles.image} source={{ uri: this.state.images.right }} />
+                        <Text style={GlobalStyles.imageText}>Right</Text>
                     </View>
 
                     <TouchableHighlight style={GlobalStyles.button} onPress={this.onPress} underlayColor='#99d9f4'>
@@ -292,7 +309,6 @@ var RegisterProduct = React.createClass({
     },
 
     onOpenCamera: function(position){
-
         this.props.navigator.push({
             leftButtonTitle: 'Cancel',
             onLeftButtonPress: () => this.props.navigator.pop(),
@@ -307,26 +323,28 @@ var RegisterProduct = React.createClass({
         });
     },
 
-    onReturnedFromCamera: function (imageUri, productPos) {
-        console.log("IMAGE FROM", productPos, imageUri);
-        //var images = this.state.images;
+    onReturnedFromCamera: function (_imageUris, productPos) {
+        // Add the new images to the upload queue
 
-        /*switch (productPos)
-        {
-            case "front":
-                images.front = imageUri;
-                break;
-            case "back":
-                images.back = imageUri;
-                break;
-            case "right":
-                images.right = imageUri;
-                break;
-            case "left":
-                images.left = imageUri;
-                break;
-        }*/
-        this.setState({images: imageUri});
+        var imageUris = Datastore.cloneObject(_imageUris);
+
+        var uuid = this.state.uuid;
+        var _paths = {};
+        Object.keys( imageUris ).forEach( function(el){
+            _paths[el] = {
+                path: imageUris[el],
+                name: uuid +'_'+ el +'.jpg',
+            };
+        });
+        var paths = Datastore.cloneObject(_paths);
+        
+        console.log("= [RegisterProduct] onReturnedFromCamera ", 'uuid', this.state.uuid, "paths:", paths);
+
+        // Add the new images to the upload queue
+        //Datastore.add("imageQueue", this.state.uuid, paths);
+        Datastore.add("imageQueue", {name:this.state.uuid, paths:paths} );
+
+        this.setState({images: imageUris, imagepaths:paths});
     },
 
     onChange: function(value)
@@ -360,6 +378,11 @@ var RegisterProduct = React.createClass({
 
         // call getValue() to get the values of the form
 
+        // images are always linked to the product,
+        // and named on disk as "Unique Product ID" (shortid())
+        // pluss image_type (front, back, etc.)
+
+
         var value = this.refs.form.getValue();
         if (value) { // if validation fails, value will be null
             // Copy value because it is not extensible, then add "private" values
@@ -376,16 +399,35 @@ var RegisterProduct = React.createClass({
             }
 
             newVal.visualInformation = Datastore.cloneObject(this.refs.form4.getValue());
-            newVal.images = Datastore.cloneObject(this.state.images);
             newVal.brand = Datastore.MemoryStore.brand.name;
 
 
-            //console.log("product info:", newVal);
+            newVal.images = Datastore.cloneObject(this.state.images);
+            newVal.imagepaths = Datastore.cloneObject(this.state.imagepaths);
+                
+
+            /*
+            newVal.uuid   = Datastore.ShortID.generate();
+            newVal._images = {};
+            Object.keys( newVal.images ).forEach( function(el){
+                if( newVal.images[el] != null ){
+                    newVal._images[el] = {
+                        path: newVal.images[el],
+                        name: newVal.uuid +'_'+ el +'.jpg',
+                    };
+                }else{
+                    newVal._images[el] = null;
+                }
+            });
+            */
+
+
+            console.log('-------------------------------');
+            console.log("[RegisterProduct] Saving newVal:", newVal);
             var entry = Datastore.add('products', newVal);
             //Datastore.Set("name", value.name);
             //Datastore.add('locations', value);
-            if(this.props.getProductData)
-            {
+            if(this.props.getProductData){
                 Datastore.MemoryStore.product = newVal;
             }
 

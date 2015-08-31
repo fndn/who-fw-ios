@@ -4,10 +4,11 @@
 
 'use strict';
 
-var React = require('react-native');
-var GlobalStyles = require('../../Styles/GlobalStyles');
-var Datastore = require('../Datastore');
+var React           = require('react-native');
+var GlobalStyles    = require('../../Styles/GlobalStyles');
+var Datastore       = require('../Datastore');
 var ValidateProduct = require('./ValidateProduct');
+var Models          = require('../Models');
 
 var {
     StyleSheet,
@@ -49,7 +50,7 @@ var SelectProduct = React.createClass ({
     },
 
     dataAvailable: function(_data){
-        console.log('SelectProduct dataAvailable', _data);
+        //console.log('SelectProduct dataAvailable', _data);
         this.setState({
             isLoading:false,
             message:'loaded',
@@ -85,13 +86,19 @@ var SelectProduct = React.createClass ({
          console.log('renderRow', rowData["_id"]) ;
          console.log('renderRow', rowData._id) ;
          */
+
+        var _foodType = Models.foodTypes.meta.map[rowData.foodType];
+        var _ageGroup = Models.ageGroups.meta.map[rowData.ageGroup];
+
+
         return (
             <TouchableHighlight underlayColor='#EEE' onPress={() => this.rowPressed(rowData)}>
                 <View>
                     <View style={GlobalStyles.listrowContainer}>
                         <View>
+                            {/* <Image style={GlobalStyles.rowImage} source={{ uri: rowData._images.front.path }} /> */}
                             <Text style={GlobalStyles.listrowTitle}>{rowData.name}</Text>
-                            <Text style={GlobalStyles.listrowSubtitle}>Some comment</Text>
+                            <Text style={GlobalStyles.listrowSubtitle}>{_foodType} by {rowData.brand}, from age {_ageGroup}</Text>
                         </View>
                     </View>
                     <View style={GlobalStyles.listrowSeparator}/>
@@ -100,11 +107,11 @@ var SelectProduct = React.createClass ({
         );
     },
     rowPressed: function(rowData) {
-        console.log("clicked ", rowData);
+        console.log("= [SelectProduct] ", rowData.name);
         //Datastore.Session.Set('brand', rowData);
         Datastore.MemoryStore.product = rowData;
         this.props.navigator.push({
-         leftButtonTitle: '< Back',
+         leftButtonTitle: 'Back',
          onLeftButtonPress: () => this.props.navigator.pop(),
          title: 'Validate Product',
          component: ValidateProduct

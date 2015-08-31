@@ -1,9 +1,7 @@
 /**
  * Created by JacobMac on 20/08/15.
  */
-/**
- * Created by JacobMac on 20/08/15.
- */
+
 
 'use strict';
 
@@ -76,7 +74,7 @@ var options = {
             editable: false,
             label: 'Serving size (g)'
         },
-        cartoons: {disabled: true},
+        cartoons: {disabled: true, onTintColor:'#4B92DB'},
         picturesOfInfantsOrYoungChildren: {disabled : true},
         picturesOfMothers: {disabled: true},
         comparativeClaims: {disabled: true},
@@ -86,16 +84,22 @@ var options = {
     }
 }; // optional rendering options (see documentation)
 
+// theme "checkboxes":
+['cartoons', 'picturesOfInfantsOrYoungChildren', 'picturesOfMothers', 'comparativeClaims', 'nutrientContentClaims', 'healthClaims', 'other'].forEach( function(el){
+    options.fields[el]['onTintColor'] = '#4B92DB';
+});
+
+
 var nutBoolOptions = {
     fields:{
-        boolValue:{ label:'Nutritional information available'}
+        boolValue:{ label:'Nutritional information available', onTintColor:'#4B92DB'}
     }
 };
 
 var validateBoolOptions =
 {
     fields:{
-        boolValue:{ label:'I confirm that info is correct'}
+        boolValue:{ label:'I confirm that info is correct', onTintColor:'#4B92DB'}
     }
 };
 
@@ -127,7 +131,7 @@ var ValidateProduct = React.createClass({
         navigatorEventListener = this.props.navigator.navigationContext.addListener('willfocus', (event) =>
         {
             if(event.data.route.component.displayName === "ValidateProduct") {
-                console.log("DATA: " , this.fillData());
+                console.log("ValidateProduct DATA: " , this.fillData());
                 this.setState(this.fillData());
             }
             //console.log(event.data.route.component.displayName);
@@ -205,7 +209,7 @@ var ValidateProduct = React.createClass({
                 <Form
                     ref="form3"
                     type={Models.NutritionServing()}
-                    options={this.state.options}
+                    options={options}
                     value={this.state.value.nutritionalPrServing}
                     />
                 <Text style={GlobalStyles.title}>
@@ -213,7 +217,7 @@ var ValidateProduct = React.createClass({
                 </Text>
                 <Form
                     ref="form4"
-                    type={Models.VisualInformation()}
+                    type={Models.VisualInformation()}                    
                     options={options}
                     value={this.state.value.visualInformation}
                     />
@@ -256,8 +260,11 @@ var ValidateProduct = React.createClass({
     {
 
         // call getValue() to get the values of the form
-        console.log("Valid!");
+        
         var value = this.refs.form.getValue();
+
+        console.log("Valid! [ValidateProduct onPress()]", value);
+
         if (value) { // if validation fails, value will be null
             // Copy value because it is not extensible, then add "private" values
             if(!Datastore.MemoryStore.credentials || !Datastore.MemoryStore.credentials.name || !Datastore.MemoryStore.credentials.affiliation )
@@ -283,13 +290,16 @@ var ValidateProduct = React.createClass({
                     newVal.gpsLocation = {};
                 }
 
-                console.log("product info validated:", newVal);
-
+                
+                
                 // Create a unique "name":
                 newVal.name = Datastore.ShortID.generate();
 
                 // Strip local _id fields
                 newVal = Datastore.removeIDs( newVal );
+               
+                console.log("-------------------------------");
+                console.log("# Saving Registration:", newVal);
 
                 Datastore.add("registrations", newVal);
 
@@ -301,7 +311,7 @@ var ValidateProduct = React.createClass({
     onEdit: function()
     {
         this.props.navigator.push({
-            leftButtonTitle: '< Back',
+            leftButtonTitle: 'Back',
             onLeftButtonPress: () => this.props.navigator.pop(),
             title: 'Register Product',
             component: RegisterProduct,

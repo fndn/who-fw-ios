@@ -45,7 +45,7 @@ var SelectLocation = React.createClass ({
     },
 
     dataAvailable: function(_data){
-        console.log('SelectLocation dataAvailable', _data);
+        //console.log('SelectLocation dataAvailable', _data);
         this.setState({
             isLoading:false,
             message:'loaded',
@@ -97,13 +97,13 @@ var SelectLocation = React.createClass ({
     },
 
     rowPressed: function(rowData) {
-        console.log("clicked ", rowData);
+        console.log("= [SelectLocation] ", rowData.name);
         //Datastore.Session.Set('location', rowData);
         Datastore.MemoryStore.location = rowData;
 
         //console.log(Datastore.Session.Get('country')._id);
         this.props.navigator.push({
-            leftButtonTitle: '< Back',
+            leftButtonTitle: 'Back',
             onLeftButtonPress: () => this.props.navigator.pop(),
             title: 'Select Store Type',
             component: SelectStoreType

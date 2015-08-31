@@ -113,9 +113,14 @@ var Sync = React.createClass({
 					  <Text style={styles.buttonText}>Cancel</Text>
 				 	</TouchableHighlight>)
 
-				: ( <TouchableHighlight style={styles.button} onPress = {this.onPressSync} underlayColor='#99d9f4'>
-					  <Text style={styles.buttonText}>Sync</Text>
-				 	</TouchableHighlight> );
+				: ( <View>
+						<TouchableHighlight style={styles.button} onPress = {this.onPressSync} underlayColor='#99d9f4'>
+						  <Text style={styles.buttonText}>Sync</Text>
+					 	</TouchableHighlight>
+					 	<TouchableHighlight style={styles.button} onPress = {this.onPressSyncDev} underlayColor='#99d9f4'>
+						  <Text style={styles.buttonText}>Sync dev</Text>
+					 	</TouchableHighlight>
+				 	</View> );
 
 
 		var logview = this.state.has_log 
@@ -185,6 +190,12 @@ var Sync = React.createClass({
 
 	onPressCancelSync: function(){
 		console.log('onPressCancelSync');
+	},
+
+	onPressSyncDev: function(){
+		//Datastore.Sync.testUpload("assets-library://asset/asset.JPG?id=E9340E11-6E7E-47D0-80D8-1971E31FA655&ext=JPG", {});
+
+		console.log('Datastore.imageQueue.all():', Datastore.all("imageQueue") );
 	},
 
 	onPressSync: function(){

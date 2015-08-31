@@ -31,7 +31,7 @@ var _subscribers 		= {};
 var _lastAnnoncement 	= Date.now();
 
 module.exports.OnChange = function(table, fn_subscriber){
-	console.log('[Datastore] 1 ADD OnChanged', table, fn_subscriber );
+	//console.log('[Datastore] 1 ADD OnChanged', table, fn_subscriber );
 
 	if( Object.keys(_subscribers).indexOf(table) < 0 ){
 		_subscribers[table] = [];
@@ -39,7 +39,7 @@ module.exports.OnChange = function(table, fn_subscriber){
 
 	if( _subscribers[table].indexOf(fn_subscriber) < 0 ){
 		_subscribers[table].push( fn_subscriber );
-		console.log('[Datastore] 2 ADD OnChanged', _subscribers );
+		//console.log('[Datastore] 2 ADD OnChanged', _subscribers );
 	}
 }
 function _announceChange(table){
@@ -81,7 +81,7 @@ function _process_init_queue(){
 
 	//console.log('DS all registrations >  ', Datastore.all('registrations') );
 
-	console.log('DS all credentials >  ', Datastore.all('credentials') );
+	//console.log('DS all credentials >  ', Datastore.all('credentials') );
 
 
 	//DatastoreInit.Run();
@@ -119,7 +119,7 @@ var init = module.exports.init = function( cb ){
 }
 
 function _setup(){
-	console.log('= Datastore: Creating Tables');
+	console.log('= Datastore: Creating Tables:');
 
 	var _tables = new Array();
 	_tables = _tables.concat(Config.tables);
@@ -137,7 +137,8 @@ function _setup(){
 			}
 			//_table.removeAll(); // reset local store
 
-			console.log("Connecting table "+ _table.tableName );
+			//console.log("= Datastore: Connecting table "+ _table.tableName );
+			console.log("  + "+ _table.tableName );
 			Datastore.tables[_table.tableName] = _table;
 			if( Object.keys(Datastore.tables).length == len ){
 				_process_init_queue();
@@ -189,12 +190,12 @@ Datastore.all = module.exports.all = function(_table, cb){
 
 			if( _table == 'locations' &&  MemoryStore.country ){
 				// filter by country
-				console.log("DATASTORE: FILTERING ", _table, " on MS.COUNTRY", MemoryStore.country.name,  "MemoryStore:", MemoryStore );
+				//console.log("DATASTORE: FILTERING ", _table, " on MS.COUNTRY", MemoryStore.country.name,  "MemoryStore:", MemoryStore );
 				obj = table.where({'country': MemoryStore.country.name}).find();
 			
 			}else if( _table == 'products' &&  MemoryStore.brand ){
 				// filter by brand
-				console.log("CDATASTORE: FILTERING ", _table, " on MS.BRAND", MemoryStore.brand.name,  "MemoryStore:", MemoryStore );
+				//console.log("CDATASTORE: FILTERING ", _table, " on MS.BRAND", MemoryStore.brand.name,  "MemoryStore:", MemoryStore );
 				obj = table.where({'brand': MemoryStore.brand.name}).find();
 
 			}else{
@@ -263,7 +264,7 @@ Datastore.add = module.exports.add = function(_table, _obj){
 		console.log('Adding', obj, 'to', _table);
 		*/
 		var ok = table.add(_obj);
-		console.log('DS '+ _table +' add _obj >> ', ok);
+		//console.log('DS '+ _table +' add _obj >> ', ok);
 
 		setTimeout( function(){ _announceChange(_table) }, 10);
 		return ok;
@@ -283,28 +284,28 @@ Datastore.del = module.exports.del = function(_table, _id){
 
 // findOneAndUpdate, updates key (single or object) in an existing record 
 Datastore.put = module.exports.put = function(_table, _id, _key, _val){
-	console.log("Datastore.put() called with", _table, _id, _key, _val);
+	//console.log("Datastore.put() called with", _table, _id, _key, _val);
 	var table = _findTable(_table);
 	if( table ){
 		var data;
 		try {
 			data = table.get(_id);
 		}catch(e){
-			console.log('FIRST PUT Error', e);
-			console.log('  table', table);
-			console.log('  this.databaseData[this.tableName]:', this.databaseData[this.tableName]);
+			//console.log('FIRST PUT Error', e);
+			//console.log('  table', table);
+			//console.log('  this.databaseData[this.tableName]:', this.databaseData[this.tableName]);
 			//return table.add(_key);
 			return;
 		}
 
-		console.log("Datastore.put:", _table, data, typeof data );
+		//console.log("Datastore.put:", _table, data, typeof data );
 		if( data == undefined ){
-			console.log("Datastore.put ADDING");
+			//console.log("Datastore.put ADDING");
 			setTimeout( function(){ _announceChange(_table) }, 10);
 			return table.add(_key);
 		}else{
 			if( data.length > 0 ) data = data[0];
-			console.log("Datastore.put UPDATING");
+			//console.log("Datastore.put UPDATING");
 			if( typeof _key === 'string'){
 				data[_key] = _val;
 			}else{
@@ -326,7 +327,7 @@ Datastore.putx = module.exports.putx = function(_table, _obj){
 	var table = _findTable(_table);
 	if( table ){
 		var data = table.where( _obj  ).limit(1).find();
-		console.log("Datastore.putx:", _table, '@1 data', data, data.length);
+		//console.log("Datastore.putx:", _table, '@1 data', data, data.length);
 		//if( data.length == 0 ){
 		if( data == undefined ){
 			// item does not exist. Add it.
@@ -345,7 +346,7 @@ Datastore._clear = function(_table){
 		table.removeAll();
 	})
 	.then(function(b){
-		console.log("= Datastore: Cleared table "+ _table );
+		//console.log("= Datastore: Cleared table "+ _table );
 		//_setDefaults( DefaultData );
 	});
 }
@@ -356,7 +357,7 @@ function _findKey( key, obj ){
 	if( Object.keys(obj).indexOf(key) > -1 ){
 		return obj[key];
 	}else{
-		console.log('_findKey '+ key +' in '+ obj +' : NOT FOUND');
+		//console.log('_findKey '+ key +' in '+ obj +' : NOT FOUND');
 		return false;	
 	}
 }

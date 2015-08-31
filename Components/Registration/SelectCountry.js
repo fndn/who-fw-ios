@@ -70,7 +70,7 @@ var SelectCountry = React.createClass ({
 	render: function(){
 
 		return (
-			<View style={GlobalStyles.scrollViewContainer}>
+			<View style={[GlobalStyles.scrollViewContainer, GlobalStyles.theme.scrollViewContainer]}>
 				<ListView
                     style={GlobalStyles.list}
                     automaticallyAdjustContentInsets={false}
@@ -94,7 +94,7 @@ var SelectCountry = React.createClass ({
 					<View style={GlobalStyles.listrowContainer}>
 						<View>
 							<Text style={GlobalStyles.listrowTitle}>{rowData.name}</Text>
-							<Text style={GlobalStyles.listrowSubtitle}>Some subtitle</Text>
+							<Text style={GlobalStyles.listrowSubtitle}>{rowData.countryCode}</Text>
 						</View>
 					</View>
 					<View style={GlobalStyles.listrowSeparator} />
@@ -104,7 +104,7 @@ var SelectCountry = React.createClass ({
 	},
 
 	rowPressed: function( rowData ){
-		console.log("clicked ", rowData );
+		console.log("= [SelectCountry] ", rowData.name );
         //Datastore.Session.Set('country', rowData);
         Datastore.MemoryStore.country = rowData;
 

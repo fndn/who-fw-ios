@@ -28,26 +28,26 @@ Form.stylesheet = GlobalStyles.formStyle;
 
 var introStyles = JSON.parse( JSON.stringify(GlobalStyles.formStyle));
 introStyles.textbox.normal = {
-    color: '#fff',
-    fontSize: 17,
-    height: 36,
-    padding: 7,
-    borderRadius: 4,
-    borderColor: '#fff',
-    borderWidth: 1,
-    marginBottom: 5
+	color: '#fff',
+	fontSize: 17,
+	height: 36,
+	padding: 7,
+	borderRadius: 4,
+	borderColor: '#fff',
+	borderWidth: 1,
+	marginBottom: 5
 };
 
 introStyles.controlLabel.normal = {
-    color: '#fff',
-    fontSize: 17,
-    marginBottom: 7,
-    fontWeight: '500'
+	color: '#fff',
+	fontSize: 17,
+	marginBottom: 7,
+	fontWeight: '500'
 };
 
 
 var Datastore = require('./Components/Datastore');
-//Datastore.init();
+//Datastore.init(); /// moved to getInitialState() so we can utilize the callbacks
 
 var FWA = React.createClass({
 
@@ -56,7 +56,7 @@ var FWA = React.createClass({
 		var self = this;
 
 		Datastore.init(function(){
-			console.log('[index.ios] Datastore init CB');
+			//console.log('[index.ios] Datastore init CB');
 			self.setState({regs: Datastore.countWhereNo("registrations", "uploaded")});
 		});
 
@@ -71,7 +71,7 @@ var FWA = React.createClass({
 		*/
 		
 		Datastore.OnChange( "registrations", function(data){
-			console.log('[index.ios] Datastore registrations OnChange()', data);
+			//console.log('[index.ios] Datastore registrations OnChange()', data);
 			self.setState({regs: Datastore.countWhereNo("registrations", "uploaded")});
 		});
 
@@ -122,7 +122,7 @@ var FWA = React.createClass({
 					iconName={'ion|ios-cloud-upload'}
 					iconSize={0}
 					systemIcon="history"
-					badgeValue={this.state.regs > 0 ? this.state.regs : undefined}
+					badgeValue={this.state.regs > 0 ? ''+this.state.regs : undefined}
 
 					title='Sync'
 					selected={this.state.selectedTab === 'Sync'}					

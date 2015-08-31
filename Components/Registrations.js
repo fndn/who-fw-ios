@@ -25,6 +25,7 @@ var Registrations = React.createClass ({
 		return (
 			<NavigatorIOS
                 ref="nav"
+                tintColor={'#4B92DB'}
 				style={GlobalStyles.container_fs}
 				initialRoute={{
 					component: SelectCountry,

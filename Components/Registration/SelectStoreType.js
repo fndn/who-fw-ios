@@ -28,7 +28,7 @@ var SelectStoreType = React.createClass ({
     },
 
     dataAvailable: function(_data){
-        console.log('SelectStoreType dataAvailable', _data);
+        //console.log('SelectStoreType dataAvailable', _data);
         this.setState({
             isLoading:false,
             message:'loaded',
@@ -65,7 +65,7 @@ var SelectStoreType = React.createClass ({
                     <View style={GlobalStyles.listrowContainer}>
                         <View>
                             <Text style={GlobalStyles.listrowTitle}>{rowData.name}</Text>
-                            <Text style={GlobalStyles.listrowSubtitle}>Some subtitle</Text>
+                            <Text style={GlobalStyles.listrowSubtitle}>{/* Some subtitle */}</Text>
                         </View>
                     </View>
                     <View style={GlobalStyles.listrowSeparator} />
@@ -76,11 +76,11 @@ var SelectStoreType = React.createClass ({
 
 
     rowPressed: function( rowData ){
-        console.log("clicked ", rowData );
+        console.log("= [SelectStoreType] ", rowData.name );
         Datastore.MemoryStore.storeType = rowData;
 
         this.props.navigator.push({
-            leftButtonTitle: '< Back',
+            leftButtonTitle: 'Back',
             onLeftButtonPress: () => this.props.navigator.pop(),
             title: 'Select Brand',
             component: SelectBrand,

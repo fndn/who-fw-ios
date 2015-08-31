@@ -4,6 +4,7 @@
 var Datastore 	= require('./Datastore');
 var xhr 		= require("xhr");
 var shortid 	= require('shortid');
+var FileUpload 	= require('NativeModules').FileUpload;
 
 
 var _running = false;
@@ -30,6 +31,31 @@ module.exports.Cancel = function(){
 	}
 }
 
+
+function _uploadImage(_path, _fields){
+	var obj = {
+		uploadUrl: Datastore.Config.server +'/images/upload',
+		method: 'POST', // default 'POST',support 'POST' and 'PUT'
+		headers: {
+			'Accept': 'application/json',
+		},
+		fields: _fields,
+		files: [
+			{
+				filename: 'testupload_'+ Date.now() +'.jpg', // require, file name
+				filepath: _path, // require, file absoluete path
+				filetype: 'image/jpeg', // options, if none, will get mimetype from `filepath` extension
+			},
+		]
+	};
+	FileUpload.upload(obj, function(err, result) {
+		console.log('upload:', err, result);
+	})
+};
+module.exports.testUpload = _uploadImage;
+
+//Datastore.Sync.testUpload("assets-library://asset/asset.JPG?id=E9340E11-6E7E-47D0-80D8-1971E31FA655&ext=JPG", {});
+
 module.exports.Sync = function( progress_cb, completion_cb, mode ){
 	if( _running ){
 		console.log( "Sync already running" );
@@ -46,7 +72,7 @@ module.exports.Sync = function( progress_cb, completion_cb, mode ){
 		// sync all except those in Datastore.Config.uploadOnly
 		
 		_tables = Datastore.Config.tables;
-		//_tables = ["countries"]; // for testing 
+		//_tables = ["products"]; // for testing 
 
 	
 	}else if( _mode == "upload" ){
@@ -243,7 +269,7 @@ function _check(_table){
 
 		_progress("% Starting ", _table );
 
-		//console.log('%% local items in table', _table, ":", items);
+		console.log('%% local items in table', _table, ":", items);
 
 		xhr({
 			'method':'POST', 

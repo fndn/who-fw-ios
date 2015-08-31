@@ -36,13 +36,11 @@ var RegisterLocation = React.createClass({
                 <Form
                     ref="form"
                     type={Models.Location()}
-                    options={options}
-                    />
+                    options={options}/>
                 <TouchableHighlight
                     style={GlobalStyles.button}
                     onPress = {this.onPress}
-                    underlayColor={GlobalStyles.colors.formHighlightColor}
-                    >
+                    underlayColor={GlobalStyles.colors.formHighlightColor}>
                     <Text style={GlobalStyles.buttonText}>Save</Text>
                 </TouchableHighlight>
             </ScrollView>

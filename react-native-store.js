@@ -23,7 +23,7 @@ var Model = function(tableName, databaseData) {
 // JS
 reactNativeStore.setDbName = function(_name){
     dbName = _name;
-    console.log('reactNativeStore Using database:', dbName);
+    //console.log('reactNativeStore Using database:', dbName);
     
 }
 

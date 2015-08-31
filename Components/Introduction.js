@@ -32,7 +32,7 @@ var Introduction = React.createClass ({
         Datastore.init(function(){
 
             var data = Datastore.last("credentials");
-            console.log('Introduction Datastore.init CB', data );
+            //console.log('Introduction Datastore.init CB', data );
             self.setState({value: data });
             Datastore.MemoryStore.credentials = data;
         });
@@ -83,7 +83,7 @@ module.exports = Introduction;
 
 // Local styles
 
-// UN Blue:
+// UN Blue: #4B92DB
 // https://en.wikipedia.org/wiki/Azure_(color)
 // https://en.wikipedia.org/wiki/Flag_of_the_United_Nations
 

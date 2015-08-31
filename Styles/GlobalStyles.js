@@ -43,7 +43,7 @@ var styles = React.StyleSheet.create({
     /*
     SCROLL VIEW
     used for registrations
-    * */
+    */
 
     scrollViewList:{
         padding: 20
@@ -56,7 +56,7 @@ var styles = React.StyleSheet.create({
         flexDirection: 'column',
         //borderColor: "#f00",
         //borderWidth: 1
-
+        //backgroundColor: '#f00'
     },
 
     /*
@@ -279,7 +279,7 @@ var formStyleSheet = {
     checkbox: {
         normal: {
             color: INPUT_COLOR,
-            marginBottom: 4
+            marginBottom: 4,
         },
         // the style applied when a validation error occours
         error: {
@@ -289,7 +289,12 @@ var formStyleSheet = {
     },
     select: {
         normal: {
-            marginBottom: 4
+            marginBottom: 4,
+            backgroundColor: '#F8F8F8',
+            marginLeft: -20,
+            marginRight: -20,
+            paddingLeft: 20,
+            paddingRight: 20,
         },
         // the style applied when a validation error occours
         error: {
@@ -304,10 +309,38 @@ var formStyleSheet = {
         error: {
             marginBottom: 4
         }
-    }
+    },
 };
 
+//var theme = {};
+var theme = require('./theme.UNBlue.js');
+//styles = mergeObjects(styles, theme);
+//console.log('themed styles', styles );
 
 module.exports = styles;
+module.exports.theme = theme;
+
 module.exports.colors = colors;
 module.exports.formStyle = formStyleSheet;
+
+/*
+function mergeObjects(base, curry){
+    var bkeys = Object.keys(base);
+    console.log('#0 curry:', Object.keys(curry), curry['scrollViewContainer'] );
+    console.log('#0 base: ', bkeys );
+    Object.keys(curry).forEach( function(ck){
+        console.log('#1 ', ck);
+        if( bkeys.indexOf(ck) > -1 ){
+            console.log('#2 found $ck', ck, " at bkeys.pos:", bkeys.indexOf(ck) );
+            console.log('#2 ', curry[ck]);
+            console.log('#2 ', Object.keys(curry[ck]));
+
+            Object.keys(curry[ck]).forEach( function(cck){
+                //base[ck][cck] = curry[ck][cck];
+                console.log('setting base[ck][cck]:', base[ck][cck] , " to curry[ck][cck]:", curry[ck][cck] );
+            });
+        }
+    });
+    return base;
+}
+*/
