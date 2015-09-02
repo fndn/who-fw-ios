@@ -19,7 +19,7 @@ var styles = React.StyleSheet.create({
 
 	listrowContainer: {
 		flexDirection: 'row',
-		padding: 10
+		padding: 10,
 	},
 
 	listrowTitle: {
@@ -39,6 +39,24 @@ var styles = React.StyleSheet.create({
 		height: 1,
 		backgroundColor: '#D8D8D8'
 	},
+
+    /**/
+    listrowContainer01: {
+        flexDirection: 'row',
+        padding: 10,
+        alignItems: 'flex-start',
+    },
+    listrowContainer02: {
+        flexDirection: 'row',
+        alignItems: 'flex-start',
+        overflow: 'hidden',
+        width: 300
+    },
+    rowImage: {
+        width: 50,
+        height: 50,
+        marginRight: 10,
+    },
 
     /*
     SCROLL VIEW

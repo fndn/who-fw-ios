@@ -7,6 +7,7 @@ var GlobalStyles 	= require('../Styles/GlobalStyles');
 var ProgressBar 	= require('./Parts/ProgressBar');
 
 var { Icon, } 		= require('react-native-icons');
+var RNFS 			= require('react-native-fs');
 
 var {
 	AppRegistry,
@@ -196,6 +197,30 @@ var Sync = React.createClass({
 		//Datastore.Sync.testUpload("assets-library://asset/asset.JPG?id=E9340E11-6E7E-47D0-80D8-1971E31FA655&ext=JPG", {});
 
 		console.log('Datastore.imageQueue.all():', Datastore.all("imageQueue") );
+
+		// list all images in Documents
+		RNFS.readDir('/', RNFS.MainBundle)
+			.then((result) => {
+				console.log('GOT RESULT', result);
+
+				// stat the first file
+				return Promise.all([RNFS.stat(result[0].path), result[0].path]);
+			})
+			.then((statResult) => {
+				if (statResult[0].isFile()) {
+				// if we have a file, read it
+				return RNFS.readFile(statResult[1]);
+			}
+			return 'no file';
+		})
+		.then((contents) => {
+			// log the file contents
+			console.log(contents);
+		})
+		.catch((err) => {
+			console.log(err.message, err.code);
+		});
+
 	},
 
 	onPressSync: function(){

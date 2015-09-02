@@ -5,7 +5,7 @@ var React = require('react-native');
 var styles = React.StyleSheet.create({
 
 	scrollViewContainer: {
-		//backgroundColor: '#4B92DB'
+		/*backgroundColor: '#4B92DB'*/
 	}
 
 

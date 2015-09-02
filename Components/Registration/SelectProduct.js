@@ -14,6 +14,7 @@ var {
     StyleSheet,
     View,
     Text,
+    Image,
     Component,
     TextInput,
     TouchableHighlight,
@@ -34,14 +35,17 @@ var SelectProduct = React.createClass ({
             dataSource: dataSource
         };
 
-        // Called when select country will be focused next
-        navigatorEventListener = this.props.navigator.navigationContext.addListener('willfocus', (event) =>
-        {
-            if(event.data.route.component.displayName === "SelectProduct"){
-                Datastore.all('products', this.dataAvailable);
-            }
-            //console.log(event.data.route.component.displayName);
-        });
+        // the try is only here so we CAN mount the component in index.ios.js. Remove for PRODUCTION
+        try{
+            // Called when select country will be focused next
+            navigatorEventListener = this.props.navigator.navigationContext.addListener('willfocus', (event) => {
+                if(event.data.route.component.displayName === "SelectProduct"){
+                    Datastore.all('products', this.dataAvailable);
+                }
+            });
+        }catch(e){
+
+        }
     },
 
 
@@ -73,11 +77,45 @@ var SelectProduct = React.createClass ({
                     style={GlobalStyles.list}
                     automaticallyAdjustContentInsets={false}
                     dataSource={this.state.dataSource}
-                    renderRow={this._renderRow}/>
+                    renderRow={this._renderRowWithImage}/>
             </View>
         );
 
     },
+
+    // dev:
+    _renderRowWithImage: function(rowData, sectionID, rowID) {
+        /*
+         console.log('renderRow', rowData, sectionID, rowID);
+         console.log('renderRow', Object.keys(rowData)) ;
+         console.log('renderRow', rowData["_id"]) ;
+         console.log('renderRow', rowData._id) ;
+         */
+
+         // test: Read image from Documents folder
+
+        var _foodType = Models.foodTypes.meta.map[rowData.foodType];
+        var _ageGroup = Models.ageGroups.meta.map[rowData.ageGroup];
+
+
+        return (
+            <TouchableHighlight underlayColor='#EEE' onPress={() => this.rowPressed(rowData)}>
+                <View>
+                    <View style={GlobalStyles.listrowContainer01}>
+                        <View style={GlobalStyles.listrowContainer02}>
+                            <Image style={GlobalStyles.rowImage} source={{ uri: 'http://lorempixel.com/100/100/sports/'}} />
+                            <View>
+                                <Text style={GlobalStyles.listrowTitle}>{rowData.name}</Text>
+                                <Text style={GlobalStyles.listrowSubtitle}>{_foodType} by {rowData.brand}, from age {_ageGroup}</Text>
+                            </View>
+                        </View>                        
+                    </View>
+                    <View style={GlobalStyles.listrowSeparator}/>
+                </View>
+            </TouchableHighlight>
+        );
+    },
+
 
     _renderRow: function(rowData, sectionID, rowID) {
         /*

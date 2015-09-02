@@ -6,6 +6,9 @@ var GlobalStyles 	= require('../Styles/GlobalStyles');
 var SelectCountry 	= require('./Registration/SelectCountry');
 var RegisterCountry = require('./Registration/RegisterCountry');
 
+// dev
+var RegisterProduct   = require('./Registration/RegisterProduct');
+
 var {
 	AppRegistry,
 	StyleSheet,
@@ -18,6 +21,7 @@ var {
 	NavigatorIOS
 } = React;
 
+// SelectCountry
 
 var Registrations = React.createClass ({
 
@@ -28,7 +32,7 @@ var Registrations = React.createClass ({
                 tintColor={'#4B92DB'}
 				style={GlobalStyles.container_fs}
 				initialRoute={{
-					component: SelectCountry,
+					component: RegisterProduct,
 					rightButtonTitle: 'Add',
 					onRightButtonPress: () => this.OpenAddCountry(),
 					title: 'Select Country'

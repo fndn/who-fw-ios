@@ -16,6 +16,8 @@ var Introduction  	= require('./Components/Introduction');
 var Registrations 	= require('./Components/Registrations');
 var Sync          	= require('./Components/Sync');
 
+//var SelectProduct   = require('./Components/Registration/SelectProduct');
+
 var GlobalStyles 	= require('./Styles/GlobalStyles');
 var t             	= require('tcomb-form-native');
 var Form = t.form.Form;
@@ -35,6 +37,16 @@ introStyles.textbox.normal = {
 	borderRadius: 4,
 	borderColor: '#fff',
 	borderWidth: 1,
+	marginBottom: 5
+};
+introStyles.textbox.focused = {
+	color: '#f',
+	fontSize: 17,
+	height: 36,
+	padding: 7,
+	borderRadius: 4,
+	borderColor: '#f',
+	borderWidth: 5,
 	marginBottom: 5
 };
 
