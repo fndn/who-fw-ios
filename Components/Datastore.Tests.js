@@ -47,34 +47,34 @@ module.exports.RunDiffTest = function(){
 			{ status: 'ok',
 			  msg: 
 			   { table: 'countries',
-			     add: [ { countryCode: 'RU', name: 'Russia' } ],
-			     put: 
-			      [ { countryCode: 'SE', name: 'Sweden', _id: 2 },
-			        { countryCode: 'FI', name: 'Finland', _id: 4 } ],
-			     del: [ { name: 'Denmark', countryCode: 'dk', _id: 1 } ] } }
+				 add: [ { countryCode: 'RU', name: 'Russia' } ],
+				 put: 
+				  [ { countryCode: 'SE', name: 'Sweden', _id: 2 },
+					{ countryCode: 'FI', name: 'Finland', _id: 4 } ],
+				 del: [ { name: 'Denmark', countryCode: 'dk', _id: 1 } ] } }
 
-     		*/
+			*/
 
-     		/*
-     		if( body.status == 'ok' ){
-     			var cmd = body.msg;
-     			var table = cmd.table;
-     			for(c in cmd.add ){
-     				console.log("Creating", cmd.add[c] );
-     				Datastore.add(table, cmd.add[c] );
-     			}
-     			for( c in cmd.put ){
-     				console.log("Updating", cmd.put[c]._id, cmd.put[c] );
-     				Datastore.put(table, cmd.put[c]._id, cmd.put[c]);
-     			}
-     			for( c in cmd.del ){
-     				console.log("Deleting", cmd.del[c]._id, cmd.del[c] );
-     				Datastore.del(table, cmd.del[c]._id);
-     			}
+			/*
+			if( body.status == 'ok' ){
+				var cmd = body.msg;
+				var table = cmd.table;
+				for(c in cmd.add ){
+					console.log("Creating", cmd.add[c] );
+					Datastore.add(table, cmd.add[c] );
+				}
+				for( c in cmd.put ){
+					console.log("Updating", cmd.put[c]._id, cmd.put[c] );
+					Datastore.put(table, cmd.put[c]._id, cmd.put[c]);
+				}
+				for( c in cmd.del ){
+					console.log("Deleting", cmd.del[c]._id, cmd.del[c] );
+					Datastore.del(table, cmd.del[c]._id);
+				}
 
-     			console.log(" Diffing completed for table ", table );
-     			console.log( Datastore.all('countries') );
-     		}
+				console.log(" Diffing completed for table ", table );
+				console.log( Datastore.all('countries') );
+			}
 			*/
 
 		});

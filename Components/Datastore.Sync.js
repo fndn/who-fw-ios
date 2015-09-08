@@ -251,8 +251,8 @@ function _upload_item( _item){
 				//_apply( body.msg );
 				console.log('############ upload response', body.msg);
 				_upload_item_uploaded( _item, body.msg );
- 			}
- 			*/	
+			}
+			*/	
 		}
 	);
 }	
@@ -292,7 +292,7 @@ function _check(_table){
 					_completion_cb("Error: "+ body.msg, true);
 				}else if( body.status == 'ok' ){
 					_apply( body.msg );
-     			}
+				}
 			}
 		);
 	});
@@ -306,9 +306,9 @@ function _apply(cmd){
 	{ status: 'ok',
 	  msg: 
 	   { table: 'countries',
-	     add: [ { countryCode: 'RU', name: 'Russia' } ],
-	     put: [ { countryCode: 'SE', name: 'Sweden', _id: 2 }, { countryCode: 'FI', name: 'Finland', _id: 4 } ],
-	     del: [ { name: 'Denmark', countryCode: 'dk', _id: 1 } ]
+		 add: [ { countryCode: 'RU', name: 'Russia' } ],
+		 put: [ { countryCode: 'SE', name: 'Sweden', _id: 2 }, { countryCode: 'FI', name: 'Finland', _id: 4 } ],
+		 del: [ { name: 'Denmark', countryCode: 'dk', _id: 1 } ]
 	   }
 	 }
 	*/

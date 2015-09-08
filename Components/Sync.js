@@ -112,16 +112,16 @@ var Sync = React.createClass({
 		var btnORprog = this.state.working
 				? (<TouchableHighlight style={[styles.button, styles.button_active]} onPress = {this.onPressCancelSync} underlayColor='#aaa'>
 					  <Text style={styles.buttonText}>Cancel</Text>
-				 	</TouchableHighlight>)
+					</TouchableHighlight>)
 
 				: ( <View>
 						<TouchableHighlight style={styles.button} onPress = {this.onPressSync} underlayColor='#99d9f4'>
 						  <Text style={styles.buttonText}>Sync</Text>
-					 	</TouchableHighlight>
-					 	<TouchableHighlight style={styles.button} onPress = {this.onPressSyncDev} underlayColor='#99d9f4'>
+						</TouchableHighlight>
+						<TouchableHighlight style={styles.button} onPress = {this.onPressSyncDev} underlayColor='#99d9f4'>
 						  <Text style={styles.buttonText}>Sync dev</Text>
-					 	</TouchableHighlight>
-				 	</View> );
+						</TouchableHighlight>
+					</View> );
 
 
 		var logview = this.state.has_log 
@@ -383,96 +383,96 @@ var styles = StyleSheet.create({
 	container: {
 		backgroundColor: '#eee',
 		flex: 1,
-    },
-    page: {
-    	padding: 20,
-    },
+	},
+	page: {
+		padding: 20,
+	},
 
 
-    button: {
-        height: 36,
-        backgroundColor: '#48BBEC',
-        borderColor: '#48BBEC',
-        borderWidth: 1,
-        borderRadius: 8,
-        marginBottom: 10,
-        alignSelf: 'stretch',
-        justifyContent: 'center'
-    },
-    button_active: {
-    	backgroundColor: '#ccc',
-        borderColor: '#ccc',
-    },
-    button_disabled: {
-    	backgroundColor: '#eee',
-        borderColor: '#ccc',
-    },
+	button: {
+		height: 36,
+		backgroundColor: '#48BBEC',
+		borderColor: '#48BBEC',
+		borderWidth: 1,
+		borderRadius: 8,
+		marginBottom: 10,
+		alignSelf: 'stretch',
+		justifyContent: 'center'
+	},
+	button_active: {
+		backgroundColor: '#ccc',
+		borderColor: '#ccc',
+	},
+	button_disabled: {
+		backgroundColor: '#eee',
+		borderColor: '#ccc',
+	},
 
-    title: {
-        fontSize: 30,
-        alignSelf: 'center',
-        marginBottom: 30
-    },
-    buttonText: {
-        fontSize: 18,
-        color: 'white',
-        alignSelf: 'center',
-        fontFamily: 'HelveticaNeue-Medium',
-    },
-    buttonText_noroute: {
-        fontSize: 18,
-        color: '#B3B3B3',
-        alignSelf: 'center',
-        fontFamily: 'HelveticaNeue-Medium',
-    },
-    
+	title: {
+		fontSize: 30,
+		alignSelf: 'center',
+		marginBottom: 30
+	},
+	buttonText: {
+		fontSize: 18,
+		color: 'white',
+		alignSelf: 'center',
+		fontFamily: 'HelveticaNeue-Medium',
+	},
+	buttonText_noroute: {
+		fontSize: 18,
+		color: '#B3B3B3',
+		alignSelf: 'center',
+		fontFamily: 'HelveticaNeue-Medium',
+	},
+	
 	infotext: {
-    	fontSize: 12,
-    	marginBottom: 10,
-    },
-    infotext_title: {
-    	fontSize: 11,
-    	fontWeight: 'bold',
-    	color: '#555',
-    	marginBottom: 6,
-    },
-    infotext_body: {
-    	fontSize: 11,
-    	color: '#444',
-    	marginBottom: 10,
-    	lineHeight: 14
-    },
-    infotext_tables: {
-    	color: "#09f",
-    	marginBottom: 0,
-    	marginTop: -10,
-    },
+		fontSize: 12,
+		marginBottom: 10,
+	},
+	infotext_title: {
+		fontSize: 11,
+		fontWeight: 'bold',
+		color: '#555',
+		marginBottom: 6,
+	},
+	infotext_body: {
+		fontSize: 11,
+		color: '#444',
+		marginBottom: 10,
+		lineHeight: 14
+	},
+	infotext_tables: {
+		color: "#09f",
+		marginBottom: 0,
+		marginTop: -10,
+	},
 
-    infobox: {
-    	borderTopWidth: 1,
-    	borderBottomWidth: 1,
-    	borderColor: '#ccc',
-    	backgroundColor: '#fff',
-    	padding: 10,
-    	paddingLeft: 20,
-    	paddingRight: 20,
-    	margin: 0,
-    	marginLeft: -20,
-    	marginRight: -20,
-    	marginBottom: 10,
-    },
-
-    logview: {
-    	backgroundColor: '#ccc',
+	infobox: {
+		borderTopWidth: 1,
+		borderBottomWidth: 1,
+		borderColor: '#ccc',
+		backgroundColor: '#fff',
 		padding: 10,
-    	height: 130,
-    },
-    progress_text_body: {
-    	fontSize: 13,
-    	color: "#444",
-    },
+		paddingLeft: 20,
+		paddingRight: 20,
+		margin: 0,
+		marginLeft: -20,
+		marginRight: -20,
+		marginBottom: 10,
+	},
 
-    progressbar: {
-    }
+	logview: {
+		backgroundColor: '#ccc',
+		padding: 10,
+		height: 130,
+	},
+	progress_text_body: {
+		fontSize: 13,
+		color: "#444",
+	},
+
+	progressbar: {
+	}
 
 });

@@ -36,23 +36,23 @@ var SelectCountry = React.createClass ({
 			dataSource: dataSource
 		};
 
-        // Called when select country will be focused next
-        navigatorEventListener = this.props.navigator.navigationContext.addListener('willfocus', (event) =>
-        {
-            //console.log(event.data.route.component.displayName);
-            if(event.data.route.component.displayName === "SelectCountry"){
-                Datastore.all('countries', this.dataAvailable);
-            }
-            
-        });
+		// Called when select country will be focused next
+		navigatorEventListener = this.props.navigator.navigationContext.addListener('willfocus', (event) =>
+		{
+			//console.log(event.data.route.component.displayName);
+			if(event.data.route.component.displayName === "SelectCountry"){
+				Datastore.all('countries', this.dataAvailable);
+			}
+			
+		});
 
-        Datastore.all('countries', this.dataAvailable);
+		Datastore.all('countries', this.dataAvailable);
 	},
 
-    componentDidMount: function(){
-    	//console.log('SelectCountry componentDidMount');
+	componentDidMount: function(){
+		//console.log('SelectCountry componentDidMount');
 		Datastore.all('countries', this.dataAvailable);
-    },
+	},
 
 	dataAvailable: function(_data){
 		//console.log('SelectCountry dataAvailable', _data);
@@ -63,17 +63,17 @@ var SelectCountry = React.createClass ({
 		});
 	},
 
-    componentWillUnmount: function(){
-        navigatorEventListener.remove();
-    },
+	componentWillUnmount: function(){
+		navigatorEventListener.remove();
+	},
 
 	render: function(){
 
 		return (
 			<View style={[GlobalStyles.scrollViewContainer, GlobalStyles.theme.scrollViewContainer]}>
 				<ListView
-                    style={GlobalStyles.list}
-                    automaticallyAdjustContentInsets={false}
+					style={GlobalStyles.list}
+					automaticallyAdjustContentInsets={false}
 					dataSource  = {this.state.dataSource}
 					renderRow 	= {this._renderRow} />
 			</View>
@@ -105,23 +105,23 @@ var SelectCountry = React.createClass ({
 
 	rowPressed: function( rowData ){
 		console.log("= [SelectCountry] ", rowData.name );
-        //Datastore.Session.Set('country', rowData);
-        Datastore.MemoryStore.country = rowData;
+		//Datastore.Session.Set('country', rowData);
+		Datastore.MemoryStore.country = rowData;
 
 		this.props.navigator.push({
 			leftButtonTitle: 'Back',
 			onLeftButtonPress: () => this.props.navigator.pop(),
 			title: 'Select Location',
 			component: SelectLocation,
-            onRightButtonPress: () => {
-                this.props.navigator.push({
-                    title: 'Register Location',
-                    component: RegisterLocation,
-                    leftButtonTitle: 'Cancel',
-                    onLeftButtonPress: () => { this.props.navigator.pop();}
-                });
-            },
-            rightButtonTitle: 'Add'
+			onRightButtonPress: () => {
+				this.props.navigator.push({
+					title: 'Register Location',
+					component: RegisterLocation,
+					leftButtonTitle: 'Cancel',
+					onLeftButtonPress: () => { this.props.navigator.pop();}
+				});
+			},
+			rightButtonTitle: 'Add'
 			//passProps: {countryId: rowData._id, countryName: rowData.name },
 
 		});

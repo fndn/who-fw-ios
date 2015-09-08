@@ -9,10 +9,10 @@ var Datastore       = require('./Datastore');
 var Form = t.form.Form;
 
 var {
-    AppRegistry,
+	AppRegistry,
 	StyleSheet,
 	View,
-    ScrollView,
+	ScrollView,
 	Text,
 	Component,
 	TextInput,
@@ -27,27 +27,27 @@ var { Icon, } = require('react-native-icons');
 
 var Introduction = React.createClass ({
 
-    loadCreds: function(){
-        var self = this;
-        Datastore.init(function(){
+	loadCreds: function(){
+		var self = this;
+		Datastore.init(function(){
 
-            var data = Datastore.last("credentials");
-            //console.log('Introduction Datastore.init CB', data );
-            self.setState({value: data });
-            Datastore.MemoryStore.credentials = data;
-        });
-    },
+			var data = Datastore.last("credentials");
+			//console.log('Introduction Datastore.init CB', data );
+			self.setState({value: data });
+			Datastore.MemoryStore.credentials = data;
+		});
+	},
 
-    getInitialState: function() {
-        this.loadCreds();
-        return {
-            value: {}
-        };
-    },
+	getInitialState: function() {
+		this.loadCreds();
+		return {
+			value: {}
+		};
+	},
 
 	render: function(){
 		return (
-            <View style={styles.unbg}>
+			<View style={styles.unbg}>
 			<ScrollView>
 				<View style={styles.imagewrap}>
 					<Image
@@ -56,24 +56,24 @@ var Introduction = React.createClass ({
 						source={require('image!who_logo')}/>
 				</View>
 
-                <View style={styles.login}>
-                    <Form
-                        ref="form"
-                        type={Models.Respondent()}
-                        value={this.state.value}
-                        onChange={this.onChange}
-                        />
-                </View>
+				<View style={styles.login}>
+					<Form
+						ref="form"
+						type={Models.Respondent()}
+						value={this.state.value}
+						onChange={this.onChange}
+						/>
+				</View>
 			</ScrollView>
-            </View>
+			</View>
 		);
 	},
 
-    onChange: function(value){
-        Datastore.MemoryStore.credentials = value;
-        this.setState({value:value});
-        Datastore.add("credentials", value);
-    }
+	onChange: function(value){
+		Datastore.MemoryStore.credentials = value;
+		this.setState({value:value});
+		Datastore.add("credentials", value);
+	}
 
 
 });
@@ -89,29 +89,29 @@ module.exports = Introduction;
 
 var styles = StyleSheet.create({
 
-    unbg:{
-        flex: 1,
-        backgroundColor: '#4B92DB',
+	unbg:{
+		flex: 1,
+		backgroundColor: '#4B92DB',
 
-    },
+	},
 
-    login: {
-        padding: 20,
-        paddingBottom: 300,
-    },
-    imagewrap: {
+	login: {
+		padding: 20,
+		paddingBottom: 300,
+	},
+	imagewrap: {
 		alignItems: 'center',
-        justifyContent: 'center',
-        flex: 1,
-        height: 300,
-    },
-    logo: {
+		justifyContent: 'center',
+		flex: 1,
+		height: 300,
+	},
+	logo: {
 		width: 250,
 	},
 
-    textbox:{
-        color: '#f00',
-    }
+	textbox:{
+		color: '#f00',
+	}
 
 
 });

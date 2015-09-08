@@ -19,7 +19,6 @@ module.exports.ShortID  = shortid;
 
 var MemoryStore 		= module.exports.MemoryStore = {};	// shared global store
 
-
 var Datastore 	 		= {};
 Datastore.tables 		= {}; 		// memorymapped async store
 
@@ -210,10 +209,10 @@ Datastore.all = module.exports.all = function(_table, cb){
 		
 
 		if( typeof cb == 'function'){
-        	cb(obj);
-        }else{
-        	return obj;
-        }
+			cb(obj);
+		}else{
+			return obj;
+		}
 
 	}
 }
@@ -384,23 +383,23 @@ function sortByKey(array, key) {
 }
 */
 function sortByKey(array, key) {
-    return array.sort(function(a, b) {
+	return array.sort(function(a, b) {
 
-    	if( !a.hasOwnProperty(key) || !a.hasOwnProperty(key) ){
-    		return false;
-    	}
+		if( !a.hasOwnProperty(key) || !a.hasOwnProperty(key) ){
+			return false;
+		}
 
-        var x = a[key];
-        var y = b[key];
+		var x = a[key];
+		var y = b[key];
 
-        if (typeof x == "string")
-        {
-            x = x.toLowerCase(); 
-            y = y.toLowerCase();
-        }
+		if (typeof x == "string")
+		{
+			x = x.toLowerCase(); 
+			y = y.toLowerCase();
+		}
 
-        return ((x < y) ? -1 : ((x > y) ? 1 : 0));
-    });
+		return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+	});
 }
 
 var cloneObject = module.exports.cloneObject = function(o){

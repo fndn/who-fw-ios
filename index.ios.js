@@ -23,8 +23,8 @@ var t             	= require('tcomb-form-native');
 var Form = t.form.Form;
 
 Form.i18n = {
-    optional: '',
-    required: ' *'
+	optional: '',
+	required: ' *'
 };
 Form.stylesheet = GlobalStyles.formStyle;
 

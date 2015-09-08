@@ -48,16 +48,16 @@ var _checkReachable = module.exports._CheckReachable = function(){
 				_serverIsReachable = 0;
 			}else{
 				_serverIsReachable = 1;
- 			}
+			}
 
- 			//console.log('_checkReachable', startTime, endTime, "serverResponseTime:", _serverResponseTime, "_serverIsReachable:", _serverIsReachable, "_prevState:", _prevState, "_subscribers.length", _subscribers.length );
+			//console.log('_checkReachable', startTime, endTime, "serverResponseTime:", _serverResponseTime, "_serverIsReachable:", _serverIsReachable, "_prevState:", _prevState, "_subscribers.length", _subscribers.length );
 
- 			//if( _prevState != _serverIsReachable ){
+			//if( _prevState != _serverIsReachable ){
 
- 				if( _subscribers.length > 0 ){
- 					_announceChange();
- 				}
- 			//}
+				if( _subscribers.length > 0 ){
+					_announceChange();
+				}
+			//}
 		}
 	);
 }

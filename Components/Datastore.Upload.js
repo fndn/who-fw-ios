@@ -121,7 +121,7 @@ function _send(){
 					console.log('Item Upload complete, flagged item', _item, err, res );
 					//_next();
 				});
- 			}
+			}
 		}
 	);
 }
