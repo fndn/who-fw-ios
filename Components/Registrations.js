@@ -7,7 +7,7 @@ var SelectCountry 	= require('./Registration/SelectCountry');
 var RegisterCountry = require('./Registration/RegisterCountry');
 
 // dev
-var RegisterProduct   = require('./Registration/RegisterProduct');
+var RegisterProduct   = require('./Registration/RegisterLocation');
 
 var {
 	AppRegistry,
@@ -32,7 +32,7 @@ var Registrations = React.createClass ({
                 tintColor={'#4B92DB'}
 				style={GlobalStyles.container_fs}
 				initialRoute={{
-					component: RegisterProduct,
+					component: SelectCountry,
 					rightButtonTitle: 'Add',
 					onRightButtonPress: () => this.OpenAddCountry(),
 					title: 'Select Country'

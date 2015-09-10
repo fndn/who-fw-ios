@@ -60,7 +60,7 @@ var RegisterBrand = React.createClass({
 			// Copy value because it is not extensible, then add "private" values
 			var newVal = JSON.parse(JSON.stringify(value));
 			newVal.country = Datastore.MemoryStore.country.name;
-			Datastore.MemoryStore.brand = value
+			//Datastore.MemoryStore.brand = value
 			console.log("RegisterBrand add: " , newVal);
 			Datastore.add('brands', newVal);
 			//Datastore.Set("name", value.name);

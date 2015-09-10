@@ -64,7 +64,7 @@ var styles = React.StyleSheet.create({
     */
 
     scrollViewList:{
-        padding: 20
+        padding: 20,
     },
 
     scrollViewContainer:{

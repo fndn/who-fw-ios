@@ -88,7 +88,7 @@ var FWA = React.createClass({
 		});
 
 		return {
-			selectedTab: 'Introduction', // initial view
+			selectedTab: 'Registrations', // initial view
 			regs: 0,
 		};
 	},

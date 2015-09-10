@@ -22,20 +22,6 @@ var storeTypes = t.enums({
 
 module.exports.storeTypes = storeTypes;
 
-/*
-var visualInfo = t.enums({
-	VICA: 'Cartoons',
-	VIPC: 'Pictures of infants/young children',
-	PM: 'Pictures of mothers',
-	CC: 'Comparative claims',
-	NCC: 'Nutrient content claims',
-	HC: 'Health claims',
-	OTHER: 'Other'
-});
-
-module.exports.visualInfo = visualInfo;*/
-
-
 
 var ageGroups = t.enums({
 	THREE:  '≤ 3 months',
@@ -90,12 +76,21 @@ module.exports.Country = function(){
 };
 
 module.exports.Location = function(){
+    var data = Datastore.all('storeBrands');
+    var storeBrands = {};
+    for(var i = 0; i < data.length; i++)
+    {
+        storeBrands[data[i]._id] = data[i].name;
+    }
+
 	return t.struct({
 		name: t.Str,
 		city: t.Str,
-		neighbourhood: t.Str,
-		street: t.maybe(t.Str),
-		incomeType: incomeTypes
+		neighbourhood: t.maybe(t.Str),
+		street: t.Str,
+		incomeType: incomeTypes,
+        storeBrand: t.enums(storeBrands),
+        storeType: storeTypes
 	});
 };
 
@@ -111,9 +106,24 @@ module.exports.Brand = function(){
 	});
 };
 
+// For registration
+module.exports.StoreBrand = function(){
+    return t.struct({
+        name: t.Str
+    });
+};
+
 module.exports.Product = function(){
+    var data = Datastore.all('brands');
+    var brands = {};
+    for(var i = 0; i < data.length; i++)
+    {
+        brands[data[i]._id] = data[i].name;
+    }
+
 	return t.struct({
 		name: t.Str,
+        brand: t.enums(brands),
 		foodType: foodTypes,
 		ageGroup: ageGroups
 	});

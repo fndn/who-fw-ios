@@ -248,7 +248,7 @@ var ValidateProduct = React.createClass({
 						<Text style={GlobalStyles.buttonText}>Submit</Text>
 					</TouchableHighlight>
 					<TouchableHighlight style={styles.button} onPress = {this.onEdit} underlayColor='#FF92A6'>
-						<Text style={GlobalStyles.buttonText}>Clone & Edit</Text>
+						<Text style={GlobalStyles.buttonText}>Clone &amp; Edit</Text>
 					</TouchableHighlight>
 				</View>
 			</ScrollView>
@@ -278,7 +278,7 @@ var ValidateProduct = React.createClass({
 				newVal.brand = Datastore.MemoryStore.brand;
 				newVal.country = Datastore.MemoryStore.country;
 				newVal.location = Datastore.MemoryStore.location;
-				newVal.storeType = Datastore.MemoryStore.storeType;
+				//newVal.storeType = Datastore.MemoryStore.storeType;
 				newVal.credentials = Datastore.MemoryStore.credentials;
 				newVal.timeOfRegistration = Date.now(); // UTC in seconds
 

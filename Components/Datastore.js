@@ -197,7 +197,12 @@ Datastore.all = module.exports.all = function(_table, cb){
 				//console.log("CDATASTORE: FILTERING ", _table, " on MS.BRAND", MemoryStore.brand.name,  "MemoryStore:", MemoryStore );
 				obj = table.where({'brand': MemoryStore.brand.name}).find();
 
-			}else{
+			}else if( _table == 'storeBrands' && MemoryStore.country ){
+                // filter by country
+                //console.log("DATASTORE: FILTERING ", _table, " on MS.COUNTRY", MemoryStore.country.name,  "MemoryStore:", MemoryStore );
+                obj = table.where({'country': MemoryStore.country.name}).find();
+
+            } else{
 				// un-filtered
 				//console.log("DATASTORE: all@"+ _table );
 				obj = table.findAll();

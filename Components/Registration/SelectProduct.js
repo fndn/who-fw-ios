@@ -54,7 +54,7 @@ var SelectProduct = React.createClass ({
 	},
 
 	dataAvailable: function(_data){
-		//console.log('SelectProduct dataAvailable', _data);
+		console.log('SelectProduct dataAvailable', _data);
 		this.setState({
 			isLoading:false,
 			message:'loaded',

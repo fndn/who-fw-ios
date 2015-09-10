@@ -4,7 +4,8 @@ var React           = require('react-native');
 var GlobalStyles    = require('../../Styles/GlobalStyles');
 //var SelectLocation 		= require('./SelectLocation');
 var Datastore       = require('../Datastore');
-var SelectStoreType = require('./SelectStoreType');
+var SelectProduct = require('./SelectProduct');
+var RegisterProduct = require('./RegisterProduct');
 
 var {
 	StyleSheet,
@@ -45,7 +46,7 @@ var SelectLocation = React.createClass ({
 	},
 
 	dataAvailable: function(_data){
-		//console.log('SelectLocation dataAvailable', _data);
+		console.log('SelectLocation dataAvailable', _data);
 		this.setState({
 			isLoading:false,
 			message:'loaded',
@@ -81,13 +82,19 @@ var SelectLocation = React.createClass ({
 		 console.log('renderRow', rowData._id) ;
 		 */
 
+        var subtext = "";
+        subtext += rowData.street + ", " + rowData.city;
+        if(rowData.neighbourhood)
+            subtext += ", " + rowData.neighbourhood;
+
+
 		return (
 			<TouchableHighlight underlayColor='#EEE' onPress={() => this.rowPressed(rowData)}>
 				<View>
 					<View style={GlobalStyles.listrowContainer}>
 						<View>
 							<Text style={GlobalStyles.listrowTitle}>{rowData.name}</Text>
-							<Text style={GlobalStyles.listrowSubtitle}>{rowData.neighbourhood}</Text>
+							<Text style={GlobalStyles.listrowSubtitle}>{subtext}</Text>
 						</View>
 					</View>
 					<View style={GlobalStyles.listrowSeparator}/>
@@ -102,13 +109,22 @@ var SelectLocation = React.createClass ({
 		Datastore.MemoryStore.location = rowData;
 
 		//console.log(Datastore.Session.Get('country')._id);
-		this.props.navigator.push({
-			leftButtonTitle: 'Back',
-			onLeftButtonPress: () => this.props.navigator.pop(),
-			title: 'Select Store Type',
-			component: SelectStoreType
+        this.props.navigator.push({
+            leftButtonTitle: 'Back',
+            onLeftButtonPress: () => this.props.navigator.pop(),
+            title: 'Select Product',
+            component: SelectProduct,
+            onRightButtonPress: () => {
+                this.props.navigator.push({
+                    title: 'Register Product',
+                    component: RegisterProduct,
+                    leftButtonTitle: 'Cancel',
+                    onLeftButtonPress: () => { this.props.navigator.pop();}
+                });
+            },
+            rightButtonTitle: 'Add'
 
-		});
+        });
 	}
 
 });
