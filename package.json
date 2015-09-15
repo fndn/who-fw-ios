@@ -1,17 +1,17 @@
 {
-  "name": "fwa",
-  "version": "0.6.0",
-  "private": true,
-  "scripts": {
+	"name": "fwa",
+	"version": "0.6.0",
+	"private": true,
+	"scripts": {
 	"start": "node_modules/react-native/packager/packager.sh"
-  },
-  "dependencies": {
-	"react-native": "^0.11.0",
-	"fndn-rn-datastore": "fndn/fndn-rn-datastore",
-	"react-native-camera": "^0.3.3",
-    "react-native-icons": "^0.3.4",
-    "tcomb": "^1.0.3",
-    "tcomb-form-native": "^0.2.5",
-    "tcomb-validation": "^1.0.4"
-  }
+	},
+	"dependencies": {
+		"react-native": "^0.11.0",
+		"fndn-rn-datastore": "fndn/fndn-rn-datastore",
+		"react-native-camera": "spyro92/react-native-camera",
+		"react-native-icons": "^0.3.4",
+		"tcomb": "^1.0.3",
+		"tcomb-form-native": "^0.2.5",
+		"tcomb-validation": "^1.0.4"
+	}
 }

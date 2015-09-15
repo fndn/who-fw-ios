@@ -29,21 +29,24 @@ var { Icon, } = require('react-native-icons');
 var Introduction = React.createClass ({
 
 	loadCreds: function(){
-		var self = this;
-		Datastore.data.init(function(){
-
-			var data = Datastore.data.last("credentials");
-			//console.log('Introduction Datastore.init CB', data );
-			self.setState({value: data });
-			Datastore.M.credentials = data;
-		});
+		var data = Datastore.data.last("credentials");
+		this.setState({value: data });
+		Datastore.M.credentials = data;
 	},
 
 	getInitialState: function() {
-		this.loadCreds();
+		var self = this;
+		Datastore.data.init(function(){
+			self.loadCreds();
+		});
+
 		return {
 			value: {}
 		};
+	},
+
+	componentWillMount: function(){
+		this.loadCreds();
 	},
 
 	render: function(){

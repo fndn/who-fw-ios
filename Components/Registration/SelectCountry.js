@@ -55,7 +55,10 @@ var SelectCountry = React.createClass ({
 	*/
 
 	dataAvailable: function(_data){
-		//console.log('[SelectCountry] dataAvailable', _data);
+		console.log('[SelectCountry] dataAvailable', _data);
+		
+		Datastore.data.orderBy(_data, "name"); // orders *in place*
+
 		this.setState({
 			isLoading:false,
 			message:'loaded',

@@ -24,7 +24,7 @@ var Datastore 		= require('fndn-rn-datastore');
 
 Datastore.opts({
 	data: {
-		database: 	'whofw-dev-0002',
+		database: 	'whofw-dev-0004',
 		tables: 	["countries", "locations", "brands", "incomeTypes", "storeTypes", "storeBrands", "ageGroups", "products"],
 		uploadOnly: ["registrations"],
 		localOnly:	["credentials", "imageQueue"]
@@ -64,7 +64,7 @@ var fwa = React.createClass({
 		});
 
 		return {
-			selectedTab: 'Registrations', // initial view
+			selectedTab: 'Introduction', // initial view
 			regs: 0,
 		};
 	},
