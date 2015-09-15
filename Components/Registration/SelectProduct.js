@@ -97,7 +97,6 @@ var SelectProduct = React.createClass ({
 		var _foodType = Models.foodTypes.meta.map[rowData.foodType];
 		var _ageGroup = Models.ageGroups.meta.map[rowData.ageGroup];
 
-
 		return (
 			<TouchableHighlight underlayColor='#EEE' onPress={() => this.rowPressed(rowData)}>
 				<View>
@@ -106,7 +105,7 @@ var SelectProduct = React.createClass ({
 							<Image style={GlobalStyles.rowImage} source={{ uri: 'http://lorempixel.com/100/100/sports/'}} />
 							<View>
 								<Text style={GlobalStyles.listrowTitle}>{rowData.name}</Text>
-								<Text style={GlobalStyles.listrowSubtitle}>{_foodType} by {rowData.brand}, from age {_ageGroup}</Text>
+								<Text style={GlobalStyles.listrowSubtitle}>{_foodType} by {Datastore.one('brands', rowData.brand).name}, from age {_ageGroup}</Text>
 							</View>
 						</View>                        
 					</View>
@@ -117,13 +116,8 @@ var SelectProduct = React.createClass ({
 	},
 
 
-	_renderRow: function(rowData, sectionID, rowID) {
-		/*
-		 console.log('renderRow', rowData, sectionID, rowID);
-		 console.log('renderRow', Object.keys(rowData)) ;
-		 console.log('renderRow', rowData["_id"]) ;
-		 console.log('renderRow', rowData._id) ;
-		 */
+	/*_renderRow: function(rowData, sectionID, rowID) {
+
 
 		var _foodType = Models.foodTypes.meta.map[rowData.foodType];
 		var _ageGroup = Models.ageGroups.meta.map[rowData.ageGroup];
@@ -134,16 +128,15 @@ var SelectProduct = React.createClass ({
 				<View>
 					<View style={GlobalStyles.listrowContainer}>
 						<View>
-							{/* <Image style={GlobalStyles.rowImage} source={{ uri: rowData._images.front.path }} /> */}
 							<Text style={GlobalStyles.listrowTitle}>{rowData.name}</Text>
-							<Text style={GlobalStyles.listrowSubtitle}>{_foodType} by {rowData.brand}, from age {_ageGroup}</Text>
+							<Text style={GlobalStyles.listrowSubtitle}>{_foodType} by {Datastore.one('brands', rowData.brand).name}, from age {_ageGroup}</Text>
 						</View>
 					</View>
 					<View style={GlobalStyles.listrowSeparator}/>
 				</View>
 			</TouchableHighlight>
 		);
-	},
+	},*/
 	rowPressed: function(rowData) {
 		console.log("= [SelectProduct] ", rowData.name);
 		//Datastore.Session.Set('brand', rowData);

@@ -166,7 +166,7 @@ Datastore.countWhereNo = module.exports.countWhereNo = function(_table, key){
 
 
 // findAll, returns list
-Datastore.all = module.exports.all = function(_table, cb){
+Datastore.all = module.exports.all = function(_table, cb, forceAll = false){
 
 	if( !_initialized ){
 		console.log("adding ds.all@"+ _table +" to _init_queue");
@@ -180,29 +180,41 @@ Datastore.all = module.exports.all = function(_table, cb){
 		
 		var obj;
 
-		if( _table == 'registrations' ){
-			
+        var countryBasedTables = ['locations', 'products', 'storeBrands', 'brands'];
+
+		if(forceAll ){
+
 			//console.log('### registrations DBB', table );
 			obj = table.findAll();
 
 		}else{
-
-			if( _table == 'locations' &&  MemoryStore.country ){
+			if( (countryBasedTables.indexOf(_table) > -1) &&  MemoryStore.country ){
 				// filter by country
-				//console.log("DATASTORE: FILTERING ", _table, " on MS.COUNTRY", MemoryStore.country.name,  "MemoryStore:", MemoryStore );
+				console.log("DATASTORE: FILTERING ", _table, " on MS.COUNTRY", MemoryStore.country.name,  "MemoryStore:", MemoryStore );
 				obj = table.where({'country': MemoryStore.country.name}).find();
 			
-			}else if( _table == 'products' &&  MemoryStore.brand ){
+			}/*else if( _table == 'products' &&  MemoryStore.country ){
 				// filter by brand
 				//console.log("CDATASTORE: FILTERING ", _table, " on MS.BRAND", MemoryStore.brand.name,  "MemoryStore:", MemoryStore );
-				obj = table.where({'brand': MemoryStore.brand.name}).find();
+				obj = table.where({'country': MemoryStore.country.name}).find();
 
 			}else if( _table == 'storeBrands' && MemoryStore.country ){
                 // filter by country
                 //console.log("DATASTORE: FILTERING ", _table, " on MS.COUNTRY", MemoryStore.country.name,  "MemoryStore:", MemoryStore );
                 obj = table.where({'country': MemoryStore.country.name}).find();
 
-            } else{
+            } else if( _table == 'brands' && MemoryStore.country ){
+                // filter by country
+                //console.log("DATASTORE: FILTERING ", _table, " on MS.COUNTRY", MemoryStore.country.name,  "MemoryStore:", MemoryStore );
+                obj = table.where({'country': MemoryStore.country.name}).find();
+
+            }*/else if( _table == 'registrations' && MemoryStore.location ){
+                // filter by country
+                //console.log("DATASTORE: FILTERING ", _table, " on MS.COUNTRY", MemoryStore.country.name,  "MemoryStore:", MemoryStore );
+                obj = table.where({'locationID': MemoryStore.location._id}).find();
+
+            }
+            else{
 				// un-filtered
 				//console.log("DATASTORE: all@"+ _table );
 				obj = table.findAll();

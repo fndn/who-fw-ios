@@ -85,8 +85,14 @@ var options = {
 
 var nutBoolOptions = {
 	fields:{
-		boolValue:{ label:'Nutritional information available', onTintColor:'#4B92DB'}
+		boolValue:{ label:'Nutritional information pr 100g available', onTintColor:'#4B92DB'}
 	}
+};
+
+var nutServingBoolOptions = {
+    fields:{
+        boolValue:{ label:'Nutritional information pr serving available', onTintColor:'#4B92DB'}
+    }
 };
 
 var {
@@ -136,6 +142,7 @@ var RegisterProduct = React.createClass({
 		var hundredData = null;
 		var servingData = null;
 		var nutBoolData = {boolValue:false};
+        var nutServingBoolData = {boolValue:false};
 		var visualData = null;
 
 		var images = {
@@ -155,16 +162,28 @@ var RegisterProduct = React.createClass({
 			var data = Datastore.cloneObject(Datastore.MemoryStore.product);
 			hundredData = data.nutritionalPr100g;
 			servingData = data.nutritionalPrServing;
-			nutBoolData = {boolValue:true};
+
+            if(servingData)
+                nutServingBoolData = {boolValue:true};
+            else
+                nutServingBoolData = {boolValue:false};
+
+            if(hundredData)
+			    nutBoolData = {boolValue:true};
+            else
+                nutBoolData = {boolValue:false};
+
 			visualData = data.visualInformation;
 			//if(data.images) images = data.images;
             //Datastore.MemoryStore.product = null;
+            console.log(hundredData);
 		}
 
 		return {
 			options: options,
 			value: data,
 			nutBool: nutBoolData,
+            nutServingBool: nutServingBoolData,
 			nutHundredValue: hundredData,
 			nutServingValue: servingData,
 			visualInfo: visualData,
@@ -200,11 +219,7 @@ var RegisterProduct = React.createClass({
                     <Text style={styles.buttonText}>Add</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity
-                    style={styles.addFoodTypeButton}
-                    onPress = {this.onAddFoodType}>
-                    <Text style={styles.buttonText}>Add</Text>
-                </TouchableOpacity>
+
 
                 <Form
                     type={Models.SimpelBool()}
@@ -216,8 +231,22 @@ var RegisterProduct = React.createClass({
         );
     },
 
+    renderMid: function () {
+        return(
+            <Form
+                type={Models.SimpelBool()}
+                options={nutServingBoolOptions}
+                value={this.state.nutServingBool}
+                onChange={this.onNutritionServingChange}
+                />
+        );
+    },
+
     renderNutritionalPr100g: function()
     {
+        if(!this.state.nutBool.boolValue)
+            return;
+
         return(
             <View>
                 <Text style={GlobalStyles.title}>
@@ -237,6 +266,9 @@ var RegisterProduct = React.createClass({
 
     renderNutritionalPrServing: function()
     {
+        if(!this.state.nutServingBool.boolValue)
+            return;
+
         return(
             <View>
                 <Text style={GlobalStyles.title}>
@@ -303,28 +335,18 @@ var RegisterProduct = React.createClass({
 
 	render: function(){
 
-		if(this.state.nutBool.boolValue)
-		{
-			return (
-				<ScrollView style={GlobalStyles.scrollViewList}>
-                    {this.renderTop()}
+        return (
+            <ScrollView style={GlobalStyles.scrollViewList}>
+                {this.renderTop()}
 
-                    {this.renderNutritionalPr100g()}
-                    {this.renderNutritionalPrServing()}
+                {this.renderNutritionalPr100g()}
+                {this.renderMid()}
+                {this.renderNutritionalPrServing()}
 
-                    {this.renderBottom()}
-				</ScrollView>
-			);
-		}
-		else {
-			return (
-				<ScrollView style={GlobalStyles.scrollViewList}>
-                    {this.renderTop()}
+                {this.renderBottom()}
+            </ScrollView>
+        );
 
-                    {this.renderBottom()}
-				</ScrollView>
-			);
-		}
 	},
 
 	onTakeFront: function () {
@@ -406,6 +428,11 @@ var RegisterProduct = React.createClass({
 		this.setState({nutBool: value})
 	},
 
+    onNutritionServingChange: function(value)
+    {
+        this.setState({nutServingBool: value});
+    },
+
 	onChange2: function(value)
 	{
 		this.setState({nutHundredValue: value});
@@ -450,6 +477,7 @@ var RegisterProduct = React.createClass({
 
             newVal.images = Datastore.cloneObject(this.state.images);
             newVal.imagepaths = Datastore.cloneObject(this.state.imagepaths);
+            newVal.country = Datastore.MemoryStore.country.name;
 
 
             /*

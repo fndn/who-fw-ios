@@ -309,25 +309,27 @@ var formStyleSheet = {
         normal: {
             marginBottom: 4,
             backgroundColor: '#F8F8F8',
-            marginLeft: -20,
-            marginRight: -20,
             paddingLeft: 20,
             paddingRight: 20,
         },
         // the style applied when a validation error occours
         error: {
-            marginBottom: 4
+            marginBottom: 4,
+            backgroundColor: '#F8F8F8',
+            paddingLeft: 20,
+            paddingRight: 20,
         }
     },
     datepicker: {
         normal: {
             marginBottom: 4
+
         },
         // the style applied when a validation error occours
         error: {
             marginBottom: 4
         }
-    },
+    }
 };
 
 //var theme = {};

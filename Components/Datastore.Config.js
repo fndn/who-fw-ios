@@ -2,7 +2,7 @@
 // Settings
 
 // Datastore will store everything in this (local) database.
-module.exports.database = 'whofw-dev-100';
+module.exports.database = 'whofw-dev-200';
 
 // Datastore will create AsyncStore backends for these tables
 // and Datastore.Sync will keep these synchronised with the server

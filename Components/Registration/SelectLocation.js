@@ -4,6 +4,7 @@ var React           = require('react-native');
 var GlobalStyles    = require('../../Styles/GlobalStyles');
 //var SelectLocation 		= require('./SelectLocation');
 var Datastore       = require('../Datastore');
+var ViewRegistrations = require('./ViewRegistrations');
 var SelectProduct = require('./SelectProduct');
 var RegisterProduct = require('./RegisterProduct');
 
@@ -112,18 +113,27 @@ var SelectLocation = React.createClass ({
         this.props.navigator.push({
             leftButtonTitle: 'Back',
             onLeftButtonPress: () => this.props.navigator.pop(),
-            title: 'Select Product',
-            component: SelectProduct,
+            title: 'Registrations',
+            component: ViewRegistrations,
+            rightButtonTitle: 'Add',
             onRightButtonPress: () => {
                 this.props.navigator.push({
-                    title: 'Register Product',
-                    component: RegisterProduct,
+                    title: 'Select Product',
+                    component: SelectProduct,
                     leftButtonTitle: 'Cancel',
-                    onLeftButtonPress: () => { this.props.navigator.pop();}
+                    onLeftButtonPress: () => { this.props.navigator.pop();},
+                    rightButtonTitle: 'New',
+                    onRightButtonPress: () =>
+                    {
+                        this.props.navigator.push({
+                            title: 'Register Product',
+                            component: RegisterProduct,
+                            leftButtonTitle: 'Cancel',
+                            onLeftButtonPress: () => {this.props.navigator.pop()}
+                        })
+                    }
                 });
-            },
-            rightButtonTitle: 'Add'
-
+            }
         });
 	}
 

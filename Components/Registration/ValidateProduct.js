@@ -11,6 +11,7 @@ var Datastore       = require('../Datastore');
 var Models          = require('../Models');
 var t               = require('tcomb-form-native');
 var RegisterProduct = require('./RegisterProduct');
+var CompleteRegistration    = require('./CompleteRegistration');
 
 var Form = t.form.Form;
 
@@ -20,6 +21,9 @@ var options = {
 		name:{
 			editable: false
 		},
+        brand:{
+            editable: false
+        },
 		foodType:{
 			editable: false
 		},
@@ -131,7 +135,7 @@ var ValidateProduct = React.createClass({
 		navigatorEventListener = this.props.navigator.navigationContext.addListener('willfocus', (event) =>
 		{
 			if(event.data.route.component.displayName === "ValidateProduct") {
-				console.log("ValidateProduct DATA: " , this.fillData());
+				//console.log("ValidateProduct DATA: " , this.fillData());
 				this.setState(this.fillData());
 			}
 			//console.log(event.data.route.component.displayName);
@@ -145,9 +149,10 @@ var ValidateProduct = React.createClass({
 	{
 		var data = Datastore.cloneObject(Datastore.MemoryStore.product);
 		//Models.storeTypes.meta.map["SUP"]
-		//console.log("getInitialState, ", data);
+		console.log("getInitialState, ", Models.brands);
 		data.foodType = Models.foodTypes.meta.map[data.foodType];
 		data.ageGroup = Models.ageGroups.meta.map[data.ageGroup];
+        data.brand = Datastore.one('brands', data.brand).name;
 
 		if(!data.images)
 		{
@@ -242,18 +247,36 @@ var ValidateProduct = React.createClass({
 					<Image style={GlobalStyles.image} source={{ uri: this.state.value.images.right }} />
 					<Text style={GlobalStyles.imageText}>Right</Text>
 				</View>
+                <View>
+                    <Text style={styles.text}>
+                        Click CONFIRM to confirm that this product matches the one in the store to every detail.
+                    </Text>
+                    <TouchableHighlight style={styles.buttonConfirm} onPress = {this.onPress} underlayColor='#FF92A6'>
+                        <Text style={GlobalStyles.buttonText}>CONFIRM</Text>
+                    </TouchableHighlight>
+                    <Text style={styles.text}>
+                        Click CLONE AND EDIT if there is any difference between the product in the store and this.
+                        On the next page you will be able to edit the information.
+                    </Text>
+                    <TouchableHighlight style={[styles.buttonConfirm, styles.buttonClone]} onPress = {this.onEdit} underlayColor='#FF92A6'>
+                        <Text style={GlobalStyles.buttonText}>CLONE AND EDIT</Text>
+                    </TouchableHighlight>
+                </View>
 
-				<View style={styles.doubleButtonContainer}>
-					<TouchableHighlight style={[styles.button,styles.button_notlast]} onPress = {this.onPress} underlayColor='#C8E5F3'>
-						<Text style={GlobalStyles.buttonText}>Submit</Text>
-					</TouchableHighlight>
-					<TouchableHighlight style={styles.button} onPress = {this.onEdit} underlayColor='#FF92A6'>
-						<Text style={GlobalStyles.buttonText}>Clone &amp; Edit</Text>
-					</TouchableHighlight>
-				</View>
 			</ScrollView>
 		);
 	},
+
+/*
+ <View style={styles.doubleButtonContainer}>
+ <TouchableHighlight style={[styles.button,styles.button_notlast]} onPress = {this.onPress} underlayColor='#C8E5F3'>
+ <Text style={GlobalStyles.buttonText}>Submit</Text>
+ </TouchableHighlight>
+ <TouchableHighlight style={styles.button} onPress = {this.onEdit} underlayColor='#FF92A6'>
+ <Text style={GlobalStyles.buttonText}>Clone &amp; Edit</Text>
+ </TouchableHighlight>
+ </View>
+ */
 
 
 	onPress: function()
@@ -273,12 +296,8 @@ var ValidateProduct = React.createClass({
 
 				var newVal = {};
 				newVal.product = Datastore.cloneObject(this.state.value); // foodType and ageGroup gets name
-				//newVal.product = Datastore.cloneObject(Datastore.MemoryStore.product); // foodType and ageGroup are abbreviations
-
-				newVal.brand = Datastore.MemoryStore.brand;
 				newVal.country = Datastore.MemoryStore.country;
 				newVal.location = Datastore.MemoryStore.location;
-				//newVal.storeType = Datastore.MemoryStore.storeType;
 				newVal.credentials = Datastore.MemoryStore.credentials;
 				newVal.timeOfRegistration = Date.now(); // UTC in seconds
 
@@ -297,13 +316,26 @@ var ValidateProduct = React.createClass({
 
 				// Strip local _id fields
 				newVal = Datastore.removeIDs( newVal );
+                newVal.locationID = Datastore.MemoryStore.location._id;
 			   
 				console.log("-------------------------------");
 				console.log("# Saving Registration:", newVal);
 
 				Datastore.add("registrations", newVal);
 
-				this.props.navigator.pop();
+
+                /*var locationRegistration = {};
+                locationRegistration.locationID = Datastore.MemoryStore.location._id;
+                locationRegistration.value = newVal;
+                console.log("# Saving location registration", locationRegistration);
+                Datastore.add("locationRegistrations", locationRegistration);*/
+
+				//this.props.navigator.popN(2); // pop back to view registrations past select product
+                this.props.navigator.push({
+                    onLeftButtonPress: () => this.props.navigator.popN(2),
+                    leftButtonTitle: 'Products',
+                   component: CompleteRegistration
+                });
 			}
 		}
 	},
@@ -328,23 +360,24 @@ var styles = StyleSheet.create({
 		flexDirection: 'row'
 	},
 	// Red button (Copy)
-	button: {
+	buttonConfirm: {
 		height: 36,
 		flex: 1,
-		backgroundColor: '#FF2851',
-		borderColor: '#FF2851',
+		backgroundColor: '#44da5e',
 		borderWidth: 0,
-		borderRadius: 8,
-		marginBottom: 10,
+		borderRadius: 18.5,
+		marginBottom: 15,
 		alignSelf: 'stretch',
 		justifyContent: 'center'
 	},
 	// Green button (Use)
-	button_notlast: {
-		backgroundColor: '#54C7FC',
-		borderColor: '#54C7FC',
-		marginRight: 10
-	}
+	buttonClone: {
+		backgroundColor: '#ff9600'
+	},
+    text: {
+        marginBottom: 15,
+        marginTop: 15
+    }
 });
 
 

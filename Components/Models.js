@@ -116,6 +116,7 @@ module.exports.StoreBrand = function(){
 module.exports.Product = function(){
     var data = Datastore.all('brands');
     var brands = {};
+    //console.log('brands', data);
     for(var i = 0; i < data.length; i++)
     {
         brands[data[i]._id] = data[i].name;
@@ -132,6 +133,7 @@ module.exports.Product = function(){
 module.exports.ProductEvaluation = function(){
 	return t.struct({
 		name: t.Str,
+        brand: t.Str,
 		foodType: t.Str,
 		ageGroup: t.Str
 	});

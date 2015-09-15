@@ -29,6 +29,12 @@ var {
 var navigatorEventListener;
 
 var RegisterLocation = React.createClass({
+    getInitialState: function() {
+
+        return {
+            value: null
+        };
+    },
 
 	render: function(){
 
@@ -40,7 +46,9 @@ var RegisterLocation = React.createClass({
                     <Form
                         ref="form"
                         type={Models.Location()}
-                        options={options}/>
+                        options={options}
+                        value={this.state.value}
+                        onChange={this.onChange}/>
 
                     <TouchableOpacity
                         style={styles.addStoreBrandButton}
@@ -69,6 +77,12 @@ var RegisterLocation = React.createClass({
             component: RegisterStoreBrand
 
         });
+    },
+
+    onChange: function(value)
+    {
+        //console.log(value);
+        this.setState({value: value});
     },
 
 	onPress: function()
