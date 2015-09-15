@@ -5,12 +5,12 @@
 
 'use strict';
 
-var React 			= require('react-native');
-var GlobalStyles 	= require('../../Styles/GlobalStyles');
-var Datastore       = require('../Datastore');
-var Models          = require('../Models');
-var t               = require('tcomb-form-native');
-var RegisterProduct = require('./RegisterProduct');
+var React 					= require('react-native');
+var GlobalStyles 			= require('../../Styles/GlobalStyles');
+var Datastore 				= require('fndn-rn-datastore');
+var Models          		= require('../Models');
+var t               		= require('tcomb-form-native');
+var RegisterProduct 		= require('./RegisterProduct');
 var CompleteRegistration    = require('./CompleteRegistration');
 
 var Form = t.form.Form;
@@ -21,9 +21,9 @@ var options = {
 		name:{
 			editable: false
 		},
-        brand:{
-            editable: false
-        },
+		brand:{
+			editable: false
+		},
 		foodType:{
 			editable: false
 		},
@@ -147,12 +147,12 @@ var ValidateProduct = React.createClass({
 
 	fillData: function()
 	{
-		var data = Datastore.cloneObject(Datastore.MemoryStore.product);
+		var data = Datastore.clone(Datastore.M.product);
 		//Models.storeTypes.meta.map["SUP"]
 		console.log("getInitialState, ", Models.brands);
 		data.foodType = Models.foodTypes.meta.map[data.foodType];
 		data.ageGroup = Models.ageGroups.meta.map[data.ageGroup];
-        data.brand = Datastore.one('brands', data.brand).name;
+		data.brand = Datastore.data.one('brands', data.brand).name;
 
 		if(!data.images)
 		{
@@ -247,21 +247,21 @@ var ValidateProduct = React.createClass({
 					<Image style={GlobalStyles.image} source={{ uri: this.state.value.images.right }} />
 					<Text style={GlobalStyles.imageText}>Right</Text>
 				</View>
-                <View>
-                    <Text style={styles.text}>
-                        Click CONFIRM to confirm that this product matches the one in the store to every detail.
-                    </Text>
-                    <TouchableHighlight style={styles.buttonConfirm} onPress = {this.onPress} underlayColor='#FF92A6'>
-                        <Text style={GlobalStyles.buttonText}>CONFIRM</Text>
-                    </TouchableHighlight>
-                    <Text style={styles.text}>
-                        Click CLONE AND EDIT if there is any difference between the product in the store and this.
-                        On the next page you will be able to edit the information.
-                    </Text>
-                    <TouchableHighlight style={[styles.buttonConfirm, styles.buttonClone]} onPress = {this.onEdit} underlayColor='#FF92A6'>
-                        <Text style={GlobalStyles.buttonText}>CLONE AND EDIT</Text>
-                    </TouchableHighlight>
-                </View>
+				<View>
+					<Text style={styles.text}>
+						Click CONFIRM to confirm that this product matches the one in the store to every detail.
+					</Text>
+					<TouchableHighlight style={styles.buttonConfirm} onPress = {this.onPress} underlayColor='#FF92A6'>
+						<Text style={GlobalStyles.buttonText}>CONFIRM</Text>
+					</TouchableHighlight>
+					<Text style={styles.text}>
+						Click CLONE AND EDIT if there is any difference between the product in the store and this.
+						On the next page you will be able to edit the information.
+					</Text>
+					<TouchableHighlight style={[styles.buttonConfirm, styles.buttonClone]} onPress = {this.onEdit} underlayColor='#FF92A6'>
+						<Text style={GlobalStyles.buttonText}>CLONE AND EDIT</Text>
+					</TouchableHighlight>
+				</View>
 
 			</ScrollView>
 		);
@@ -290,15 +290,15 @@ var ValidateProduct = React.createClass({
 
 		if (value) { // if validation fails, value will be null
 			// Copy value because it is not extensible, then add "private" values
-			if(!Datastore.MemoryStore.credentials || !Datastore.MemoryStore.credentials.name || !Datastore.MemoryStore.credentials.affiliation )
+			if(!Datastore.M.credentials || !Datastore.M.credentials.name || !Datastore.M.credentials.affiliation )
 				AlertIOS.alert('Credentials needed!', 'Please go to \"Introduction\" and fill in the information', [{text: 'OK'}] );
 			else {
 
 				var newVal = {};
-				newVal.product = Datastore.cloneObject(this.state.value); // foodType and ageGroup gets name
-				newVal.country = Datastore.MemoryStore.country;
-				newVal.location = Datastore.MemoryStore.location;
-				newVal.credentials = Datastore.MemoryStore.credentials;
+				newVal.product = Datastore.clone(this.state.value); // foodType and ageGroup gets name
+				newVal.country = Datastore.M.country;
+				newVal.location = Datastore.M.location;
+				newVal.credentials = Datastore.M.credentials;
 				newVal.timeOfRegistration = Date.now(); // UTC in seconds
 
 				console.log("  this,state", this.state );
@@ -312,30 +312,30 @@ var ValidateProduct = React.createClass({
 				
 				
 				// Create a unique "name":
-				newVal.name = Datastore.ShortID.generate();
+				newVal.name = Datastore.shortid.generate();
 
 				// Strip local _id fields
-				newVal = Datastore.removeIDs( newVal );
-                newVal.locationID = Datastore.MemoryStore.location._id;
+				newVal = Datastore.data.removeIDs( newVal );
+				newVal.locationID = Datastore.M.location._id;
 			   
 				console.log("-------------------------------");
 				console.log("# Saving Registration:", newVal);
 
-				Datastore.add("registrations", newVal);
+				Datastore.data.add("registrations", newVal);
 
 
-                /*var locationRegistration = {};
-                locationRegistration.locationID = Datastore.MemoryStore.location._id;
-                locationRegistration.value = newVal;
-                console.log("# Saving location registration", locationRegistration);
-                Datastore.add("locationRegistrations", locationRegistration);*/
+				/*var locationRegistration = {};
+				locationRegistration.locationID = Datastore.M.location._id;
+				locationRegistration.value = newVal;
+				console.log("# Saving location registration", locationRegistration);
+				Datastore.data.add("locationRegistrations", locationRegistration);*/
 
 				//this.props.navigator.popN(2); // pop back to view registrations past select product
-                this.props.navigator.push({
-                    onLeftButtonPress: () => this.props.navigator.popN(2),
-                    leftButtonTitle: 'Products',
-                   component: CompleteRegistration
-                });
+				this.props.navigator.push({
+					onLeftButtonPress: () => this.props.navigator.popN(2),
+					leftButtonTitle: 'Products',
+				   component: CompleteRegistration
+				});
 			}
 		}
 	},
@@ -374,10 +374,10 @@ var styles = StyleSheet.create({
 	buttonClone: {
 		backgroundColor: '#ff9600'
 	},
-    text: {
-        marginBottom: 15,
-        marginTop: 15
-    }
+	text: {
+		marginBottom: 15,
+		marginTop: 15
+	}
 });
 
 

@@ -1,10 +1,11 @@
 'use strict';
 
 var React 				= require('react-native');
+var Datastore 			= require('fndn-rn-datastore');
+
 var GlobalStyles 		= require('../../Styles/GlobalStyles');
 var SelectLocation 		= require('./SelectLocation');
 var RegisterLocation    = require('./RegisterLocation');
-var Datastore  			= require('../Datastore');
 
 var {
 	StyleSheet,
@@ -21,14 +22,9 @@ var navigatorEventListener;
 
 var SelectCountry = React.createClass ({
 
-	getInitialState: function() {
-		//console.log('SelectCountry getInitialState');
-		return null;
-	},
-
 	componentWillMount: function(){
-		//console.log('SelectCountry componentWillMount');
-		//super(props);
+		console.log('[SelectCountry] componentWillMount');
+
 		var dataSource = new ListView.DataSource({rowHasChanged: (r1, r2) => r1["_id"] !== r2["_id"] });
 		this.state = {
 			isLoading: false,
@@ -36,26 +32,30 @@ var SelectCountry = React.createClass ({
 			dataSource: dataSource
 		};
 
-		// Called when select country will be focused next
-		navigatorEventListener = this.props.navigator.navigationContext.addListener('willfocus', (event) =>
-		{
-			//console.log(event.data.route.component.displayName);
-			if(event.data.route.component.displayName === "SelectCountry"){
-				Datastore.all('countries', this.dataAvailable);
-			}
-			
+		navigatorEventListener = this.props.navigator.navigationContext.addListener('willfocus', (event) => {
+			//console.log("[SelectCountry]", event.data.route.displayName);
+			if(event.data.route.displayName === "SelectCountry"){
+				Datastore.data.all('countries', this.dataAvailable);
+			}			
 		});
 
-		Datastore.all('countries', this.dataAvailable);
+		// 1
+		Datastore.data.all('countries', this.dataAvailable);
 	},
 
-	componentDidMount: function(){
-		//console.log('SelectCountry componentDidMount');
-		Datastore.all('countries', this.dataAvailable);
+	componentWillUnmount: function(){
+		navigatorEventListener.remove();
 	},
+
+	/*
+	componentDidMount: function(){
+		console.log('[SelectCountry] componentDidMount');
+		Datastore.data.all('countries', this.dataAvailable);
+	},
+	*/
 
 	dataAvailable: function(_data){
-		//console.log('SelectCountry dataAvailable', _data);
+		//console.log('[SelectCountry] dataAvailable', _data);
 		this.setState({
 			isLoading:false,
 			message:'loaded',
@@ -63,12 +63,7 @@ var SelectCountry = React.createClass ({
 		});
 	},
 
-	componentWillUnmount: function(){
-		navigatorEventListener.remove();
-	},
-
 	render: function(){
-
 		return (
 			<View style={[GlobalStyles.scrollViewContainer, GlobalStyles.theme.scrollViewContainer]}>
 				<ListView
@@ -78,16 +73,9 @@ var SelectCountry = React.createClass ({
 					renderRow 	= {this._renderRow} />
 			</View>
 		);
-
 	},
 
 	_renderRow: function( rowData, sectionID, rowID ){
-		/*
-		console.log('renderRow', rowData, sectionID, rowID);
-		console.log('renderRow', Object.keys(rowData)) ;
-		console.log('renderRow', rowData["_id"]) ;
-		console.log('renderRow', rowData._id) ;
-		*/
 		return (
 			<TouchableHighlight underlayColor='#EEE' onPress={() => this.rowPressed(rowData)}>
 				<View>
@@ -105,18 +93,20 @@ var SelectCountry = React.createClass ({
 
 	rowPressed: function( rowData ){
 		console.log("= [SelectCountry] ", rowData.name );
-		//Datastore.Session.Set('country', rowData);
-		Datastore.MemoryStore.country = rowData;
+
+		Datastore.M.country = rowData;
 
 		this.props.navigator.push({
 			leftButtonTitle: 'Back',
 			onLeftButtonPress: () => this.props.navigator.pop(),
 			title: 'Select Location',
+			displayName: 'SelectLocation',
 			component: SelectLocation,
 			onRightButtonPress: () => {
 				this.props.navigator.push({
 					title: 'Register Location',
 					component: RegisterLocation,
+					displayName: 'RegisterLocation',
 					leftButtonTitle: 'Cancel',
 					onLeftButtonPress: () => { this.props.navigator.pop();}
 				});
@@ -130,7 +120,3 @@ var SelectCountry = React.createClass ({
 
 module.exports = SelectCountry;
 
-// Local styles
-var styles = StyleSheet.create({
-
-});

@@ -4,10 +4,12 @@
 'use strict';
 
 var React 			= require('react-native');
-var GlobalStyles 	= require('../../Styles/GlobalStyles');
-var Datastore       = require('../Datastore');
-var Models          = require('../Models');
+var Datastore 		= require('fndn-rn-datastore');
 var t               = require('tcomb-form-native');
+
+var Models          = require('../Models');
+var GlobalStyles 	= require('../../Styles/GlobalStyles');
+
 
 var Form = t.form.Form;
 
@@ -59,10 +61,10 @@ var RegisterBrand = React.createClass({
 		if (value) { // if validation fails, value will be null
 			// Copy value because it is not extensible, then add "private" values
 			var newVal = JSON.parse(JSON.stringify(value));
-			newVal.country = Datastore.MemoryStore.country.name;
+			newVal.country = Datastore.M.country.name;
 			//Datastore.MemoryStore.brand = value
 			console.log("RegisterBrand add: " , newVal);
-			Datastore.add('brands', newVal);
+			Datastore.data.add('brands', newVal);
 			//Datastore.Set("name", value.name);
 			//Datastore.add('locations', value);
 			this.props.navigator.pop();

@@ -1,16 +1,16 @@
 'use strict';
 
 var React 			= require('react-native');
+var Datastore 		= require('fndn-rn-datastore');
+var t               = require('tcomb-form-native');
+
 var GlobalStyles 	= require('../../Styles/GlobalStyles');
 var SelectCountry 	= require('./SelectCountry');
-var Datastore       = require('../Datastore');
 var Models          = require('../Models');
-var t               = require('tcomb-form-native');
 
 var Form = t.form.Form;
 
-
-var options = {}; // optional rendering options (see documentation)
+var options = {};
 
 var {
 	StyleSheet,
@@ -22,13 +22,9 @@ var {
 	ActivityIndicatorIOS,
 	NavigatorIOS,
 	ScrollView
-	} = React;
+} = React;
 
 var RegisterCountry = React.createClass({
-
-	//constructor( props ){
-	//    super(props);
-	//}
 
 	render: function(){
 		return (
@@ -48,28 +44,13 @@ var RegisterCountry = React.createClass({
 		);
 	},
 
-	onPress: function()
-	{
-
-		// call getValue() to get the values of the form
-
+	onPress: function(){
 		var value = this.refs.form.getValue();
-		if (value) { // if validation fails, value will be null
-			//var newVal = JSON.parse(JSON.stringify(value));
-			var newVal = Datastore.cloneObject(value); // about 30x faster :)
-			//console.log(newVal);
-			Datastore.add('countries', newVal)
+		if (value) {
+			Datastore.data.add('countries', Datastore.clone(value) );
 			this.props.navigator.pop();
 		}
 	}
 });
-
-
-
-var styles = StyleSheet.create({
-
-});
-
-
 
 module.exports = RegisterCountry;

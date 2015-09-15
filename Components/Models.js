@@ -2,7 +2,7 @@
 
 var React 	    = require('react-native');
 var t 	 	    = require('tcomb-form-native');
-var Datastore    = require('./Datastore');
+var Datastore 	= require('fndn-rn-datastore');
 
 // Enums
 var incomeTypes = t.enums({
@@ -76,12 +76,16 @@ module.exports.Country = function(){
 };
 
 module.exports.Location = function(){
-    var data = Datastore.all('storeBrands');
-    var storeBrands = {};
-    for(var i = 0; i < data.length; i++)
-    {
-        storeBrands[data[i]._id] = data[i].name;
-    }
+	//var data = Datastore.data.all('storeBrands');
+	
+	var data = Datastore.data.where('storeBrands', {"countryCode": Datastore.M.country.countryCode });
+	//console.log('[LocationModel] filterByCountry', Datastore.M, data );
+
+	var storeBrands = {};
+	for(var i = 0; i < data.length; i++)
+	{
+		storeBrands[data[i]._id] = data[i].name;
+	}
 
 	return t.struct({
 		name: t.Str,
@@ -89,8 +93,8 @@ module.exports.Location = function(){
 		neighbourhood: t.maybe(t.Str),
 		street: t.Str,
 		incomeType: incomeTypes,
-        storeBrand: t.enums(storeBrands),
-        storeType: storeTypes
+		storeBrand: t.enums(storeBrands),
+		storeType: storeTypes
 	});
 };
 
@@ -108,23 +112,23 @@ module.exports.Brand = function(){
 
 // For registration
 module.exports.StoreBrand = function(){
-    return t.struct({
-        name: t.Str
-    });
+	return t.struct({
+		name: t.Str
+	});
 };
 
 module.exports.Product = function(){
-    var data = Datastore.all('brands');
-    var brands = {};
-    //console.log('brands', data);
-    for(var i = 0; i < data.length; i++)
-    {
-        brands[data[i]._id] = data[i].name;
-    }
+	var data = Datastore.data.all('brands');
+	var brands = {};
+	//console.log('brands', data);
+	for(var i = 0; i < data.length; i++)
+	{
+		brands[data[i]._id] = data[i].name;
+	}
 
 	return t.struct({
 		name: t.Str,
-        brand: t.enums(brands),
+		brand: t.enums(brands),
 		foodType: foodTypes,
 		ageGroup: ageGroups
 	});
@@ -133,7 +137,7 @@ module.exports.Product = function(){
 module.exports.ProductEvaluation = function(){
 	return t.struct({
 		name: t.Str,
-        brand: t.Str,
+		brand: t.Str,
 		foodType: t.Str,
 		ageGroup: t.Str
 	});

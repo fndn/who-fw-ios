@@ -77,7 +77,7 @@ var SelectStoreType = React.createClass ({
 
 	rowPressed: function( rowData ){
 		console.log("= [SelectStoreType] ", rowData.name );
-		Datastore.MemoryStore.storeType = rowData;
+		Datastore.M.storeType = rowData;
 
 		this.props.navigator.push({
 			leftButtonTitle: 'Back',

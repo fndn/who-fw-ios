@@ -1,18 +1,13 @@
-/**
- * Created by JacobMac on 20/08/15.
- */
-
 'use strict';
 
 var React 			= require('react-native');
+var Datastore 		= require('fndn-rn-datastore');
+var t 				= require('tcomb-form-native');
+var CameraCapture 	= require('./CameraCapture');
+var RegisterBrand 	= require('./RegisterBrand');
+var Models 			= require('../Models');
 var GlobalStyles 	= require('../../Styles/GlobalStyles');
-var Datastore       = require('../Datastore');
-var Models          = require('../Models');
-var t               = require('tcomb-form-native');
-var CameraCapture   = require('./CameraCapture');
-var RegisterBrand   = require('./RegisterBrand');
-
-var RNFS            = require('react-native-fs');
+//var RNFS            = require('react-native-fs');
 
 var Form = t.form.Form;
 
@@ -90,9 +85,9 @@ var nutBoolOptions = {
 };
 
 var nutServingBoolOptions = {
-    fields:{
-        boolValue:{ label:'Nutritional information pr serving available', onTintColor:'#4B92DB'}
-    }
+	fields:{
+		boolValue:{ label:'Nutritional information pr serving available', onTintColor:'#4B92DB'}
+	}
 };
 
 var {
@@ -102,7 +97,7 @@ var {
 	Component,
 	TextInput,
 	TouchableHighlight,
-    TouchableOpacity,
+	TouchableOpacity,
 	ActivityIndicatorIOS,
 	NavigatorIOS,
 	Image,
@@ -142,7 +137,7 @@ var RegisterProduct = React.createClass({
 		var hundredData = null;
 		var servingData = null;
 		var nutBoolData = {boolValue:false};
-        var nutServingBoolData = {boolValue:false};
+		var nutServingBoolData = {boolValue:false};
 		var visualData = null;
 
 		var images = {
@@ -152,38 +147,38 @@ var RegisterProduct = React.createClass({
 			left: null
 		};
 
-		var uuid = Datastore.ShortID.generate();
+		var uuid = Datastore.shortid.generate();
 
 		// Q: Should we make a new UUID for it? YES - and we should NOT let it inherit images from the source.
 		// (reason: the images should depict the product *in detail* so it CAN NOT look *exactly* the same as its source)
 
 		if(this.props.getProductData){
 			//was cloned
-			var data = Datastore.cloneObject(Datastore.MemoryStore.product);
+			var data = Datastore.clone(Datastore.M.product);
 			hundredData = data.nutritionalPr100g;
 			servingData = data.nutritionalPrServing;
 
-            if(servingData)
-                nutServingBoolData = {boolValue:true};
-            else
-                nutServingBoolData = {boolValue:false};
+			if(servingData)
+				nutServingBoolData = {boolValue:true};
+			else
+				nutServingBoolData = {boolValue:false};
 
-            if(hundredData)
-			    nutBoolData = {boolValue:true};
-            else
-                nutBoolData = {boolValue:false};
+			if(hundredData)
+				nutBoolData = {boolValue:true};
+			else
+				nutBoolData = {boolValue:false};
 
 			visualData = data.visualInformation;
 			//if(data.images) images = data.images;
-            //Datastore.MemoryStore.product = null;
-            console.log(hundredData);
+			//Datastore.M.product = null;
+			console.log(hundredData);
 		}
 
 		return {
 			options: options,
 			value: data,
 			nutBool: nutBoolData,
-            nutServingBool: nutServingBoolData,
+			nutServingBool: nutServingBoolData,
 			nutHundredValue: hundredData,
 			nutServingValue: servingData,
 			visualInfo: visualData,
@@ -202,150 +197,150 @@ var RegisterProduct = React.createClass({
 		);
 	},
 
-    renderTop: function(){
-        return(
-            <View>
-                <Form
-                    ref="form"
-                    type={Models.Product()}
-                    value={this.state.value}
-                    options={this.state.options}
-                    onChange={this.onChange}
-                />
+	renderTop: function(){
+		return(
+			<View>
+				<Form
+					ref="form"
+					type={Models.Product()}
+					value={this.state.value}
+					options={this.state.options}
+					onChange={this.onChange}
+				/>
 
-                <TouchableOpacity
-                    style={styles.addBrandButton}
-                    onPress = {this.onAddBrand}>
-                    <Text style={styles.buttonText}>Add</Text>
-                </TouchableOpacity>
-
-
-
-                <Form
-                    type={Models.SimpelBool()}
-                    options={nutBoolOptions}
-                    value={this.state.nutBool}
-                    onChange={this.onNutritionInfoAvailableChange}
-                    />
-            </View>
-        );
-    },
-
-    renderMid: function () {
-        return(
-            <Form
-                type={Models.SimpelBool()}
-                options={nutServingBoolOptions}
-                value={this.state.nutServingBool}
-                onChange={this.onNutritionServingChange}
-                />
-        );
-    },
-
-    renderNutritionalPr100g: function()
-    {
-        if(!this.state.nutBool.boolValue)
-            return;
-
-        return(
-            <View>
-                <Text style={GlobalStyles.title}>
-                    Nutritional Information
-                    Pr 100g
-                </Text>
-                <Form
-                    ref="form2"
-                    type={Models.Nutrition()}
-                    value={this.state.nutHundredValue}
-                    onChange={this.onChange2}
-                    options={this.state.options}
-                    />
-            </View>
-        )
-    },
-
-    renderNutritionalPrServing: function()
-    {
-        if(!this.state.nutServingBool.boolValue)
-            return;
-
-        return(
-            <View>
-                <Text style={GlobalStyles.title}>
-                    Per serving
-                </Text>
-                <Form
-                    ref="form3"
-                    type={Models.NutritionServing()}
-                    value={this.state.nutServingValue}
-                    options={this.state.options}
-                    onChange={this.onChange3}
-                    />
-            </View>
-        )
-    },
-
-    renderBottom: function()
-    {
-        return(
-            <View>
-                <Text style={GlobalStyles.title}>
-                    Visual information
-                </Text>
-                <Form
-                    ref="form4"
-                    type={Models.VisualInformation()}
-                    options={options}
-                    onChange={this.onChange4}
-                    value={this.state.visualInfo}
-                    />
-
-                <Text style={GlobalStyles.title}>
-                    Pictures
-                </Text>
-                <TouchableHighlight style={GlobalStyles.button} onPress={this.onTakeFront} underlayColor='#99d9f4'>
-                    <Text style={GlobalStyles.buttonText}>Capture product images</Text>
-                </TouchableHighlight>
+				<TouchableOpacity
+					style={styles.addBrandButton}
+					onPress = {this.onAddBrand}>
+					<Text style={styles.buttonText}>Add</Text>
+				</TouchableOpacity>
 
 
-                <View style={GlobalStyles.imageGrid}>
-                    <Image style={GlobalStyles.image} source={{ uri: this.state.images.front }} />
-                    <Text style={GlobalStyles.imageText}>Front</Text>
-                </View>
-                <View style={GlobalStyles.imageGrid}>
-                    <Image style={GlobalStyles.image} source={{ uri: this.state.images.back }} />
-                    <Text style={GlobalStyles.imageText}>Back</Text>
-                </View>
-                <View style={GlobalStyles.imageGrid}>
-                    <Image style={GlobalStyles.image} source={{ uri: this.state.images.left }} />
-                    <Text style={GlobalStyles.imageText}>Left</Text>
-                </View>
-                <View style={GlobalStyles.imageGrid}>
-                    <Image style={GlobalStyles.image} source={{ uri: this.state.images.right }} />
-                    <Text style={GlobalStyles.imageText}>Right</Text>
-                </View>
 
-                <TouchableHighlight style={GlobalStyles.button} onPress={this.onPress} underlayColor='#99d9f4'>
-                    <Text style={GlobalStyles.buttonText}>Save</Text>
-                </TouchableHighlight>
-            </View>
-        )
-    },
+				<Form
+					type={Models.SimpelBool()}
+					options={nutBoolOptions}
+					value={this.state.nutBool}
+					onChange={this.onNutritionInfoAvailableChange}
+					/>
+			</View>
+		);
+	},
+
+	renderMid: function () {
+		return(
+			<Form
+				type={Models.SimpelBool()}
+				options={nutServingBoolOptions}
+				value={this.state.nutServingBool}
+				onChange={this.onNutritionServingChange}
+				/>
+		);
+	},
+
+	renderNutritionalPr100g: function()
+	{
+		if(!this.state.nutBool.boolValue)
+			return;
+
+		return(
+			<View>
+				<Text style={GlobalStyles.title}>
+					Nutritional Information
+					Pr 100g
+				</Text>
+				<Form
+					ref="form2"
+					type={Models.Nutrition()}
+					value={this.state.nutHundredValue}
+					onChange={this.onChange2}
+					options={this.state.options}
+					/>
+			</View>
+		)
+	},
+
+	renderNutritionalPrServing: function()
+	{
+		if(!this.state.nutServingBool.boolValue)
+			return;
+
+		return(
+			<View>
+				<Text style={GlobalStyles.title}>
+					Per serving
+				</Text>
+				<Form
+					ref="form3"
+					type={Models.NutritionServing()}
+					value={this.state.nutServingValue}
+					options={this.state.options}
+					onChange={this.onChange3}
+					/>
+			</View>
+		)
+	},
+
+	renderBottom: function()
+	{
+		return(
+			<View>
+				<Text style={GlobalStyles.title}>
+					Visual information
+				</Text>
+				<Form
+					ref="form4"
+					type={Models.VisualInformation()}
+					options={options}
+					onChange={this.onChange4}
+					value={this.state.visualInfo}
+					/>
+
+				<Text style={GlobalStyles.title}>
+					Pictures
+				</Text>
+				<TouchableHighlight style={GlobalStyles.button} onPress={this.onTakeFront} underlayColor='#99d9f4'>
+					<Text style={GlobalStyles.buttonText}>Capture product images</Text>
+				</TouchableHighlight>
+
+
+				<View style={GlobalStyles.imageGrid}>
+					<Image style={GlobalStyles.image} source={{ uri: this.state.images.front }} />
+					<Text style={GlobalStyles.imageText}>Front</Text>
+				</View>
+				<View style={GlobalStyles.imageGrid}>
+					<Image style={GlobalStyles.image} source={{ uri: this.state.images.back }} />
+					<Text style={GlobalStyles.imageText}>Back</Text>
+				</View>
+				<View style={GlobalStyles.imageGrid}>
+					<Image style={GlobalStyles.image} source={{ uri: this.state.images.left }} />
+					<Text style={GlobalStyles.imageText}>Left</Text>
+				</View>
+				<View style={GlobalStyles.imageGrid}>
+					<Image style={GlobalStyles.image} source={{ uri: this.state.images.right }} />
+					<Text style={GlobalStyles.imageText}>Right</Text>
+				</View>
+
+				<TouchableHighlight style={GlobalStyles.button} onPress={this.onPress} underlayColor='#99d9f4'>
+					<Text style={GlobalStyles.buttonText}>Save</Text>
+				</TouchableHighlight>
+			</View>
+		)
+	},
 
 
 	render: function(){
 
-        return (
-            <ScrollView style={GlobalStyles.scrollViewList}>
-                {this.renderTop()}
+		return (
+			<ScrollView style={GlobalStyles.scrollViewList}>
+				{this.renderTop()}
 
-                {this.renderNutritionalPr100g()}
-                {this.renderMid()}
-                {this.renderNutritionalPrServing()}
+				{this.renderNutritionalPr100g()}
+				{this.renderMid()}
+				{this.renderNutritionalPrServing()}
 
-                {this.renderBottom()}
-            </ScrollView>
-        );
+				{this.renderBottom()}
+			</ScrollView>
+		);
 
 	},
 
@@ -380,7 +375,7 @@ var RegisterProduct = React.createClass({
 	onReturnedFromCamera: function (_imageUris, productPos) {
 		// Add the new images to the upload queue
 
-		var imageUris = Datastore.cloneObject(_imageUris);
+		var imageUris = Datastore.clone(_imageUris);
 
 		var uuid = this.state.uuid;
 		var _paths = {};
@@ -393,29 +388,29 @@ var RegisterProduct = React.createClass({
 			// Save files to Documents directory
 			saveImage( _paths[el] );
 		});
-		var paths = Datastore.cloneObject(_paths);
+		var paths = Datastore.clone(_paths);
 		
 		console.log("= [RegisterProduct] onReturnedFromCamera ", 'uuid', this.state.uuid, "paths:", paths);
 
 		// Add the new images to the upload queue
-		Datastore.add("imageQueue", {name:this.state.uuid, paths:paths} );
+		Datastore.data.add("imageQueue", {name:this.state.uuid, paths:paths} );
 
 		this.setState({images: imageUris, imagepaths:paths});
 	},
 
-    onAddBrand: function () {
-        this.props.navigator.push({
-            leftButtonTitle: 'Cancel',
-            onLeftButtonPress: () => this.props.navigator.pop(),
-            title: 'Register Brand',
-            component: RegisterBrand
+	onAddBrand: function () {
+		this.props.navigator.push({
+			leftButtonTitle: 'Cancel',
+			onLeftButtonPress: () => this.props.navigator.pop(),
+			title: 'Register Brand',
+			component: RegisterBrand
 
-        });
-    },
+		});
+	},
 
-    onAddFoodType: function () {
+	onAddFoodType: function () {
 
-    },
+	},
 
 	onChange: function(value)
 	{
@@ -428,10 +423,10 @@ var RegisterProduct = React.createClass({
 		this.setState({nutBool: value})
 	},
 
-    onNutritionServingChange: function(value)
-    {
-        this.setState({nutServingBool: value});
-    },
+	onNutritionServingChange: function(value)
+	{
+		this.setState({nutServingBool: value});
+	},
 
 	onChange2: function(value)
 	{
@@ -448,70 +443,69 @@ var RegisterProduct = React.createClass({
 	},
 
 
-    getProduct: function()
-    {
-        // call getValue() to get the values of the form
+	getProduct: function()
+	{
+		// call getValue() to get the values of the form
 
-        // images are always linked to the product,
-        // and named on disk as "Unique Product ID" (shortid())
-        // pluss image_type (front, back, etc.)
-
-
-        var value = this.refs.form.getValue();
-        if (value) { // if validation fails, value will be null
-            // Copy value because it is not extensible, then add "private" values
-            var newVal = Datastore.cloneObject(value);
-            newVal.nutritionalPr100g = null;
-            newVal.nutritionalPrServing = null;
-
-            if (this.refs.form2) {
-                newVal.nutritionalPr100g = Datastore.cloneObject(this.refs.form2.getValue());
-            }
-            if (this.refs.form3) {
-                newVal.nutritionalPrServing = Datastore.cloneObject(this.refs.form3.getValue());
-            }
-
-            newVal.visualInformation = Datastore.cloneObject(this.refs.form4.getValue());
-            //newVal.brand = Datastore.MemoryStore.brand.name;
+		// images are always linked to the product,
+		// and named on disk as "Unique Product ID" (shortid())
+		// pluss image_type (front, back, etc.)
 
 
-            newVal.images = Datastore.cloneObject(this.state.images);
-            newVal.imagepaths = Datastore.cloneObject(this.state.imagepaths);
-            newVal.country = Datastore.MemoryStore.country.name;
+		var value = this.refs.form.getValue();
+		if (value) { // if validation fails, value will be null
+			// Copy value because it is not extensible, then add "private" values
+			var newVal = Datastore.clone(value);
+			newVal.nutritionalPr100g = null;
+			newVal.nutritionalPrServing = null;
+
+			if (this.refs.form2) {
+				newVal.nutritionalPr100g = Datastore.clone(this.refs.form2.getValue());
+			}
+			if (this.refs.form3) {
+				newVal.nutritionalPrServing = Datastore.clone(this.refs.form3.getValue());
+			}
+
+			newVal.visualInformation = Datastore.clone(this.refs.form4.getValue());
+			//newVal.brand = Datastore.M.brand.name;
 
 
-            /*
-             newVal.uuid   = Datastore.ShortID.generate();
-             newVal._images = {};
-             Object.keys( newVal.images ).forEach( function(el){
-             if( newVal.images[el] != null ){
-             newVal._images[el] = {
-             path: newVal.images[el],
-             name: newVal.uuid +'_'+ el +'.jpg',
-             };
-             }else{
-             newVal._images[el] = null;
-             }
-             });
-             */
-            return newVal;
-        }
-        else return null;
-    },
+			newVal.images = Datastore.clone(this.state.images);
+			newVal.imagepaths = Datastore.clone(this.state.imagepaths);
+			newVal.country = Datastore.M.country.name;
+
+
+			/*
+			 newVal.uuid   = Datastore.shortid.generate();
+			 newVal._images = {};
+			 Object.keys( newVal.images ).forEach( function(el){
+			 if( newVal.images[el] != null ){
+			 newVal._images[el] = {
+			 path: newVal.images[el],
+			 name: newVal.uuid +'_'+ el +'.jpg',
+			 };
+			 }else{
+			 newVal._images[el] = null;
+			 }
+			 });
+			 */
+			return newVal;
+		}
+		else return null;
+	},
 
 	onPress: function()
 	{
-        var newVal = this.getProduct();
-        if(newVal)
-        {
+		var newVal = this.getProduct();
+		if(newVal)
+		{
 
 			console.log('-------------------------------');
 			console.log("[RegisterProduct] Saving newVal:", newVal);
-			var entry = Datastore.add('products', newVal);
-			//Datastore.Set("name", value.name);
-			//Datastore.add('locations', value);
+			var entry = Datastore.data.add('products', newVal);
+			
 			if(this.props.getProductData){
-				Datastore.MemoryStore.product = newVal;
+				Datastore.M.product = newVal;
 			}
 
 			this.props.navigator.pop();
@@ -527,24 +521,24 @@ var RegisterProduct = React.createClass({
 // picker: 257.5
 
 var styles = StyleSheet.create({
-    addBrandButton:{
-        position: 'absolute',
-        top: 78.5,
-        right: 0
+	addBrandButton:{
+		position: 'absolute',
+		top: 78.5,
+		right: 0
 
-    },
-    addFoodTypeButton:{
-        position: 'absolute',
-        top: 78.5 + 257.5,
-        right: 0
+	},
+	addFoodTypeButton:{
+		position: 'absolute',
+		top: 78.5 + 257.5,
+		right: 0
 
-    },
+	},
 
-    buttonText:
-    {
-        fontSize: 17,
-        color: '#4b92db'
-    }
+	buttonText:
+	{
+		fontSize: 17,
+		color: '#4b92db'
+	}
 });
 
 

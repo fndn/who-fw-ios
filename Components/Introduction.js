@@ -1,10 +1,11 @@
 'use strict';
 
 var React 			= require('react-native');
-var GlobalStyles 	= require('../Styles/GlobalStyles');
 var t               = require('tcomb-form-native');
+var Datastore 		= require('fndn-rn-datastore');
+var GlobalStyles 	= require('../Styles/GlobalStyles');
 var Models          = require('./Models');
-var Datastore       = require('./Datastore');
+
 
 var Form = t.form.Form;
 
@@ -29,12 +30,12 @@ var Introduction = React.createClass ({
 
 	loadCreds: function(){
 		var self = this;
-		Datastore.init(function(){
+		Datastore.data.init(function(){
 
-			var data = Datastore.last("credentials");
+			var data = Datastore.data.last("credentials");
 			//console.log('Introduction Datastore.init CB', data );
 			self.setState({value: data });
-			Datastore.MemoryStore.credentials = data;
+			Datastore.M.credentials = data;
 		});
 	},
 
@@ -70,9 +71,13 @@ var Introduction = React.createClass ({
 	},
 
 	onChange: function(value){
-		Datastore.MemoryStore.credentials = value;
+
+		var v = Datastore.clone(value);
+		console.log('v', v);
+
+		Datastore.M.credentials = value;
 		this.setState({value:value});
-		Datastore.add("credentials", value);
+		Datastore.data.add("credentials", value);
 	}
 
 

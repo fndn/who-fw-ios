@@ -4,11 +4,11 @@
 
 'use strict';
 
-var React           = require('react-native');
-var GlobalStyles    = require('../../Styles/GlobalStyles');
-var Datastore       = require('../Datastore');
-var ValidateProduct = require('./ValidateProduct');
-var Models          = require('../Models');
+var React           	= require('react-native');
+var Datastore 			= require('fndn-rn-datastore');
+var GlobalStyles    	= require('../../Styles/GlobalStyles');
+var ValidateProduct 	= require('./ValidateProduct');
+var Models          	= require('../Models');
 
 var {
 	StyleSheet,
@@ -24,6 +24,7 @@ var {
 
 var navigatorEventListener;
 var productNames = {};
+
 var SelectProduct = React.createClass ({
 
 	componentWillMount: function() {
@@ -35,36 +36,35 @@ var SelectProduct = React.createClass ({
 			dataSource: dataSource
 		};
 
-		// the try is only here so we CAN mount the component in index.ios.js. Remove for PRODUCTION
-		try{
-			// Called when select country will be focused next
-			navigatorEventListener = this.props.navigator.navigationContext.addListener('willfocus', (event) => {
-				if(event.data.route.component.displayName === "SelectProduct"){
-					Datastore.all('products', this.dataAvailable);
-				}
-			});
-		}catch(e){
+		navigatorEventListener = this.props.navigator.navigationContext.addListener('willfocus', (event) => {
+			console.log("[SelectProduct] willfocus", event.data.route.displayName);
+			if(event.data.route.displayName === "SelectProduct"){
 
-		}
+				//TODO: Filter by what?
+				//Datastore.data.where('products', {"": Datastore.M. }, this.dataAvailable);
+
+				Datastore.data.all('products', this.dataAvailable);
+			}
+		});
+	},
+	
+	componentWillUnmount: function() {
+		navigatorEventListener.remove();
 	},
 
-
+	/*
 	componentDidMount: function() {
-		Datastore.all('products', this.dataAvailable);
+		Datastore.data.all('products', this.dataAvailable);
 	},
+	*/
 
 	dataAvailable: function(_data){
-		console.log('SelectProduct dataAvailable', _data);
+		console.log('[SelectProduct] dataAvailable', _data);
 		this.setState({
 			isLoading:false,
 			message:'loaded',
 			dataSource: this.state.dataSource.cloneWithRows(_data)
 		});
-	},
-
-	componentWillUnmount: function()
-	{
-		navigatorEventListener.remove();
 	},
 
 	render: function() {
@@ -105,7 +105,7 @@ var SelectProduct = React.createClass ({
 							<Image style={GlobalStyles.rowImage} source={{ uri: 'http://lorempixel.com/100/100/sports/'}} />
 							<View>
 								<Text style={GlobalStyles.listrowTitle}>{rowData.name}</Text>
-								<Text style={GlobalStyles.listrowSubtitle}>{_foodType} by {Datastore.one('brands', rowData.brand).name}, from age {_ageGroup}</Text>
+								<Text style={GlobalStyles.listrowSubtitle}>{_foodType} by {Datastore.data.one('brands', rowData.brand).name}, from age {_ageGroup}</Text>
 							</View>
 						</View>                        
 					</View>
@@ -129,7 +129,7 @@ var SelectProduct = React.createClass ({
 					<View style={GlobalStyles.listrowContainer}>
 						<View>
 							<Text style={GlobalStyles.listrowTitle}>{rowData.name}</Text>
-							<Text style={GlobalStyles.listrowSubtitle}>{_foodType} by {Datastore.one('brands', rowData.brand).name}, from age {_ageGroup}</Text>
+							<Text style={GlobalStyles.listrowSubtitle}>{_foodType} by {Datastore.data.one('brands', rowData.brand).name}, from age {_ageGroup}</Text>
 						</View>
 					</View>
 					<View style={GlobalStyles.listrowSeparator}/>
@@ -139,8 +139,7 @@ var SelectProduct = React.createClass ({
 	},*/
 	rowPressed: function(rowData) {
 		console.log("= [SelectProduct] ", rowData.name);
-		//Datastore.Session.Set('brand', rowData);
-		Datastore.MemoryStore.product = rowData;
+		Datastore.M.product = rowData;
 		this.props.navigator.push({
 		 leftButtonTitle: 'Back',
 		 onLeftButtonPress: () => this.props.navigator.pop(),

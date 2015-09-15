@@ -1,13 +1,14 @@
 'use strict';
 
 var React 			= require('react-native');
-var Datastore       = require('./Datastore');
+//var Datastore       = require('./Datastore');
+var Datastore = require('fndn-rn-datastore');
 
 var GlobalStyles 	= require('../Styles/GlobalStyles');
 var ProgressBar 	= require('./Parts/ProgressBar');
 
 var { Icon, } 		= require('react-native-icons');
-var RNFS 			= require('react-native-fs');
+//var RNFS 			= require('react-native-fs');
 
 var {
 	AppRegistry,
@@ -25,7 +26,13 @@ var _buffer = "";
 
 var Sync = React.createClass({
 
+	render: function(){
+		return (<View><Text>wip</Text></View>);
+	},
+
+	/*
 	componentDidMount: function(){
+		
 		var self = this;
 		Datastore.Remote.OnReachableStateChanged( function(state){
 			console.log('[Sync] OnReachableStateChanged()');
@@ -49,14 +56,15 @@ var Sync = React.createClass({
 				remote_responseTime: Datastore.Remote.ResponseTime()
 			});
 		});
+		
 	},
 
 	getInitialState: function() {
-
+	
 		var _tables = Datastore.Config.tables.filter( function(el){ return Datastore.Config.uploadOnly.indexOf(el) == -1 });//.join(", ");
 		var _last_table = _tables.pop();
 		var tables_str = _tables.join(", ") + " and "+ _last_table;
-
+		
 		return {
 			progress_message: "idle",
 			working: false,
@@ -67,7 +75,7 @@ var Sync = React.createClass({
 			tables_str: tables_str
 		};
 	},
-
+	
 	_render_noreach: function(){
 		return (
 			<View style={styles.container}>
@@ -93,6 +101,8 @@ var Sync = React.createClass({
 		);
 	},
 
+
+	
 	render: function(){
 
 		if( !this.state.remote_reachable ){
@@ -189,11 +199,13 @@ var Sync = React.createClass({
 		</View>);	
 	},
 
+
 	onPressCancelSync: function(){
 		console.log('onPressCancelSync');
 	},
 
 	onPressSyncDev: function(){
+		
 		//Datastore.Sync.testUpload("assets-library://asset/asset.JPG?id=E9340E11-6E7E-47D0-80D8-1971E31FA655&ext=JPG", {});
 
 		console.log('Datastore.imageQueue.all():', Datastore.all("imageQueue") );
@@ -307,7 +319,7 @@ var Sync = React.createClass({
 			"upload"
 		);
 	}
-
+		*/
 });
 
 module.exports = Sync;

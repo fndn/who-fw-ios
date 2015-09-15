@@ -6,21 +6,21 @@
 
 var React           = require('react-native');
 var GlobalStyles    = require('../../Styles/GlobalStyles');
-var Datastore       = require('../Datastore');
-var SelectProduct = require('./SelectProduct');
+var Datastore 		= require('fndn-rn-datastore');
+var SelectProduct 	= require('./SelectProduct');
 var Models          = require('../Models');
 
 var {
-    StyleSheet,
-    View,
-    Text,
-    Image,
-    Component,
-    TextInput,
-    TouchableHighlight,
-    ActivityIndicatorIOS,
-    ListView
-    } = React;
+	StyleSheet,
+	View,
+	Text,
+	Image,
+	Component,
+	TextInput,
+	TouchableHighlight,
+	ActivityIndicatorIOS,
+	ListView
+	} = React;
 
 var navigatorEventListener;
 var productNames = {};
@@ -28,139 +28,136 @@ var locationRegistrations;
 
 var ViewRegistrations = React.createClass ({
 
-    componentWillMount: function() {
+	componentWillMount: function() {
 
-        var dataSource = new ListView.DataSource({rowHasChanged: (r1, r2) => r1["_id"] !== r2["_id"]});
-        this.state = {
-            isLoading: false,
-            message: 'init',
-            dataSource: dataSource
-        };
-
-        // the try is only here so we CAN mount the component in index.ios.js. Remove for PRODUCTION
-        try{
-            // Called when select country will be focused next
-            navigatorEventListener = this.props.navigator.navigationContext.addListener('willfocus', (event) => {
-                if(event.data.route.component.displayName === "ViewRegistrations"){
-                    Datastore.all("registrations", this.dataAvailable);
-                }
-            });
-        }catch(e){
-
-        }
-    },
+		var dataSource = new ListView.DataSource({rowHasChanged: (r1, r2) => r1["_id"] !== r2["_id"]});
+		this.state = {
+			isLoading: false,
+			message: 'init',
+			dataSource: dataSource
+		};
 
 
-    componentDidMount: function() {
-        //console.log(Datastore.all('registrations'));
-        //Datastore.all('products', this.dataAvailable);
+		navigatorEventListener = this.props.navigator.navigationContext.addListener('willfocus', (event) => {
+			console.log("[ViewRegistrations]", event.data.route.displayName);
+			if(event.data.route.displayName === "ViewRegistrations"){
+				Datastore.data.all("registrations", this.dataAvailable);
+			}
+		});
 
-        Datastore.all("registrations", this.dataAvailable);
-    },
-
-    dataAvailable: function(_data){
-        //console.log('SelectProduct dataAvailable', _data);
-        //locationRegistrations = Datastore.all("locationRegistrations");
-
-        //console.log("registrations: " , _data);
-        this.setState({
-            isLoading:false,
-            message:'loaded',
-            dataSource: this.state.dataSource.cloneWithRows(_data)
-        });
-    },
-
-    componentWillUnmount: function()
-    {
-        navigatorEventListener.remove();
-    },
-
-    render: function() {
-
-        return (
-
-            <View style={GlobalStyles.scrollViewContainer}>
-
-                <ListView
-                    style={GlobalStyles.list}
-                    automaticallyAdjustContentInsets={false}
-                    dataSource={this.state.dataSource}
-                    renderRow={this._renderRowWithImage}/>
-            </View>
-        );
-
-    },
+	},
 
 
-    // dev:
-    _renderRowWithImage: function(rowData, sectionID, rowID) {
-        var productInfo = rowData.product;
+	componentDidMount: function() {
+		//console.log(Datastore.all('registrations'));
+		//Datastore.all('products', this.dataAvailable);
 
-        return (
-            <TouchableHighlight underlayColor='#EEE' onPress={() => this.rowPressed(rowData)}>
-                <View>
-                    <View style={GlobalStyles.listrowContainer01}>
-                        <View style={GlobalStyles.listrowContainer02}>
-                            <Image style={GlobalStyles.rowImage} source={{ uri: 'http://facebook.github.io/react/img/logo_og.png'}} />
-                            <View>
-                                <Text style={GlobalStyles.listrowTitle}>{productInfo.name}</Text>
-                                <Text style={GlobalStyles.listrowSubtitle}>{productInfo.foodType} by {productInfo.brand}, from age {productInfo.ageGroup}</Text>
-                            </View>
-                        </View>
-                    </View>
-                    <View style={GlobalStyles.listrowSeparator}/>
-                </View>
-            </TouchableHighlight>
-        );
-    },
+		Datastore.data.all("registrations", this.dataAvailable);
+	},
+
+	dataAvailable: function(_data){
+		//console.log('SelectProduct dataAvailable', _data);
+		//locationRegistrations = Datastore.all("locationRegistrations");
+
+		//console.log("registrations: " , _data);
+		this.setState({
+			isLoading:false,
+			message:'loaded',
+			dataSource: this.state.dataSource.cloneWithRows(_data)
+		});
+	},
+
+	componentWillUnmount: function()
+	{
+		navigatorEventListener.remove();
+	},
+
+	render: function() {
+
+		return (
+
+			<View style={GlobalStyles.scrollViewContainer}>
+
+				<ListView
+					style={GlobalStyles.list}
+					automaticallyAdjustContentInsets={false}
+					dataSource={this.state.dataSource}
+					renderRow={this._renderRowWithImage}/>
+			</View>
+		);
+
+	},
 
 
-    /*_renderRow: function(rowData, sectionID, rowID) {
+	// dev:
+	_renderRowWithImage: function(rowData, sectionID, rowID) {
+		var productInfo = rowData.product;
 
-        var _foodType = Models.foodTypes.meta.map[rowData.foodType];
-        var _ageGroup = Models.ageGroups.meta.map[rowData.ageGroup];
+		return (
+			<TouchableHighlight underlayColor='#EEE' onPress={() => this.rowPressed(rowData)}>
+				<View>
+					<View style={GlobalStyles.listrowContainer01}>
+						<View style={GlobalStyles.listrowContainer02}>
+							<Image style={GlobalStyles.rowImage} source={{ uri: 'http://facebook.github.io/react/img/logo_og.png'}} />
+							<View>
+								<Text style={GlobalStyles.listrowTitle}>{productInfo.name}</Text>
+								<Text style={GlobalStyles.listrowSubtitle}>{productInfo.foodType} by {productInfo.brand}, from age {productInfo.ageGroup}</Text>
+							</View>
+						</View>
+					</View>
+					<View style={GlobalStyles.listrowSeparator}/>
+				</View>
+			</TouchableHighlight>
+		);
+	},
 
 
-        return (
-            <TouchableHighlight underlayColor='#EEE' onPress={() => this.rowPressed(rowData)}>
-                <View>
-                    <View style={GlobalStyles.listrowContainer}>
-                        <View>
-                            <Text style={GlobalStyles.listrowTitle}>{rowData.name}</Text>
-                            <Text style={GlobalStyles.listrowSubtitle}>{_foodType} by {rowData.brand}, from age {_ageGroup}</Text>
-                        </View>
-                    </View>
-                    <View style={GlobalStyles.listrowSeparator}/>
-                </View>
-            </TouchableHighlight>
-        );
-    },*/
-    rowPressed: function(rowData) {
-        console.log("= [ViewRegistrations] ", rowData.product.name);
-        //Datastore.Session.Set('brand', rowData);
-        /*Datastore.MemoryStore.product = rowData;
-        this.props.navigator.push({
-            leftButtonTitle: 'Back',
-            onLeftButtonPress: () => this.props.navigator.pop(),
-            title: 'Validate Product',
-            component: ValidateProduct
+	/*_renderRow: function(rowData, sectionID, rowID) {
 
-        });*/
-    },
+		var _foodType = Models.foodTypes.meta.map[rowData.foodType];
+		var _ageGroup = Models.ageGroups.meta.map[rowData.ageGroup];
 
-    // Maybe use this to make diff?? it returns the values that are different on a compared to b
-    diff: function(a,b) {
-        var r = {};
-        _.each(a, function(v,k) {
-            if(b[k] === v) return;
-            // but what if it returns an empty object? still attach?
-            r[k] = _.isObject(v)
-                ? _.diff(v, b[k])
-                : v
-            ;
-        });
-        return r;
-    }
+
+		return (
+			<TouchableHighlight underlayColor='#EEE' onPress={() => this.rowPressed(rowData)}>
+				<View>
+					<View style={GlobalStyles.listrowContainer}>
+						<View>
+							<Text style={GlobalStyles.listrowTitle}>{rowData.name}</Text>
+							<Text style={GlobalStyles.listrowSubtitle}>{_foodType} by {rowData.brand}, from age {_ageGroup}</Text>
+						</View>
+					</View>
+					<View style={GlobalStyles.listrowSeparator}/>
+				</View>
+			</TouchableHighlight>
+		);
+	},*/
+	rowPressed: function(rowData) {
+		console.log("= [ViewRegistrations] ", rowData.product.name);
+		//Datastore.Session.Set('brand', rowData);
+		/*Datastore.M.product = rowData;
+		this.props.navigator.push({
+			leftButtonTitle: 'Back',
+			onLeftButtonPress: () => this.props.navigator.pop(),
+			title: 'Validate Product',
+			component: ValidateProduct
+
+		});*/
+	},
+
+	// Maybe use this to make diff?? it returns the values that are different on a compared to b
+	diff: function(a,b) {
+		var r = {};
+		_.each(a, function(v,k) {
+			if(b[k] === v) return;
+			// but what if it returns an empty object? still attach?
+			r[k] = _.isObject(v)
+				? _.diff(v, b[k])
+				: v
+			;
+		});
+		return r;
+	}
 
 });
 
@@ -170,12 +167,12 @@ module.exports = ViewRegistrations;
 
 // Local styles
 var styles = StyleSheet.create({
-    rowImageSelected: {
-        position: 'absolute',
-        width: 16,
-        height: 16,
-        left: 50 - 16 - 1,
-        top: 1,
-        marginRight: 0,
-    },
+	rowImageSelected: {
+		position: 'absolute',
+		width: 16,
+		height: 16,
+		left: 50 - 16 - 1,
+		top: 1,
+		marginRight: 0,
+	},
 });

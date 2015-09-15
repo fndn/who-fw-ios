@@ -4,10 +4,10 @@
 
 'use strict';
 
-var React = require('react-native');
+var React 			= require('react-native');
+var Datastore 		= require('fndn-rn-datastore');
+
 var GlobalStyles = require('../../Styles/GlobalStyles');
-//var SelectLocation 		= require('./SelectLocation');
-var Datastore = require('../Datastore');
 var SelectProduct = require('./SelectProduct');
 var RegisterProduct = require('./RegisterProduct');
 
@@ -38,7 +38,7 @@ var SelectBrand = React.createClass ({
 		navigatorEventListener = this.props.navigator.navigationContext.addListener('willfocus', (event) =>
 		{
 			if(event.data.route.component.displayName === "SelectBrand")
-				Datastore.all('brands', this.dataAvailable);
+				Datastore.data.all('brands', this.dataAvailable);
 			//console.log(event.data.route.component.displayName);
 
 		});
@@ -46,7 +46,7 @@ var SelectBrand = React.createClass ({
 
 
 	componentDidMount: function() {
-		Datastore.all('brands', this.dataAvailable);
+		Datastore.data.all('brands', this.dataAvailable);
 	},
 
 	dataAvailable: function(_data){
@@ -102,7 +102,7 @@ var SelectBrand = React.createClass ({
 
 	rowPressed: function(rowData) {
 		console.log("= [SelectBrand] ", rowData.name);
-		Datastore.MemoryStore.brand = rowData;
+		Datastore.M.brand = rowData;
 		this.props.navigator.push({
 			leftButtonTitle: 'Back',
 			onLeftButtonPress: () => this.props.navigator.pop(),
