@@ -293,7 +293,7 @@ var RegisterProduct = React.createClass({
                     type={Models.NutritionServing()}
                     value={this.state.nutServingValue}
                     options={this.state.options}
-                    onChange={this.onChange3}
+                    onChange={(value) =>{this.setState({nutServingValue: value})}}
                     />
             </View>
         )
@@ -310,7 +310,7 @@ var RegisterProduct = React.createClass({
                     ref="form4"
                     type={Models.VisualInformation()}
                     options={options}
-                    onChange={this.onChange4}
+                    onChange={(value) =>{this.setState({visualInfo: value})}}
                     value={this.state.visualInfo}
                     />
 
