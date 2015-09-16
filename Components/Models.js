@@ -183,10 +183,24 @@ module.exports.VisualInformation = function(){
 		picturesOfInfantsOrYoungChildren: t.Bool,
 		picturesOfMothers: t.Bool,
 		comparativeClaims: t.Bool,
-		nutrientContentClaims: t.Bool,
-		healthClaims: t.Bool,
-		other: t.Bool
+		nutrientContentClaims: t.Bool
 	});
+};
+
+module.exports.HealthClaims = function(){
+    return t.struct({
+        noSalt: t.Bool,
+        noSugar: t.Bool,
+        noSweeteners: t.Bool,
+        vitamins: t.Bool,
+        noPreservatives: t.Bool,
+        noStarch: t.Bool,
+        noColors: t.Bool,
+        noFlavours: t.Bool,
+        glutenFree: t.Bool,
+        organic: t.Bool,
+        other: t.maybe(t.Str)
+    });
 };
 
 module.exports.Responent = function(){

@@ -9,6 +9,8 @@ var Models 			= require('../Models');
 var GlobalStyles 	= require('../../Styles/GlobalStyles');
 //var RNFS            = require('react-native-fs');
 
+var RNFS            = require('react-native-fs');
+
 var Form = t.form.Form;
 
 
@@ -85,9 +87,15 @@ var nutBoolOptions = {
 };
 
 var nutServingBoolOptions = {
-	fields:{
-		boolValue:{ label:'Nutritional information pr serving available', onTintColor:'#4B92DB'}
-	}
+    fields:{
+        boolValue:{ label:'Nutritional information pr serving available', onTintColor:'#4B92DB'}
+    }
+};
+
+var healtClaimsBoolOptions = {
+    fields:{
+        boolValue:{ label:'Health claims', onTintColor:'#4B92DB'}
+    }
 };
 
 var {
@@ -97,7 +105,7 @@ var {
 	Component,
 	TextInput,
 	TouchableHighlight,
-	TouchableOpacity,
+    TouchableOpacity,
 	ActivityIndicatorIOS,
 	NavigatorIOS,
 	Image,
@@ -137,8 +145,12 @@ var RegisterProduct = React.createClass({
 		var hundredData = null;
 		var servingData = null;
 		var nutBoolData = {boolValue:false};
-		var nutServingBoolData = {boolValue:false};
+        var nutServingBoolData = {boolValue:false};
 		var visualData = null;
+        var healthClaimsBool = {boolValue: false};
+        var healthClaims = null;
+        var otherBool = {boolValue: false};
+        var otherClaim = null;
 
 		var images = {
 			front: null,
@@ -154,34 +166,42 @@ var RegisterProduct = React.createClass({
 
 		if(this.props.getProductData){
 			//was cloned
-			var data = Datastore.clone(Datastore.M.product);
+			var data = Datastore.cloneObject(Datastore.MemoryStore.product);
 			hundredData = data.nutritionalPr100g;
 			servingData = data.nutritionalPrServing;
 
-			if(servingData)
-				nutServingBoolData = {boolValue:true};
-			else
-				nutServingBoolData = {boolValue:false};
+            if(servingData)
+                nutServingBoolData = {boolValue:true};
 
-			if(hundredData)
-				nutBoolData = {boolValue:true};
-			else
-				nutBoolData = {boolValue:false};
+            if(hundredData)
+			    nutBoolData = {boolValue:true};
 
 			visualData = data.visualInformation;
+            if(data.healthClaims) {
+                healthClaimsBool = {boolValue: true};
+                healthClaims = data.healthClaims;
+            }
+            if(data.otherClaim) {
+                otherBool = {boolValue: true};
+                otherClaim = data.otherClaim;
+            }
 			//if(data.images) images = data.images;
-			//Datastore.M.product = null;
-			console.log(hundredData);
+            //Datastore.MemoryStore.product = null;
+            console.log(hundredData);
 		}
 
 		return {
 			options: options,
 			value: data,
 			nutBool: nutBoolData,
-			nutServingBool: nutServingBoolData,
+            nutServingBool: nutServingBoolData,
 			nutHundredValue: hundredData,
 			nutServingValue: servingData,
 			visualInfo: visualData,
+            healthClaimsBool: healthClaimsBool,
+            healtClaims: healthClaims,
+            otherBool: otherBool,
+            otherClaim: otherClaim,
 			initialPosition: null,
 			images: images,
 			uuid: uuid,
@@ -196,166 +216,160 @@ var RegisterProduct = React.createClass({
 			{enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
 		);
 	},
+// <editor-fold desc=" Render methods">
+    renderTop: function(){
+        return(
+            <View>
+                <Form
+                    ref="form"
+                    type={Models.Product()}
+                    value={this.state.value}
+                    options={this.state.options}
+                    onChange={(value) =>{this.setState({value: value})}}
+                />
 
-	renderTop: function(){
-		return(
-			<View>
-				<Form
-					ref="form"
-					type={Models.Product()}
-					value={this.state.value}
-					options={this.state.options}
-					onChange={this.onChange}
-				/>
-
-				<TouchableOpacity
-					style={styles.addBrandButton}
-					onPress = {this.onAddBrand}>
-					<Text style={styles.buttonText}>Add</Text>
-				</TouchableOpacity>
-
-
-
-				<Form
-					type={Models.SimpelBool()}
-					options={nutBoolOptions}
-					value={this.state.nutBool}
-					onChange={this.onNutritionInfoAvailableChange}
-					/>
-			</View>
-		);
-	},
-
-	renderMid: function () {
-		return(
-			<Form
-				type={Models.SimpelBool()}
-				options={nutServingBoolOptions}
-				value={this.state.nutServingBool}
-				onChange={this.onNutritionServingChange}
-				/>
-		);
-	},
-
-	renderNutritionalPr100g: function()
-	{
-		if(!this.state.nutBool.boolValue)
-			return;
-
-		return(
-			<View>
-				<Text style={GlobalStyles.title}>
-					Nutritional Information
-					Pr 100g
-				</Text>
-				<Form
-					ref="form2"
-					type={Models.Nutrition()}
-					value={this.state.nutHundredValue}
-					onChange={this.onChange2}
-					options={this.state.options}
-					/>
-			</View>
-		)
-	},
-
-	renderNutritionalPrServing: function()
-	{
-		if(!this.state.nutServingBool.boolValue)
-			return;
-
-		return(
-			<View>
-				<Text style={GlobalStyles.title}>
-					Per serving
-				</Text>
-				<Form
-					ref="form3"
-					type={Models.NutritionServing()}
-					value={this.state.nutServingValue}
-					options={this.state.options}
-					onChange={this.onChange3}
-					/>
-			</View>
-		)
-	},
-
-	renderBottom: function()
-	{
-		return(
-			<View>
-				<Text style={GlobalStyles.title}>
-					Visual information
-				</Text>
-				<Form
-					ref="form4"
-					type={Models.VisualInformation()}
-					options={options}
-					onChange={this.onChange4}
-					value={this.state.visualInfo}
-					/>
-
-				<Text style={GlobalStyles.title}>
-					Pictures
-				</Text>
-				<TouchableHighlight style={GlobalStyles.button} onPress={this.onTakeFront} underlayColor='#99d9f4'>
-					<Text style={GlobalStyles.buttonText}>Capture product images</Text>
-				</TouchableHighlight>
+                <TouchableOpacity
+                    style={styles.addBrandButton}
+                    onPress = {this.onAddBrand}>
+                    <Text style={styles.buttonText}>Add</Text>
+                </TouchableOpacity>
 
 
-				<View style={GlobalStyles.imageGrid}>
-					<Image style={GlobalStyles.image} source={{ uri: this.state.images.front }} />
-					<Text style={GlobalStyles.imageText}>Front</Text>
-				</View>
-				<View style={GlobalStyles.imageGrid}>
-					<Image style={GlobalStyles.image} source={{ uri: this.state.images.back }} />
-					<Text style={GlobalStyles.imageText}>Back</Text>
-				</View>
-				<View style={GlobalStyles.imageGrid}>
-					<Image style={GlobalStyles.image} source={{ uri: this.state.images.left }} />
-					<Text style={GlobalStyles.imageText}>Left</Text>
-				</View>
-				<View style={GlobalStyles.imageGrid}>
-					<Image style={GlobalStyles.image} source={{ uri: this.state.images.right }} />
-					<Text style={GlobalStyles.imageText}>Right</Text>
-				</View>
 
-				<TouchableHighlight style={GlobalStyles.button} onPress={this.onPress} underlayColor='#99d9f4'>
-					<Text style={GlobalStyles.buttonText}>Save</Text>
-				</TouchableHighlight>
-			</View>
-		)
-	},
+                <Form
+                    type={Models.SimpelBool()}
+                    options={nutBoolOptions}
+                    value={this.state.nutBool}
+                    onChange={(value) =>{this.setState({nutBool: value})}}
+                    />
+            </View>
+        );
+    },
+
+    renderMid: function () {
+        return(
+            <Form
+                type={Models.SimpelBool()}
+                options={nutServingBoolOptions}
+                value={this.state.nutServingBool}
+                onChange={(value) =>{this.setState({nutServingBool: value})}}
+                />
+        );
+    },
+
+    renderNutritionalPr100g: function()
+    {
+        if(!this.state.nutBool.boolValue)
+            return;
+
+        return(
+            <View>
+                <Text style={GlobalStyles.title}>
+                    Pr 100g
+                </Text>
+                <Form
+                    ref="form2"
+                    type={Models.Nutrition()}
+                    value={this.state.nutHundredValue}
+                    onChange={(value) =>{this.setState({nutHundredValue: value})}}
+                    options={this.state.options}
+                    />
+            </View>
+        )
+    },
+
+    renderNutritionalPrServing: function()
+    {
+        if(!this.state.nutServingBool.boolValue)
+            return;
+
+        return(
+            <View>
+                <Text style={GlobalStyles.title}>
+                    Per serving
+                </Text>
+                <Form
+                    ref="form3"
+                    type={Models.NutritionServing()}
+                    value={this.state.nutServingValue}
+                    options={this.state.options}
+                    onChange={this.onChange3}
+                    />
+            </View>
+        )
+    },
+
+    renderBottom: function()
+    {
+        return(
+            <View>
+                <Text style={GlobalStyles.title}>
+                    Visual information
+                </Text>
+                <Form
+                    ref="form4"
+                    type={Models.VisualInformation()}
+                    options={options}
+                    onChange={this.onChange4}
+                    value={this.state.visualInfo}
+                    />
+
+                <Text style={GlobalStyles.title}>
+                    Pictures
+                </Text>
+                <TouchableHighlight style={GlobalStyles.button} onPress={this.onTakeFront} underlayColor='#99d9f4'>
+                    <Text style={GlobalStyles.buttonText}>Capture product images</Text>
+                </TouchableHighlight>
+
+
+                <View style={GlobalStyles.imageGrid}>
+                    <Image style={GlobalStyles.image} source={{ uri: this.state.images.front }} />
+                    <Text style={GlobalStyles.imageText}>Front</Text>
+                </View>
+                <View style={GlobalStyles.imageGrid}>
+                    <Image style={GlobalStyles.image} source={{ uri: this.state.images.back }} />
+                    <Text style={GlobalStyles.imageText}>Back</Text>
+                </View>
+                <View style={GlobalStyles.imageGrid}>
+                    <Image style={GlobalStyles.image} source={{ uri: this.state.images.left }} />
+                    <Text style={GlobalStyles.imageText}>Left</Text>
+                </View>
+                <View style={GlobalStyles.imageGrid}>
+                    <Image style={GlobalStyles.image} source={{ uri: this.state.images.right }} />
+                    <Text style={GlobalStyles.imageText}>Right</Text>
+                </View>
+
+                <TouchableHighlight style={GlobalStyles.button} onPress={this.onPress} underlayColor='#99d9f4'>
+                    <Text style={GlobalStyles.buttonText}>Save</Text>
+                </TouchableHighlight>
+            </View>
+        )
+    },
 
 
 	render: function(){
 
-		return (
-			<ScrollView style={GlobalStyles.scrollViewList}>
-				{this.renderTop()}
+        return (
+            <ScrollView style={GlobalStyles.scrollViewList}>
+                {this.renderTop()}
+                {this.renderNutritionalPr100g()}
+                {this.renderMid()}
+                {this.renderNutritionalPrServing()}
 
-				{this.renderNutritionalPr100g()}
-				{this.renderMid()}
-				{this.renderNutritionalPrServing()}
 
-				{this.renderBottom()}
-			</ScrollView>
-		);
+
+                {this.renderBottom()}
+                {this.renderHealthClaims()}
+                {this.renderImages()}
+            </ScrollView>
+        );
 
 	},
 
 	onTakeFront: function () {
 		this.onOpenCamera("front");
 	},
-	onTakeBack: function () {
-		this.onOpenCamera2("back");
-	},
-	onTakeRight: function () {
-		this.onOpenCamera("right");
-	},
-	onTakeLeft: function () {
-		this.onOpenCamera("left");
-	},
+
 
 	onOpenCamera: function(position){
 		this.props.navigator.push({
@@ -393,7 +407,7 @@ var RegisterProduct = React.createClass({
 		console.log("= [RegisterProduct] onReturnedFromCamera ", 'uuid', this.state.uuid, "paths:", paths);
 
 		// Add the new images to the upload queue
-		Datastore.data.add("imageQueue", {name:this.state.uuid, paths:paths} );
+		Datastore.add("imageQueue", {name:this.state.uuid, paths:paths} );
 
 		this.setState({images: imageUris, imagepaths:paths});
 	},
@@ -408,44 +422,11 @@ var RegisterProduct = React.createClass({
 		});
 	},
 
-	onAddFoodType: function () {
+    
 
-	},
-
-	onChange: function(value)
-	{
-		//console.log(value);
-		this.setState({value: value});
-	},
-
-	onNutritionInfoAvailableChange: function(value)
-	{
-		this.setState({nutBool: value})
-	},
-
-	onNutritionServingChange: function(value)
-	{
-		this.setState({nutServingBool: value});
-	},
-
-	onChange2: function(value)
-	{
-		this.setState({nutHundredValue: value});
-	},
-
-	onChange3: function(value)
-	{
-		this.setState({nutServingValue: value});
-	},
-
-	onChange4: function(value){
-		this.setState({visualInfo: value});
-	},
-
-
-	getProduct: function()
-	{
-		// call getValue() to get the values of the form
+    getProduct: function()
+    {
+        // call getValue() to get the values of the form
 
 		// images are always linked to the product,
 		// and named on disk as "Unique Product ID" (shortid())
@@ -459,12 +440,16 @@ var RegisterProduct = React.createClass({
 			newVal.nutritionalPr100g = null;
 			newVal.nutritionalPrServing = null;
 
-			if (this.refs.form2) {
-				newVal.nutritionalPr100g = Datastore.clone(this.refs.form2.getValue());
-			}
-			if (this.refs.form3) {
-				newVal.nutritionalPrServing = Datastore.clone(this.refs.form3.getValue());
-			}
+            if (this.refs.form2) {
+                newVal.nutritionalPr100g = Datastore.clone(this.refs.form2.getValue());
+            }
+            if (this.refs.form3) {
+                newVal.nutritionalPrServing = Datastore.clone(this.refs.form3.getValue());
+            }
+            if(this.refs.healthClaimsForm)
+            {
+                newVal.healtClaims = Datastore.clone(this.refs.healthClaimsForm.getValue());
+            }
 
 			newVal.visualInformation = Datastore.clone(this.refs.form4.getValue());
 			//newVal.brand = Datastore.M.brand.name;
