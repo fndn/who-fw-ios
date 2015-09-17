@@ -1,14 +1,11 @@
 'use strict';
 
 var React 			= require('react-native');
-//var Datastore       = require('./Datastore');
-var Datastore = require('fndn-rn-datastore');
-
+var Datastore 		= require('fndn-rn-datastore');
+var { Icon, } 		= require('react-native-icons');
 var GlobalStyles 	= require('../Styles/GlobalStyles');
 var ProgressBar 	= require('./Parts/ProgressBar');
-
-var { Icon, } 		= require('react-native-icons');
-//var RNFS 			= require('react-native-fs');
+var SyncRoutine 	= require('./SyncRoutine');
 
 var {
 	AppRegistry,
@@ -26,49 +23,38 @@ var _buffer = "";
 
 var Sync = React.createClass({
 
-	render: function(){
-		return (<View><Text>wip</Text></View>);
-	},
-
-	/*
 	componentDidMount: function(){
 		
 		var self = this;
-		Datastore.Remote.OnReachableStateChanged( function(state){
-			console.log('[Sync] OnReachableStateChanged()');
-			//console.log('[Datastore.Tests] Datastore.Remote.Reachable: '+ Datastore.Remote.Reachable() );
-			//console.log('[Datastore.Tests] Datastore.Remote.ResponseTime: '+ Datastore.Remote.ResponseTime() );
 
-			//console.log('[Sync] Datastore.countWhereNo: '+ Datastore.countWhereNo("registrations", "uploaded") );
-			
+		Datastore.reach.subscribe( function(state, ms){
+			//console.log('[Sync] OnReachableStateChanged()', state, ms);
 			self.setState({
-				remote_reachable:    Datastore.Remote.Reachable(),
-				remote_responseTime: Datastore.Remote.ResponseTime()
+				remote_reachable:    state,
+				remote_responseTime: ms
 			});
-
 		});
 
-		Datastore.OnChange( "registrations", function(data){
-			console.log('[Sync] Datastore registrations OnChange() > countWhereNo: '+ Datastore.countWhereNo("registrations", "uploaded") );
-			
-			self.setState({
-				remote_reachable:    Datastore.Remote.Reachable(),
-				remote_responseTime: Datastore.Remote.ResponseTime()
-			});
+		Datastore.data.subscribe( "registrations", function(data){
+			console.log('[Sync] Datastore registrations OnChange() > countWhereNo: '+ Datastore.data.countWhereNo("registrations", "uploaded") );
 		});
 		
 	},
 
 	getInitialState: function() {
 	
-		var _tables = Datastore.Config.tables.filter( function(el){ return Datastore.Config.uploadOnly.indexOf(el) == -1 });//.join(", ");
+		var _tables = Datastore.opts().data.tables.filter( function(el){ return Datastore.opts().data.uploadOnly.indexOf(el) == -1 });//.join(", ");
 		var _last_table = _tables.pop();
 		var tables_str = _tables.join(", ") + " and "+ _last_table;
 		
 		return {
 			progress_message: "idle",
 			working: false,
-			has_log: false,
+			show_log: false,
+			show_dl: false,
+			show_ul: false,
+			progress_dl: 0,
+			progress_dlcurr: 0,
 			progress: 0,
 			remote_reachable: true,
 			remote_responseTime: '-',
@@ -101,15 +87,13 @@ var Sync = React.createClass({
 		);
 	},
 
-
-	
 	render: function(){
 
 		if( !this.state.remote_reachable ){
 			return this._render_noreach();
 		}
 
-		var num_regs = Datastore.countWhereNo("registrations", "uploaded");
+		var num_regs = (Datastore.data.ready > 0) ? Datastore.data.countWhereNo("registrations", "uploaded") : 0;
 
 		var num_regs_str = "You have no unsaved registrations.";
 		if( num_regs == 1 ){
@@ -134,7 +118,7 @@ var Sync = React.createClass({
 					</View> );
 
 
-		var logview = this.state.has_log 
+		var logview = this.state.show_log 
 				? ( <View>
 						<Text style={styles.infotext_title}>
 							PROGRESS
@@ -154,17 +138,51 @@ var Sync = React.createClass({
 
 				: (<View></View>);
 
+		var dlview = this.state.show_dl
+				? ( <View>
+						<Text style={styles.infotext_title}>
+							DOWNLOAD PROGRESS
+						</Text>
+
+						<View style={styles.progressbar}><ProgressBar
+							completePercentage={this.state.progress_dl}
+							color={'#48BBEC'}
+							backgroundColor={'#eee'} /></View>
+
+						<View style={styles.progressbar}><ProgressBar
+							completePercentage={this.state.progress_dlcurr}
+							color={'#48BBEC'}
+							backgroundColor={'#eee'} /></View>
+
+					</View>)
+
+				: (<View></View>);
+
+		var ulview = this.state.show_ul
+				? ( <View>
+						<Text style={styles.infotext_title}>
+							UPLOAD PROGRESS
+						</Text>
+
+						<View style={styles.progressbar}><ProgressBar
+							completePercentage={this.state.progress_dl}
+							color={'#48BBEC'}
+							backgroundColor={'#eee'} /></View>
+
+					</View>)
+
+				: (<View></View>);			
 
 
 		return (
-			<View style={styles.container}>
+			<ScrollView style={styles.container}>
 			  <View style={styles.page}>
 
 				<View
-					style={[styles.nr_icontxtlabel_wrap, {marginTop:25}]}>
+					style={[styles.nr_icontxtlabel_wrap, {marginTop:20}]}>
 					<Icon
 						name='ion|arrow-swap'
-						size={100}
+						size={60}
 						color='#DEDEDE'
 						style={styles.nr_icontxtlabel_icon} />
 					
@@ -195,49 +213,161 @@ var Sync = React.createClass({
 
 				{logview}
 
-			</View>
-		</View>);	
-	},
+				{dlview}
 
+				{ulview}
+
+			</View>
+		</ScrollView>);	
+	},
 
 	onPressCancelSync: function(){
 		console.log('onPressCancelSync');
 	},
 
+/*
+
++ make sure std sync works
+- test download
+- build download progress bar
+- test upload 
+- build upload progress bar
+
+- await finnished registrations and products from jacob
+- finalize up, down and sync
+
+*/
 	onPressSyncDev: function(){
-		
-		//Datastore.Sync.testUpload("assets-library://asset/asset.JPG?id=E9340E11-6E7E-47D0-80D8-1971E31FA655&ext=JPG", {});
+		//this.__test__download();
+		this.__test__upload();
+	},
 
-		console.log('Datastore.imageQueue.all():', Datastore.all("imageQueue") );
+	__test__upload: function(){
 
-		// list all images in Documents
-		RNFS.readDir('/', RNFS.MainBundle)
-			.then((result) => {
-				console.log('GOT RESULT', result);
-
-				// stat the first file
-				return Promise.all([RNFS.stat(result[0].path), result[0].path]);
-			})
-			.then((statResult) => {
-				if (statResult[0].isFile()) {
-				// if we have a file, read it
-				return RNFS.readFile(statResult[1]);
+		var itms = [
+			{ 	crap: "hallo",
+				id: '_000-'+ Date.now(),
+				files: [
+					{name:'front', path:'00.jpg'},
+					{name:'back',  path:'01.jpg'}
+				]
+			},
+			{	crap: "hallo",
+				id: '_001-'+ Date.now(),
+				files: [
+					{name:'front', path:'02.jpg'},
+					{name:'back',  path:'03.jpg'},
+					{name:'side',  path:'04.jpg'}
+				]
 			}
-			return 'no file';
-		})
-		.then((contents) => {
-			// log the file contents
-			console.log(contents);
-		})
-		.catch((err) => {
-			console.log(err.message, err.code);
-		});
+		];
 
+		this._upload_step(itms, 0, [], []);
+	},
+
+	_upload_step: function(itms, idx, done, failed){
+		console.log('_upload_step', idx);
+		if( idx == 0 ){
+			this.setState({working:true, show_log:false, show_dl:false, show_ul:true, progress_dl:0});
+		}else{
+			var percent = ((done.length-failed.length) / itms.length) * 100;
+			this.setState({working:true, show_log:false, show_dl:false, show_ul:true, progress_dl:percent});
+
+		}
+
+		if( idx < itms.length ){
+			this._upload_worker( itms, idx, done, failed, this._upload_step);
+		}else{
+			console.log('upload done!?');
+		}
+	},
+
+	_upload_worker: function(itms, idx, done, failed, cb){
+		var obj = {
+			remote: '/images/upload',
+			id: itms[idx].id,
+			files: itms[idx].files
+		};
+		console.log('_upload_item', obj);
+		Datastore.up(obj, function(err, res){
+			console.log('UP CB', err, res);
+			
+			if( err ){
+				console.log('upload ERROR', err, res);
+				failed.push(res.id);
+			}else{
+				//console.log('upload done [', res ,']');
+				console.log('upload confirmed for id:'+ res.id);
+				done.push(res.id);
+			}
+			idx ++;
+			cb(itms, idx, done, failed);
+		});
+	},
+
+
+	
+	__test__download: function(){
+		var urls = [
+			"https://static.pexels.com/photos/183/nature-sunny-grass-moss.jpg",
+			"https://captbbrucato.files.wordpress.com/2011/08/dscf0585_stitch-besonhurst-2.jpg"
+			
+		];
+		this._download(urls);
+	},
+
+	_download: function(urls){	
+		// test download
+
+		var done   = [];
+		var failed = [];
+
+		//this.setState({progress_dl:0});
+
+		var self = this;
+		Datastore.dl({
+				urls:urls,
+				force:true,
+				directory:'downloads'
+			},
+			function(err, res){
+				console.log('[STD] Proxied OnAllDone', err, res);
+				console.log('failed', failed );
+				setTimeout(function(){
+					self.setState({working:false, show_dl:false, progress_dl:0, progress_dlcurr:0});
+				}, 2500);
+			},
+			function(message){ 
+				console.log("Proxied OnStepComplete", message);
+				var filename = message.filename;
+				if( done.indexOf(filename) < 0 ){
+					done.push(filename);
+				}
+				var percent = (done.length / urls.length) * 100;
+				self.setState({progress_dl:percent});
+			},
+			function(message){ 
+				console.log("Proxied OnStepFail", message);
+				failed.push( message.url );
+				var filename = message.url.split("/").slice(-1)[0];
+				if( done.indexOf(filename) < 0 ){
+					done.push(filename);
+				}
+				var percent = (done.length / urls.length) * 100;
+				self.setState({progress_dl:percent});
+				
+			},
+			function(message){ 
+				console.log("Proxied OnStepProgress", message);
+				var percent = parseFloat(message.pct) * 100;
+				self.setState({progress_dlcurr:percent});
+			}
+		);
+		this.setState({working:true, show_log:false, show_dl: true});
 	},
 
 	onPressSync: function(){
-
-		//console.log('DS all registrations >  ', Datastore.all('registrations') );
+		console.log('DS all registrations >  ', Datastore.data.all('registrations') );
 
 		_buffer = "";
 
@@ -255,12 +385,12 @@ var Sync = React.createClass({
 		_buffer += "Starting Two-way Sync\n";
 		
 		var self = this;
-		this.setState({working:true, has_log:true});
-		Datastore.Sync(
+		this.setState({working:true, show_log:true});
+		SyncRoutine.Run(
 			// progress:
 			function(step, steps, table){
 				console.log("[Calee] SyncProgress: ", step, steps, table);
-				_buffer += step +"/"+ steps +" : "+ table +"\n";
+				_buffer += step +"/"+ steps +" : Mirrored "+ table +"\n";
 
 				// 3 / 6 = 50
 				var percent =  (step / steps) * 100;
@@ -278,7 +408,7 @@ var Sync = React.createClass({
 				}
 				
 				self.setState({progress_message:_buffer, working:false, progress:0});
-				self._startUpload();
+				//self._startUpload();
 			},
 			// mode:
 			"sync"
@@ -287,11 +417,11 @@ var Sync = React.createClass({
 
 	_startUpload: function(){
 		_buffer += "Starting Upload\n";
-		this.setState({working:true, has_log:true});
-
+		this.setState({working:true, show_log:true});
+		/*
 		var self = this;
 		
-		Datastore.Sync(
+		SyncRoutine.Run(
 			// progress:
 			function(step, steps, table){
 				console.log("[Calee] UploadProgress: ", step, steps, table);
@@ -318,8 +448,9 @@ var Sync = React.createClass({
 			// mode:
 			"upload"
 		);
-	}
 		*/
+	}
+	
 });
 
 module.exports = Sync;
@@ -480,7 +611,8 @@ var styles = StyleSheet.create({
 		height: 130,
 	},
 	progress_text_body: {
-		fontSize: 13,
+		fontFamily: 'Menlo-Regular',
+		fontSize: 12,
 		color: "#444",
 	},
 
