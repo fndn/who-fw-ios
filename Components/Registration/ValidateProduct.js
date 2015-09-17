@@ -84,7 +84,17 @@ var options = {
 		comparativeClaims: {disabled: true},
 		nutrientContentClaims: {disabled: true},
 		healthClaims: {disabled: true},
-		other: {disabled: true}
+        noSalt:{label: 'Unsaltet/No salt/No added salt', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB', disabled: true},
+        noSugar:{label: 'No added sugar/low in sugar', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB', disabled: true},
+        noSweeteners:{label: 'No artificial sweetners', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB', disabled: true},
+        vitamins:{label: 'Fortified with vitamins/minerals', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB', disabled: true},
+        noPreservatives:{label: 'No artificial preservatives', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB', disabled: true},
+        noStarch:{label: 'No added starch', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB', disabled: true},
+        noColors:{label: 'No artificial colors', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB', disabled: true},
+        noFlavours:{label: 'No artificial flavors', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB', disabled: true},
+        glutenFree:{label: 'Gluten free', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB', disabled: true},
+        organic:{label: 'Organic', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB', disabled: true},
+		other: {template: GlobalStyles.indentedTextbox, editable: false}
 	}
 }; // optional rendering options (see documentation)
 
@@ -149,10 +159,11 @@ var ValidateProduct = React.createClass({
 	{
 		var data = Datastore.clone(Datastore.M.product);
 		//Models.storeTypes.meta.map["SUP"]
-		console.log("getInitialState, ", Models.brands);
+		console.log("getInitialState, ", data);
 		data.foodType = Models.foodTypes.meta.map[data.foodType];
 		data.ageGroup = Models.ageGroups.meta.map[data.ageGroup];
-		data.brand = Datastore.data.one('brands', data.brand).name;
+		data.brand = Datastore.data.one('brands', {_id:data.brand}).name;
+
 
 		if(!data.images)
 		{
@@ -187,6 +198,110 @@ var ValidateProduct = React.createClass({
 
 	},
 
+    renderNutritionalPr100g: function()
+    {
+        if(!this.state.value.nutritionalPr100g)
+            return(
+                <View>
+                    <Text style={GlobalStyles.title}>
+                        No Nutritional information pr 100g
+                    </Text>
+                </View>
+            );
+
+        return(
+            <View>
+                <Text style={GlobalStyles.title}>
+                    Nutritional information pr 100g
+                </Text>
+                <Form
+                    type={Models.Nutrition()}
+                    value={this.state.value.nutritionalPr100g}
+                    options={this.state.options}
+                    />
+            </View>
+        )
+    },
+
+    renderNutritionalPrServing: function()
+    {
+        if(!this.state.value.nutritionalPrServing)
+            return(
+                <View>
+                    <Text style={GlobalStyles.title}>
+                        No Nutritional information pr serving
+                    </Text>
+                </View>
+            );
+
+        return(
+            <View>
+                <Text style={GlobalStyles.title}>
+                    Nutritional information pr serving
+                </Text>
+                <Form
+                    type={Models.NutritionServing()}
+                    value={this.state.value.nutritionalPrServing}
+                    options={this.state.options}
+                    />
+            </View>
+        )
+    },
+
+    renderHealthClaims: function()
+    {
+
+        if(!this.state.value.healthClaims)
+            return(
+                <View>
+                    <Form
+                        type={Models.SimpelBool()}
+                        options={
+                            {fields:{boolValue:{ label:'Health claims', onTintColor:'#4B92DB', disabled: true}}}
+                        }
+                        value={{boolValue:false}}
+                        />
+                </View>
+            );
+        else
+            return(
+                <View>
+                    <Form
+                        type={Models.SimpelBool()}
+                        options={
+                            {fields:{boolValue:{ label:'Health claims', onTintColor:'#4B92DB', disabled: true}}}
+                        }
+                        value={{boolValue:true}}
+                        />
+
+                    <Form
+                        ref="healthClaims"
+                        type={Models.HealthClaims()}
+                        options={this.state.options
+                            /*{
+                            fields:{
+                                noSalt:{label: 'Unsaltet/No salt/No added salt', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB'},
+                                noSugar:{label: 'No added sugar/low in sugar', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB'},
+                                noSweeteners:{label: 'No artificial sweetners', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB'},
+                                vitamins:{label: 'Fortified with vitamins/minerals', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB'},
+                                noPreservatives:{label: 'No artificial preservatives', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB'},
+                                noStarch:{label: 'No added starch', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB'},
+                                noColors:{label: 'No artificial colors', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB'},
+                                noFlavours:{label: 'No artificial flavors', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB'},
+                                glutenFree:{label: 'Gluten free', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB'},
+                                organic:{label: 'Organic', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB'},
+                                other:{template: GlobalStyles.indentedTextbox}
+                                }
+                            }*/
+                        }
+                        value={this.state.value.healthClaims}
+                        />
+
+                </View>
+            );
+
+    },
+
 
 	render: function(){
 
@@ -198,35 +313,15 @@ var ValidateProduct = React.createClass({
 					options={this.state.options}
 					value={this.state.value}
 					/>
-				<Text style={GlobalStyles.title}>
-					Nutritional Information
-					Pr 100g
-				</Text>
-				<Form
-					ref="form2"
-					type={Models.Nutrition()}
-					options={this.state.options}
-					value={this.state.value.nutritionalPr100g}
-					/>
-				<Text style={GlobalStyles.title}>
-					Pr serving
-				</Text>
-				<Form
-					ref="form3"
-					type={Models.NutritionServing()}
-					options={options}
-					value={this.state.value.nutritionalPrServing}
-					/>
-				<Text style={GlobalStyles.title}>
-					Visual information
-				</Text>
+                {this.renderNutritionalPr100g()}
+                {this.renderNutritionalPrServing()}
 				<Form
 					ref="form4"
 					type={Models.VisualInformation()}                    
 					options={options}
 					value={this.state.value.visualInformation}
 					/>
-
+                {this.renderHealthClaims()}
 				<Text style={GlobalStyles.title}>
 					Pictures
 				</Text>
@@ -284,7 +379,7 @@ var ValidateProduct = React.createClass({
 
 		// call getValue() to get the values of the form
 		
-		var value = this.refs.form.getValue();
+		var value = this.state.value;
 
 		console.log("Valid! [ValidateProduct onPress()]", value);
 
@@ -298,6 +393,9 @@ var ValidateProduct = React.createClass({
 				newVal.product = Datastore.clone(this.state.value); // foodType and ageGroup gets name
 				newVal.country = Datastore.M.country;
 				newVal.location = Datastore.M.location;
+                // Convert location to readable info
+
+
 				newVal.credentials = Datastore.M.credentials;
 				newVal.timeOfRegistration = Date.now(); // UTC in seconds
 
@@ -320,7 +418,7 @@ var ValidateProduct = React.createClass({
 			   
 				console.log("-------------------------------");
 				console.log("# Saving Registration:", newVal);
-
+                //return;
 				Datastore.data.add("registrations", newVal);
 
 

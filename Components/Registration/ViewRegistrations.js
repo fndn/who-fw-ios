@@ -6,7 +6,7 @@
 
 var React           = require('react-native');
 var GlobalStyles    = require('../../Styles/GlobalStyles');
-var Datastore 		= require('fndn-rn-datastore');
+var D 		        = require('fndn-rn-datastore');
 var SelectProduct 	= require('./SelectProduct');
 var Models          = require('../Models');
 
@@ -41,7 +41,7 @@ var ViewRegistrations = React.createClass ({
 		navigatorEventListener = this.props.navigator.navigationContext.addListener('willfocus', (event) => {
 			console.log("[ViewRegistrations]", event.data.route.displayName);
 			if(event.data.route.displayName === "ViewRegistrations"){
-				Datastore.data.all("registrations", this.dataAvailable);
+				D.data.where("registrations", {locationID: D.M.location._id} , this.dataAvailable);
 			}
 		});
 
@@ -49,15 +49,15 @@ var ViewRegistrations = React.createClass ({
 
 
 	componentDidMount: function() {
-		//console.log(Datastore.all('registrations'));
-		//Datastore.all('products', this.dataAvailable);
+		//console.log(D.all('registrations'));
+		//D.all('products', this.dataAvailable);
 
-		Datastore.data.all("registrations", this.dataAvailable);
+        D.data.where("registrations", {locationID: D.M.location._id} , this.dataAvailable);
 	},
 
 	dataAvailable: function(_data){
 		//console.log('SelectProduct dataAvailable', _data);
-		//locationRegistrations = Datastore.all("locationRegistrations");
+		//locationRegistrations = D.all("locationRegistrations");
 
 		//console.log("registrations: " , _data);
 		this.setState({
@@ -134,8 +134,8 @@ var ViewRegistrations = React.createClass ({
 	},*/
 	rowPressed: function(rowData) {
 		console.log("= [ViewRegistrations] ", rowData.product.name);
-		//Datastore.Session.Set('brand', rowData);
-		/*Datastore.M.product = rowData;
+		//D.Session.Set('brand', rowData);
+		/*D.M.product = rowData;
 		this.props.navigator.push({
 			leftButtonTitle: 'Back',
 			onLeftButtonPress: () => this.props.navigator.pop(),

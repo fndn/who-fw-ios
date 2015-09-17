@@ -9,7 +9,7 @@ var Models 			= require('../Models');
 var GlobalStyles 	= require('../../Styles/GlobalStyles');
 //var RNFS            = require('react-native-fs');
 
-var RNFS            = require('react-native-fs');
+//var RNFS            = require('react-native-fs');
 
 var Form = t.form.Form;
 
@@ -138,6 +138,8 @@ function saveImage( obj ){
 	*/
 }
 
+var _tmp_state = {};
+
 var RegisterProduct = React.createClass({
 
 	getInitialState: function() {
@@ -190,6 +192,13 @@ var RegisterProduct = React.createClass({
             console.log(hundredData);
 		}
 
+        _tmp_state.value = data;
+        _tmp_state.nutHundredValue = hundredData;
+        _tmp_state.nutServingValue = servingData;
+        _tmp_state.visualInfo = visualData;
+        _tmp_state.otherClaim = otherClaim;
+        _tmp_state.healthClaims = healthClaims;
+
 		return {
 			options: options,
 			value: data,
@@ -199,13 +208,13 @@ var RegisterProduct = React.createClass({
 			nutServingValue: servingData,
 			visualInfo: visualData,
             healthClaimsBool: healthClaimsBool,
-            healtClaims: healthClaims,
+            healthClaims: healthClaims,
             otherBool: otherBool,
             otherClaim: otherClaim,
 			initialPosition: null,
 			images: images,
 			uuid: uuid,
-			imagepaths: {}
+			imagePaths: {}
 		};
 	},
 
@@ -225,7 +234,7 @@ var RegisterProduct = React.createClass({
                     type={Models.Product()}
                     value={this.state.value}
                     options={this.state.options}
-                    onChange={(value) =>{this.setState({value: value})}}
+                    onChange={(value) =>{_tmp_state.value = value}}
                 />
 
                 <TouchableOpacity
@@ -240,7 +249,7 @@ var RegisterProduct = React.createClass({
                     type={Models.SimpelBool()}
                     options={nutBoolOptions}
                     value={this.state.nutBool}
-                    onChange={(value) =>{this.setState({nutBool: value})}}
+                    onChange={(value) =>{this.storeTmpState();this.setState({nutBool: value})}}
                     />
             </View>
         );
@@ -252,7 +261,7 @@ var RegisterProduct = React.createClass({
                 type={Models.SimpelBool()}
                 options={nutServingBoolOptions}
                 value={this.state.nutServingBool}
-                onChange={(value) =>{this.setState({nutServingBool: value})}}
+                onChange={(value) =>{this.storeTmpState();this.setState({nutServingBool: value})}}
                 />
         );
     },
@@ -271,7 +280,7 @@ var RegisterProduct = React.createClass({
                     ref="form2"
                     type={Models.Nutrition()}
                     value={this.state.nutHundredValue}
-                    onChange={(value) =>{this.setState({nutHundredValue: value})}}
+                    onChange={(value) =>{_tmp_state.nutHundredValue = value}}
                     options={this.state.options}
                     />
             </View>
@@ -293,11 +302,69 @@ var RegisterProduct = React.createClass({
                     type={Models.NutritionServing()}
                     value={this.state.nutServingValue}
                     options={this.state.options}
-                    onChange={(value) =>{this.setState({nutServingValue: value})}}
+                    onChange={(value) =>{_tmp_state.nutServingValue = value}}
                     />
             </View>
         )
     },
+
+    renderHealthClaims: function()
+    {
+
+        if(!this.state.healthClaimsBool.boolValue)
+            return(
+                <View>
+                    <Form
+                        type={Models.SimpelBool()}
+                        options={
+                            {fields:{boolValue:{ label:'Health claims', onTintColor:'#4B92DB'}}}
+                        }
+                        value={this.state.healthClaimsBool}
+                        onChange={(value) =>{this.storeTmpState();this.setState({healthClaimsBool: value})}}
+                        />
+                </View>
+            );
+        else
+            return(
+                <View>
+                    <Form
+                        type={Models.SimpelBool()}
+                        options={
+                            {fields:{boolValue:{ label:'Health claims', onTintColor:'#4B92DB'}}}
+                        }
+                        value={this.state.healthClaimsBool}
+                        onChange = {(value) =>{this.storeTmpState();this.setState({healthClaimsBool: value})}}
+                    />
+
+                    <Form
+                        ref="healthClaimsForm"
+                        type={Models.HealthClaims()}
+                        options={
+                            {
+                            fields:{
+                                noSalt:{label: 'Unsaltet/No salt/No added salt', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB'},
+                                noSugar:{label: 'No added sugar/low in sugar', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB'},
+                                noSweeteners:{label: 'No artificial sweetners', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB'},
+                                vitamins:{label: 'Fortified with vitamins/minerals', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB'},
+                                noPreservatives:{label: 'No artificial preservatives', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB'},
+                                noStarch:{label: 'No added starch', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB'},
+                                noColors:{label: 'No artificial colors', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB'},
+                                noFlavours:{label: 'No artificial flavors', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB'},
+                                glutenFree:{label: 'Gluten free', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB'},
+                                organic:{label: 'Organic', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB'},
+                                other:{template: GlobalStyles.indentedTextbox}
+                                }
+                            }
+                        }
+                        value={this.state.healthClaims}
+                        onChange={(value) => {_tmp_state.healthClaims = value}}
+                        />
+
+                </View>
+            );
+
+    },
+
 
     renderBottom: function()
     {
@@ -310,14 +377,20 @@ var RegisterProduct = React.createClass({
                     ref="form4"
                     type={Models.VisualInformation()}
                     options={options}
-                    onChange={(value) =>{this.setState({visualInfo: value})}}
                     value={this.state.visualInfo}
+                    onChange={(value) =>{_tmp_state.visualInfo = value}}
                     />
+            </View>
+        )
+    },
 
+    renderImages: function() {
+      return(
+          <View>
                 <Text style={GlobalStyles.title}>
                     Pictures
                 </Text>
-                <TouchableHighlight style={GlobalStyles.button} onPress={this.onTakeFront} underlayColor='#99d9f4'>
+                <TouchableHighlight style={GlobalStyles.button} onPress={() =>{this.onOpenCamera("front");}} underlayColor='#99d9f4'>
                     <Text style={GlobalStyles.buttonText}>Capture product images</Text>
                 </TouchableHighlight>
 
@@ -366,12 +439,10 @@ var RegisterProduct = React.createClass({
 
 	},
 
-	onTakeFront: function () {
-		this.onOpenCamera("front");
-	},
-
 
 	onOpenCamera: function(position){
+        this.storeTmpState();
+
 		this.props.navigator.push({
 			leftButtonTitle: 'Cancel',
 			onLeftButtonPress: () => this.props.navigator.pop(),
@@ -407,12 +478,14 @@ var RegisterProduct = React.createClass({
 		console.log("= [RegisterProduct] onReturnedFromCamera ", 'uuid', this.state.uuid, "paths:", paths);
 
 		// Add the new images to the upload queue
-		Datastore.add("imageQueue", {name:this.state.uuid, paths:paths} );
+		Datastore.data.add("imageQueue", {name:this.state.uuid, paths:paths} );
 
-		this.setState({images: imageUris, imagepaths:paths});
+		this.setState({images: imageUris, imagePaths:paths});
 	},
 
 	onAddBrand: function () {
+        this.storeTmpState();
+
 		this.props.navigator.push({
 			leftButtonTitle: 'Cancel',
 			onLeftButtonPress: () => this.props.navigator.pop(),
@@ -422,7 +495,15 @@ var RegisterProduct = React.createClass({
 		});
 	},
 
-    
+    storeTmpState: function () {
+        this.setState({
+            value: _tmp_state.value,
+            nutHundredValue: _tmp_state.nutHundredValue,
+            visualInfo: _tmp_state.visualInfo,
+            healthClaims: _tmp_state.healthClaims,
+            otherClaim: _tmp_state.otherClaim
+        });
+    },
 
     getProduct: function()
     {
@@ -431,10 +512,13 @@ var RegisterProduct = React.createClass({
 		// images are always linked to the product,
 		// and named on disk as "Unique Product ID" (shortid())
 		// pluss image_type (front, back, etc.)
-
-
+        this.storeTmpState();
+        //console.log("Hello")
 		var value = this.refs.form.getValue();
 		if (value) { // if validation fails, value will be null
+
+
+
 			// Copy value because it is not extensible, then add "private" values
 			var newVal = Datastore.clone(value);
 			newVal.nutritionalPr100g = null;
@@ -446,9 +530,10 @@ var RegisterProduct = React.createClass({
             if (this.refs.form3) {
                 newVal.nutritionalPrServing = Datastore.clone(this.refs.form3.getValue());
             }
+
             if(this.refs.healthClaimsForm)
             {
-                newVal.healtClaims = Datastore.clone(this.refs.healthClaimsForm.getValue());
+                newVal.healthClaims = Datastore.clone(this.refs.healthClaimsForm.getValue());
             }
 
 			newVal.visualInformation = Datastore.clone(this.refs.form4.getValue());
@@ -456,7 +541,7 @@ var RegisterProduct = React.createClass({
 
 
 			newVal.images = Datastore.clone(this.state.images);
-			newVal.imagepaths = Datastore.clone(this.state.imagepaths);
+			newVal.imagePaths = Datastore.clone(this.state.imagePaths);
 			newVal.country = Datastore.M.country.name;
 
 
@@ -482,11 +567,13 @@ var RegisterProduct = React.createClass({
 	onPress: function()
 	{
 		var newVal = this.getProduct();
+
 		if(newVal)
 		{
 
 			console.log('-------------------------------');
 			console.log("[RegisterProduct] Saving newVal:", newVal);
+
 			var entry = Datastore.data.add('products', newVal);
 			
 			if(this.props.getProductData){

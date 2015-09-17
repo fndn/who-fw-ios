@@ -79,13 +79,14 @@ module.exports.Location = function(){
 	//var data = Datastore.data.all('storeBrands');
 	
 	var data = Datastore.data.where('storeBrands', {"countryCode": Datastore.M.country.countryCode });
-	//console.log('[LocationModel] filterByCountry', Datastore.M, data );
+    data = Datastore.data.orderBy(data, "name");
 
 	var storeBrands = {};
 	for(var i = 0; i < data.length; i++)
 	{
-		storeBrands[data[i]._id] = data[i].name;
+		storeBrands[this.numberToLetters(data[i]._id)] = data[i].name;
 	}
+
 
 	return t.struct({
 		name: t.Str,
@@ -97,6 +98,29 @@ module.exports.Location = function(){
 		storeType: storeTypes
 	});
 };
+
+module.exports.numberToLetters = function(n) {
+    var ordA = 'A'.charCodeAt(0);
+    var ordZ = 'Z'.charCodeAt(0);
+    var len = ordZ - ordA + 1;
+
+    var s = "";
+    while(n >= 0) {
+        s = String.fromCharCode(n % len + ordA) + s;
+        n = Math.floor(n / len) - 1;
+    }
+    return s;
+};
+
+module.exports.letterToNumbers = function(string) {
+    string = string.toUpperCase();
+    var letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', sum = 0, i;
+    for (i = 0; i < string.length; i++) {
+        sum += Math.pow(letters.length, i) * (letters.indexOf(string.substr(((i + 1) * -1), 1)));
+    }
+    return sum;
+};
+
 
 module.exports.StoreType = function(){
 	return t.struct({

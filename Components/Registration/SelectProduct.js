@@ -46,6 +46,7 @@ var SelectProduct = React.createClass ({
 				Datastore.data.all('products', this.dataAvailable);
 			}
 		});
+        Datastore.data.all('products', this.dataAvailable);
 	},
 	
 	componentWillUnmount: function() {
@@ -105,7 +106,7 @@ var SelectProduct = React.createClass ({
 							<Image style={GlobalStyles.rowImage} source={{ uri: 'http://lorempixel.com/100/100/sports/'}} />
 							<View>
 								<Text style={GlobalStyles.listrowTitle}>{rowData.name}</Text>
-								<Text style={GlobalStyles.listrowSubtitle}>{_foodType} by {Datastore.data.one('brands', rowData.brand).name}, from age {_ageGroup}</Text>
+								<Text style={GlobalStyles.listrowSubtitle}>{_foodType} by {Datastore.data.one('brands', {_id:rowData.brand}).name}, from age {_ageGroup}</Text>
 							</View>
 						</View>                        
 					</View>

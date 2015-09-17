@@ -92,7 +92,12 @@ var RegisterLocation = React.createClass({
 			newVal.country = Datastore.M.country.name;
 			newVal.countryCode = Datastore.M.country.countryCode;
 
-			newVal.storeBrand = Datastore.data.one('storeBrands', newVal.storeBrand).name;
+
+            // storeBrands are stored as letters such as A = 1 C = 2 AA = 27 etc.
+            // Therefore we need to convert it back to a number to retrieve from Datastore
+            newVal.storeBrand = Models.letterToNumbers(newVal.storeBrand);
+
+			//newVal.storeBrand = Datastore.data.one('storeBrands', {_id:newVal.storeBrand}).name;
 
 			console.log("[RegisterLocation] new location: ", newVal);
 			Datastore.data.add('locations', newVal);
