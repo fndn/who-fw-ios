@@ -52,6 +52,9 @@ var CameraCapture = React.createClass({
 				ref="cam"
 				style={styles.container}
 				onBarCodeRead={this._onBarCodeRead}
+
+				captureTarget={Camera.constants.CaptureTarget.disk}
+
 				type={this.state.cameraType}
 				>
 
