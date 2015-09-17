@@ -7,12 +7,8 @@ var CameraCapture 	= require('./CameraCapture');
 var RegisterBrand 	= require('./RegisterBrand');
 var Models 			= require('../Models');
 var GlobalStyles 	= require('../../Styles/GlobalStyles');
-//var RNFS            = require('react-native-fs');
-
-//var RNFS            = require('react-native-fs');
 
 var Form = t.form.Form;
-
 
 var options = {
 	fields:{
@@ -87,15 +83,15 @@ var nutBoolOptions = {
 };
 
 var nutServingBoolOptions = {
-    fields:{
-        boolValue:{ label:'Nutritional information pr serving available', onTintColor:'#4B92DB'}
-    }
+	fields:{
+		boolValue:{ label:'Nutritional information pr serving available', onTintColor:'#4B92DB'}
+	}
 };
 
 var healtClaimsBoolOptions = {
-    fields:{
-        boolValue:{ label:'Health claims', onTintColor:'#4B92DB'}
-    }
+	fields:{
+		boolValue:{ label:'Health claims', onTintColor:'#4B92DB'}
+	}
 };
 
 var {
@@ -105,7 +101,7 @@ var {
 	Component,
 	TextInput,
 	TouchableHighlight,
-    TouchableOpacity,
+	TouchableOpacity,
 	ActivityIndicatorIOS,
 	NavigatorIOS,
 	Image,
@@ -113,30 +109,6 @@ var {
 } = React;
 
 
-function saveImage( obj ){
-	// create a path you want to write to
-	//var path = RNFS.DocumentDirectoryPath + obj.name;
-
-	console.log('saveImage', obj);
-	/*
-	
-	NIX: Could not read file at path assets-library://asset/asset.JPG?id=6A2A3518-3FC9-4C62-A35F-767CE40460BD&ext=JPG
-
-	RNFS.readFile( obj.path ).then((b64) => {
-		console.log('FILE READ b64', b64);
-	}).catch((err) => {
-		console.log('FILE READ ERROR:', err.message);
-	});
-	*/
-
-	/*
-	RNFS.writeFile(RNFS.DocumentDirectoryPath + obj.name, obj.path).then((success) => {
-		console.log('FILE WRITTEN!', path);
-	}).catch((err) => {
-		console.log('FILE ERROR:', err.message);
-	});
-	*/
-}
 
 var _tmp_state = {};
 
@@ -147,12 +119,12 @@ var RegisterProduct = React.createClass({
 		var hundredData = null;
 		var servingData = null;
 		var nutBoolData = {boolValue:false};
-        var nutServingBoolData = {boolValue:false};
+		var nutServingBoolData = {boolValue:false};
 		var visualData = null;
-        var healthClaimsBool = {boolValue: false};
-        var healthClaims = null;
-        var otherBool = {boolValue: false};
-        var otherClaim = null;
+		var healthClaimsBool = {boolValue: false};
+		var healthClaims = null;
+		var otherBool = {boolValue: false};
+		var otherClaim = null;
 
 		var images = {
 			front: null,
@@ -168,53 +140,56 @@ var RegisterProduct = React.createClass({
 
 		if(this.props.getProductData){
 			//was cloned
+
+			console.log('# 2 Product was cloned!');
+			console.log('# 2 with: ', Datastore.MemoryStore.product);
+
 			var data = Datastore.cloneObject(Datastore.MemoryStore.product);
 			hundredData = data.nutritionalPr100g;
 			servingData = data.nutritionalPrServing;
 
-            if(servingData)
-                nutServingBoolData = {boolValue:true};
+			if(servingData)
+				nutServingBoolData = {boolValue:true};
 
-            if(hundredData)
-			    nutBoolData = {boolValue:true};
+			if(hundredData)
+				nutBoolData = {boolValue:true};
 
 			visualData = data.visualInformation;
-            if(data.healthClaims) {
-                healthClaimsBool = {boolValue: true};
-                healthClaims = data.healthClaims;
-            }
-            if(data.otherClaim) {
-                otherBool = {boolValue: true};
-                otherClaim = data.otherClaim;
-            }
+			if(data.healthClaims) {
+				healthClaimsBool = {boolValue: true};
+				healthClaims = data.healthClaims;
+			}
+			if(data.otherClaim) {
+				otherBool = {boolValue: true};
+				otherClaim = data.otherClaim;
+			}
 			//if(data.images) images = data.images;
-            //Datastore.MemoryStore.product = null;
-            console.log(hundredData);
+			//Datastore.MemoryStore.product = null;
+			console.log(hundredData);
 		}
 
-        _tmp_state.value = data;
-        _tmp_state.nutHundredValue = hundredData;
-        _tmp_state.nutServingValue = servingData;
-        _tmp_state.visualInfo = visualData;
-        _tmp_state.otherClaim = otherClaim;
-        _tmp_state.healthClaims = healthClaims;
+		_tmp_state.value = data;
+		_tmp_state.nutHundredValue = hundredData;
+		_tmp_state.nutServingValue = servingData;
+		_tmp_state.visualInfo = visualData;
+		_tmp_state.otherClaim = otherClaim;
+		_tmp_state.healthClaims = healthClaims;
 
 		return {
 			options: options,
 			value: data,
 			nutBool: nutBoolData,
-            nutServingBool: nutServingBoolData,
+			nutServingBool: nutServingBoolData,
 			nutHundredValue: hundredData,
 			nutServingValue: servingData,
 			visualInfo: visualData,
-            healthClaimsBool: healthClaimsBool,
-            healthClaims: healthClaims,
-            otherBool: otherBool,
-            otherClaim: otherClaim,
+			healthClaimsBool: healthClaimsBool,
+			healthClaims: healthClaims,
+			otherBool: otherBool,
+			otherClaim: otherClaim,
 			initialPosition: null,
 			images: images,
 			uuid: uuid,
-			imagePaths: {}
 		};
 	},
 
@@ -226,222 +201,220 @@ var RegisterProduct = React.createClass({
 		);
 	},
 // <editor-fold desc=" Render methods">
-    renderTop: function(){
-        return(
-            <View>
-                <Form
-                    ref="form"
-                    type={Models.Product()}
-                    value={this.state.value}
-                    options={this.state.options}
-                    onChange={(value) =>{_tmp_state.value = value}}
-                />
+	renderTop: function(){
+		return(
+			<View>
+				<Form
+					ref="form"
+					type={Models.Product()}
+					value={this.state.value}
+					options={this.state.options}
+					onChange={(value) =>{_tmp_state.value = value}}
+				/>
 
-                <TouchableOpacity
-                    style={styles.addBrandButton}
-                    onPress = {this.onAddBrand}>
-                    <Text style={styles.buttonText}>Add</Text>
-                </TouchableOpacity>
-
-
-
-                <Form
-                    type={Models.SimpelBool()}
-                    options={nutBoolOptions}
-                    value={this.state.nutBool}
-                    onChange={(value) =>{this.storeTmpState();this.setState({nutBool: value})}}
-                    />
-            </View>
-        );
-    },
-
-    renderMid: function () {
-        return(
-            <Form
-                type={Models.SimpelBool()}
-                options={nutServingBoolOptions}
-                value={this.state.nutServingBool}
-                onChange={(value) =>{this.storeTmpState();this.setState({nutServingBool: value})}}
-                />
-        );
-    },
-
-    renderNutritionalPr100g: function()
-    {
-        if(!this.state.nutBool.boolValue)
-            return;
-
-        return(
-            <View>
-                <Text style={GlobalStyles.title}>
-                    Pr 100g
-                </Text>
-                <Form
-                    ref="form2"
-                    type={Models.Nutrition()}
-                    value={this.state.nutHundredValue}
-                    onChange={(value) =>{_tmp_state.nutHundredValue = value}}
-                    options={this.state.options}
-                    />
-            </View>
-        )
-    },
-
-    renderNutritionalPrServing: function()
-    {
-        if(!this.state.nutServingBool.boolValue)
-            return;
-
-        return(
-            <View>
-                <Text style={GlobalStyles.title}>
-                    Per serving
-                </Text>
-                <Form
-                    ref="form3"
-                    type={Models.NutritionServing()}
-                    value={this.state.nutServingValue}
-                    options={this.state.options}
-                    onChange={(value) =>{_tmp_state.nutServingValue = value}}
-                    />
-            </View>
-        )
-    },
-
-    renderHealthClaims: function()
-    {
-
-        if(!this.state.healthClaimsBool.boolValue)
-            return(
-                <View>
-                    <Form
-                        type={Models.SimpelBool()}
-                        options={
-                            {fields:{boolValue:{ label:'Health claims', onTintColor:'#4B92DB'}}}
-                        }
-                        value={this.state.healthClaimsBool}
-                        onChange={(value) =>{this.storeTmpState();this.setState({healthClaimsBool: value})}}
-                        />
-                </View>
-            );
-        else
-            return(
-                <View>
-                    <Form
-                        type={Models.SimpelBool()}
-                        options={
-                            {fields:{boolValue:{ label:'Health claims', onTintColor:'#4B92DB'}}}
-                        }
-                        value={this.state.healthClaimsBool}
-                        onChange = {(value) =>{this.storeTmpState();this.setState({healthClaimsBool: value})}}
-                    />
-
-                    <Form
-                        ref="healthClaimsForm"
-                        type={Models.HealthClaims()}
-                        options={
-                            {
-                            fields:{
-                                noSalt:{label: 'Unsaltet/No salt/No added salt', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB'},
-                                noSugar:{label: 'No added sugar/low in sugar', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB'},
-                                noSweeteners:{label: 'No artificial sweetners', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB'},
-                                vitamins:{label: 'Fortified with vitamins/minerals', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB'},
-                                noPreservatives:{label: 'No artificial preservatives', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB'},
-                                noStarch:{label: 'No added starch', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB'},
-                                noColors:{label: 'No artificial colors', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB'},
-                                noFlavours:{label: 'No artificial flavors', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB'},
-                                glutenFree:{label: 'Gluten free', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB'},
-                                organic:{label: 'Organic', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB'},
-                                other:{template: GlobalStyles.indentedTextbox}
-                                }
-                            }
-                        }
-                        value={this.state.healthClaims}
-                        onChange={(value) => {_tmp_state.healthClaims = value}}
-                        />
-
-                </View>
-            );
-
-    },
+				<TouchableOpacity
+					style={styles.addBrandButton}
+					onPress = {this.onAddBrand}>
+					<Text style={styles.buttonText}>Add</Text>
+				</TouchableOpacity>
 
 
-    renderBottom: function()
-    {
-        return(
-            <View>
-                <Text style={GlobalStyles.title}>
-                    Visual information
-                </Text>
-                <Form
-                    ref="form4"
-                    type={Models.VisualInformation()}
-                    options={options}
-                    value={this.state.visualInfo}
-                    onChange={(value) =>{_tmp_state.visualInfo = value}}
-                    />
-            </View>
-        )
-    },
 
-    renderImages: function() {
-      return(
-          <View>
-                <Text style={GlobalStyles.title}>
-                    Pictures
-                </Text>
-                <TouchableHighlight style={GlobalStyles.button} onPress={() =>{this.onOpenCamera("front");}} underlayColor='#99d9f4'>
-                    <Text style={GlobalStyles.buttonText}>Capture product images</Text>
-                </TouchableHighlight>
+				<Form
+					type={Models.SimpelBool()}
+					options={nutBoolOptions}
+					value={this.state.nutBool}
+					onChange={(value) =>{this.storeTmpState();this.setState({nutBool: value})}}
+					/>
+			</View>
+		);
+	},
+
+	renderMid: function () {
+		return(
+			<Form
+				type={Models.SimpelBool()}
+				options={nutServingBoolOptions}
+				value={this.state.nutServingBool}
+				onChange={(value) =>{this.storeTmpState();this.setState({nutServingBool: value})}}
+				/>
+		);
+	},
+
+	renderNutritionalPr100g: function()
+	{
+		if(!this.state.nutBool.boolValue)
+			return;
+
+		return(
+			<View>
+				<Text style={GlobalStyles.title}>
+					Pr 100g
+				</Text>
+				<Form
+					ref="form2"
+					type={Models.Nutrition()}
+					value={this.state.nutHundredValue}
+					onChange={(value) =>{_tmp_state.nutHundredValue = value}}
+					options={this.state.options}
+					/>
+			</View>
+		)
+	},
+
+	renderNutritionalPrServing: function()
+	{
+		if(!this.state.nutServingBool.boolValue)
+			return;
+
+		return(
+			<View>
+				<Text style={GlobalStyles.title}>
+					Per serving
+				</Text>
+				<Form
+					ref="form3"
+					type={Models.NutritionServing()}
+					value={this.state.nutServingValue}
+					options={this.state.options}
+					onChange={(value) =>{_tmp_state.nutServingValue = value}}
+					/>
+			</View>
+		)
+	},
+
+	renderHealthClaims: function()
+	{
+
+		if(!this.state.healthClaimsBool.boolValue)
+			return(
+				<View>
+					<Form
+						type={Models.SimpelBool()}
+						options={
+							{fields:{boolValue:{ label:'Health claims', onTintColor:'#4B92DB'}}}
+						}
+						value={this.state.healthClaimsBool}
+						onChange={(value) =>{this.storeTmpState();this.setState({healthClaimsBool: value})}}
+						/>
+				</View>
+			);
+		else
+			return(
+				<View>
+					<Form
+						type={Models.SimpelBool()}
+						options={
+							{fields:{boolValue:{ label:'Health claims', onTintColor:'#4B92DB'}}}
+						}
+						value={this.state.healthClaimsBool}
+						onChange = {(value) =>{this.storeTmpState();this.setState({healthClaimsBool: value})}}/>
+
+					<Form
+						ref="healthClaimsForm"
+						type={Models.HealthClaims()}
+						options={
+							{
+							fields:{
+								noSalt:{label: 'Unsaltet/No salt/No added salt', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB'},
+								noSugar:{label: 'No added sugar/low in sugar', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB'},
+								noSweeteners:{label: 'No artificial sweetners', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB'},
+								vitamins:{label: 'Fortified with vitamins/minerals', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB'},
+								noPreservatives:{label: 'No artificial preservatives', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB'},
+								noStarch:{label: 'No added starch', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB'},
+								noColors:{label: 'No artificial colors', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB'},
+								noFlavours:{label: 'No artificial flavors', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB'},
+								glutenFree:{label: 'Gluten free', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB'},
+								organic:{label: 'Organic', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB'},
+								other:{template: GlobalStyles.indentedTextbox}
+								}
+							}
+						}
+						value={this.state.healthClaims}
+						onChange={(value) => {_tmp_state.healthClaims = value}}/>
+
+				</View>
+			);
+
+	},
 
 
-                <View style={GlobalStyles.imageGrid}>
-                    <Image style={GlobalStyles.image} source={{ uri: this.state.images.front }} />
-                    <Text style={GlobalStyles.imageText}>Front</Text>
-                </View>
-                <View style={GlobalStyles.imageGrid}>
-                    <Image style={GlobalStyles.image} source={{ uri: this.state.images.back }} />
-                    <Text style={GlobalStyles.imageText}>Back</Text>
-                </View>
-                <View style={GlobalStyles.imageGrid}>
-                    <Image style={GlobalStyles.image} source={{ uri: this.state.images.left }} />
-                    <Text style={GlobalStyles.imageText}>Left</Text>
-                </View>
-                <View style={GlobalStyles.imageGrid}>
-                    <Image style={GlobalStyles.image} source={{ uri: this.state.images.right }} />
-                    <Text style={GlobalStyles.imageText}>Right</Text>
-                </View>
+	renderBottom: function()
+	{
+		return(
+			<View>
+				<Text style={GlobalStyles.title}>
+					Visual information
+				</Text>
+				<Form
+					ref="form4"
+					type={Models.VisualInformation()}
+					options={options}
+					value={this.state.visualInfo}
+					onChange={(value) =>{_tmp_state.visualInfo = value}}
+					/>
+			</View>
+		)
+	},
 
-                <TouchableHighlight style={GlobalStyles.button} onPress={this.onPress} underlayColor='#99d9f4'>
-                    <Text style={GlobalStyles.buttonText}>Save</Text>
-                </TouchableHighlight>
-            </View>
-        )
-    },
+	renderImages: function() {
+	  return(
+		  <View>
+				<Text style={GlobalStyles.title}>
+					Pictures
+				</Text>
+				<TouchableHighlight style={GlobalStyles.button} onPress={() =>{this.onOpenCamera("front");}} underlayColor='#99d9f4'>
+					<Text style={GlobalStyles.buttonText}>Capture product images</Text>
+				</TouchableHighlight>
+
+
+				<View style={GlobalStyles.imageGrid}>
+					<Image style={GlobalStyles.image} source={{ uri: this.state.images.front }} />
+					<Text style={GlobalStyles.imageText}>Front</Text>
+				</View>
+				<View style={GlobalStyles.imageGrid}>
+					<Image style={GlobalStyles.image} source={{ uri: this.state.images.back }} />
+					<Text style={GlobalStyles.imageText}>Back</Text>
+				</View>
+				<View style={GlobalStyles.imageGrid}>
+					<Image style={GlobalStyles.image} source={{ uri: this.state.images.left }} />
+					<Text style={GlobalStyles.imageText}>Left</Text>
+				</View>
+				<View style={GlobalStyles.imageGrid}>
+					<Image style={GlobalStyles.image} source={{ uri: this.state.images.right }} />
+					<Text style={GlobalStyles.imageText}>Right</Text>
+				</View>
+
+				<TouchableHighlight style={GlobalStyles.button} onPress={this.onPress} underlayColor='#99d9f4'>
+					<Text style={GlobalStyles.buttonText}>Save</Text>
+				</TouchableHighlight>
+			</View>
+		)
+	},
 
 
 	render: function(){
 
-        return (
-            <ScrollView style={GlobalStyles.scrollViewList}>
-                {this.renderTop()}
-                {this.renderNutritionalPr100g()}
-                {this.renderMid()}
-                {this.renderNutritionalPrServing()}
+		return (
+			<ScrollView style={GlobalStyles.scrollViewList}>
+				{this.renderTop()}
+				{this.renderNutritionalPr100g()}
+				{this.renderMid()}
+				{this.renderNutritionalPrServing()}
 
 
 
-                {this.renderBottom()}
-                {this.renderHealthClaims()}
-                {this.renderImages()}
-            </ScrollView>
-        );
+				{this.renderBottom()}
+				{this.renderHealthClaims()}
+				{this.renderImages()}
+			</ScrollView>
+		);
 
 	},
 
 
 	onOpenCamera: function(position){
-        this.storeTmpState();
+		this.storeTmpState();
 
 		this.props.navigator.push({
 			leftButtonTitle: 'Cancel',
@@ -457,34 +430,23 @@ var RegisterProduct = React.createClass({
 		});
 	},
 
-	onReturnedFromCamera: function (_imageUris, productPos) {
+	onReturnedFromCamera: function (_pics, productPos) {
 		// Add the new images to the upload queue
 
-		var imageUris = Datastore.clone(_imageUris);
-
+		var pics = Datastore.clone(_pics);
 		var uuid = this.state.uuid;
-		var _paths = {};
-		Object.keys( imageUris ).forEach( function(el){
-			_paths[el] = {
-				path: imageUris[el],
-				name: uuid +'_'+ el +'.jpg',
-			};
-
-			// Save files to Documents directory
-			saveImage( _paths[el] );
+		var images = [];
+		Object.keys( pics ).forEach( function(el){
+			images.push({name: el, path: pics[el]});
 		});
-		var paths = Datastore.clone(_paths);
 		
-		console.log("= [RegisterProduct] onReturnedFromCamera ", 'uuid', this.state.uuid, "paths:", paths);
+		console.log("= [RegisterProduct] onReturnedFromCamera ", 'uuid', this.state.uuid, "images:", images);
 
-		// Add the new images to the upload queue
-		Datastore.data.add("imageQueue", {name:this.state.uuid, paths:paths} );
-
-		this.setState({images: imageUris, imagePaths:paths});
+		this.setState({images: images});
 	},
 
 	onAddBrand: function () {
-        this.storeTmpState();
+		this.storeTmpState();
 
 		this.props.navigator.push({
 			leftButtonTitle: 'Cancel',
@@ -495,77 +457,56 @@ var RegisterProduct = React.createClass({
 		});
 	},
 
-    storeTmpState: function () {
-        this.setState({
-            value: _tmp_state.value,
-            nutHundredValue: _tmp_state.nutHundredValue,
-            visualInfo: _tmp_state.visualInfo,
-            healthClaims: _tmp_state.healthClaims,
-            otherClaim: _tmp_state.otherClaim
-        });
-    },
+	storeTmpState: function () {
+		this.setState({
+			value: _tmp_state.value,
+			nutHundredValue: _tmp_state.nutHundredValue,
+			visualInfo: _tmp_state.visualInfo,
+			healthClaims: _tmp_state.healthClaims,
+			otherClaim: _tmp_state.otherClaim
+		});
+	},
 
-    getProduct: function()
-    {
-        // call getValue() to get the values of the form
+	getProduct: function() {
 
-		// images are always linked to the product,
-		// and named on disk as "Unique Product ID" (shortid())
-		// pluss image_type (front, back, etc.)
-        this.storeTmpState();
-        //console.log("Hello")
+		this.storeTmpState();
+
 		var value = this.refs.form.getValue();
-		if (value) { // if validation fails, value will be null
+		if (value) {
 
-
-
-			// Copy value because it is not extensible, then add "private" values
 			var newVal = Datastore.clone(value);
+
 			newVal.nutritionalPr100g = null;
 			newVal.nutritionalPrServing = null;
 
-            if (this.refs.form2) {
-                newVal.nutritionalPr100g = Datastore.clone(this.refs.form2.getValue());
-            }
-            if (this.refs.form3) {
-                newVal.nutritionalPrServing = Datastore.clone(this.refs.form3.getValue());
-            }
+			if (this.refs.form2) {
+				newVal.nutritionalPr100g = Datastore.clone(this.refs.form2.getValue());
+			}
+			if (this.refs.form3) {
+				newVal.nutritionalPrServing = Datastore.clone(this.refs.form3.getValue());
+			}
 
-            if(this.refs.healthClaimsForm)
-            {
-                newVal.healthClaims = Datastore.clone(this.refs.healthClaimsForm.getValue());
-            }
+			if(this.refs.healthClaimsForm){
+				newVal.healthClaims = Datastore.clone(this.refs.healthClaimsForm.getValue());
+			}
 
 			newVal.visualInformation = Datastore.clone(this.refs.form4.getValue());
 			//newVal.brand = Datastore.M.brand.name;
 
-
-			newVal.images = Datastore.clone(this.state.images);
-			newVal.imagePaths = Datastore.clone(this.state.imagePaths);
+			newVal.images = this.state.images; //Datastore.clone(this.state.images);
+			
 			newVal.country = Datastore.M.country.name;
 
+			newVal.uuid   = this.state.uuid;
+			console.log('#1 Prod UUID ', newVal.uuid);
+			console.log('#1 Prod IMAGES ', newVal.images);
 
-			/*
-			 newVal.uuid   = Datastore.shortid.generate();
-			 newVal._images = {};
-			 Object.keys( newVal.images ).forEach( function(el){
-			 if( newVal.images[el] != null ){
-			 newVal._images[el] = {
-			 path: newVal.images[el],
-			 name: newVal.uuid +'_'+ el +'.jpg',
-			 };
-			 }else{
-			 newVal._images[el] = null;
-			 }
-			 });
-			 */
 			return newVal;
 		}
 		else return null;
 	},
 
-	onPress: function()
-	{
+	onPress: function(){
 		var newVal = this.getProduct();
 
 		if(newVal)
