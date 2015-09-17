@@ -437,7 +437,10 @@ var RegisterProduct = React.createClass({
 		var uuid = this.state.uuid;
 		var images = [];
 		Object.keys( pics ).forEach( function(el){
-			images.push({name: el, path: pics[el]});
+			images.push({
+				name: uuid +'-'+ el,
+				path: pics[el]
+			});
 		});
 		
 		console.log("= [RegisterProduct] onReturnedFromCamera ", 'uuid', this.state.uuid, "images:", images);
