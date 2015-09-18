@@ -146,9 +146,9 @@ var RegisterProduct = React.createClass({
 			//was cloned
 
 			console.log('# 2 Product was cloned!');
-			console.log('# 2 with: ', Datastore.MemoryStore.product);
+			console.log('# 2 with: ', Datastore.M.product);
 
-			var data = Datastore.cloneObject(Datastore.MemoryStore.product);
+			var data = Datastore.clone(Datastore.M.product);
 			hundredData = data.nutritionalPr100g;
 			servingData = data.nutritionalPrServing;
 
@@ -189,7 +189,7 @@ var RegisterProduct = React.createClass({
                 otherClaim = data.otherClaim;
             }
 			//if(data.images) images = data.images;
-            //Datastore.MemoryStore.product = null;
+            //Datastore.M.product = null;
             console.log(hundredData);
 		}
 
@@ -199,6 +199,8 @@ var RegisterProduct = React.createClass({
 		_tmp_state.visualInfo = visualData;
 		_tmp_state.otherClaim = otherClaim;
 		_tmp_state.healthClaims = healthClaims;
+        _tmp_state.servingSaltSodiumValue = servingSaltSodiumValue;
+        _tmp_state.hundredSaltSodiumValue = hundredSaltSodiumValue;
 
 		return {
 			options: options,
@@ -278,9 +280,9 @@ var RegisterProduct = React.createClass({
 
         var saltSodium = (this.state.saltSodium) ? (<Form
             ref="hundredSalt"
-            type={ t.struct({ hundredSaltSodiumValue: t.maybe(t.Num) }) }
-            value={this.state.hundredSaltSodiumValue}
-            options={{ fields:{hundredSaltSodiumValue:{label:this.state.saltSodium + " (g)", keyboardType: 'numeric'}  }}}
+            type={ t.struct({ tValue: t.maybe(t.Num) }) }
+            value={{tValue: this.state.hundredSaltSodiumValue}}
+            options={{ fields:{tValue:{label:this.state.saltSodium + " (g)", keyboardType: 'numeric'}  }}}
             onChange={(value) => { _tmp_state.hundredSaltSodiumValue = value }}
             />) : null;
 
@@ -322,9 +324,9 @@ var RegisterProduct = React.createClass({
 
         var saltSodium = (this.state.saltSodium) ? (<Form
             ref="servingSalt"
-            type={ t.struct({ servingSaltSodiumValue: t.maybe(t.Num) }) }
-            value={this.state.servingSaltSodiumValue}
-            options={{ fields:{servingSaltSodiumValue:{label:this.state.saltSodium + " (g)", keyboardType: 'numeric'}  }}}
+            type={ t.struct({ tValue: t.maybe(t.Num) }) }
+            value={ { tValue : this.state.servingSaltSodiumValue } }
+            options={{ fields:{tValue:{label:this.state.saltSodium + " (g)", keyboardType: 'numeric'}  }}}
             onChange={(value) => { _tmp_state.servingSaltSodiumValue = value }}
             />) : null;
 
@@ -558,9 +560,9 @@ var RegisterProduct = React.createClass({
 			newVal.nutritionalPrServing = null;
 
 
-            if (this.refs.form2) {
+            if (this.refs.form2 && this.refs.form2.getValue()) {
                 newVal.nutritionalPr100g = Datastore.clone(this.refs.form2.getValue());
-                if(this.refs.hundredSalt)
+                if(this.refs.hundredSalt  && this.refs.hundredSalt.getValue())
                 {
 
                     if(newVal.saltSodium == "Salt")
@@ -568,19 +570,24 @@ var RegisterProduct = React.createClass({
                     else
                         newVal.nutritionalPr100g.sodium = Datastore.clone(this.refs.hundredSalt.getValue()).hundredSaltSodiumValue;
                 }
+                else return null;
 
             }
-            if (this.refs.form3) {
+            else return null;
+
+            if (this.refs.form3 && this.refs.form2.getValue()) {
                 newVal.nutritionalPrServing = Datastore.clone(this.refs.form3.getValue());
 
-                if(this.refs.servingSalt)
+                if(this.refs.servingSalt && this.refs.servingSalt.getValue())
                 {
                     if(newVal.saltSodium == "Salt")
                         newVal.nutritionalPrServing.salt = Datastore.clone(this.refs.servingSalt.getValue()).servingSaltSodiumValue;
                     else
                         newVal.nutritionalPrServing.sodium = Datastore.clone(this.refs.servingSalt.getValue()).servingSaltSodiumValue;
                 }
+                else return null;
             }
+            else return null;
 
 
 

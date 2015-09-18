@@ -225,7 +225,7 @@ var ValidateProduct = React.createClass({
             );
 
         var val = this.state.saltSodium == "Salt" ? this.state.value.nutritionalPr100g.salt : this.state.value.nutritionalPr100g.sodium;
-        console.log(this.state.value.nutritionalPr100g.sodium);
+
         var saltSodium = (this.state.saltSodium) ? (<Form
             ref="hundredSalt"
             type={ t.struct({ tField: t.maybe(t.Num) }) }
@@ -259,10 +259,13 @@ var ValidateProduct = React.createClass({
                 </View>
             );
 
+        var val = this.state.saltSodium == "Salt" ? this.state.value.nutritionalPrServing.salt : this.state.value.nutritionalPrServing.sodium;
+
+
         var saltSodium = (this.state.saltSodium) ? (<Form
             ref="hundredSalt"
             type={ t.struct({ tField: t.maybe(t.Num) }) }
-            value={this.state.saltSodium == "Salt" ? this.state.value.nutritionalPrServing.salt : this.state.value.nutritionalPrServing.sodium}
+            value={{tField: val}}
             options={{ fields:{tField:{label:this.state.saltSodium + " (g)", editable: false}  }}}
             />) : null;
 
