@@ -32,15 +32,26 @@ var _tmp_state = {};
 var RegisterLocation = React.createClass({
 	
 	getInitialState: function() {
+        _tmp_state.scrollOffset = 0;
+
 		return {
-			value: null
+			value: null,
 		};
 	},
 
 	render: function(){
+
 		return (
 			<View style={GlobalStyles.scrollViewContainer}>
-				<ScrollView style={GlobalStyles.scrollViewList} automaticallyAdjustContentInsets={false}>
+				<ScrollView
+                    style={GlobalStyles.scrollViewList}
+                    automaticallyAdjustContentInsets={false}
+                    keyboardDismissMode={'on-drag'}
+                    keyboardShouldPersistTaps={false}
+                    scrollsToTop={true}
+                    contentOffset={{x:0, y:_tmp_state.scrollOffset + Math.random()}}
+                    onScroll={(event: Object) => {_tmp_state.scrollOffset = event.nativeEvent.contentOffset.y;}}
+                    scrollEventThrottle={5}>
 					<Form
 						ref="form"
 						type={Models.Location()}
@@ -79,6 +90,7 @@ var RegisterLocation = React.createClass({
 		});
 	},
 
+
 	onChange: function(value){
 		// store Form value outside state (hitting state is too expensive)
 		_tmp_state = value;
@@ -87,6 +99,13 @@ var RegisterLocation = React.createClass({
 
 	onPress: function(){
 		var value = this.refs.form.getValue();
+        var firstError = (this.refs.form.validate().errors[0].path[0]);
+
+        this.refs.form.getComponent(firstError).refs.input.measure((ox,oy,width,height,px,py) =>
+        {
+            _tmp_state.scrollOffset += (py - 110.5);
+            this.setState({value: _tmp_state});
+        });
 		if (value) {
 			var newVal = Datastore.clone(value);
 			newVal.country = Datastore.M.country.name;

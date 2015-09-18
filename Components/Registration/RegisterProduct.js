@@ -202,6 +202,7 @@ var RegisterProduct = React.createClass({
 		_tmp_state.healthClaims = healthClaims;
         _tmp_state.servingSaltSodiumValue = servingSaltSodiumValue;
         _tmp_state.hundredSaltSodiumValue = hundredSaltSodiumValue;
+        _tmp_state.scrollOffset = 0;
 
 		return {
 			options: options,
@@ -431,6 +432,7 @@ var RegisterProduct = React.createClass({
                     value={this.state.visualInfo}
                     onChange={(value) =>{_tmp_state.visualInfo = value}}
                     />
+
             </View>
         )
     },
@@ -472,20 +474,29 @@ var RegisterProduct = React.createClass({
 
 
 	render: function(){
-
+        console.log("Rendeer with offset " , _tmp_state.scrollOffset);
 		return (
-			<ScrollView style={GlobalStyles.scrollViewList}>
-				{this.renderTop()}
-				{this.renderNutritionalPr100g()}
-				{this.renderMid()}
-				{this.renderNutritionalPrServing()}
+            <View style={GlobalStyles.scrollViewContainer}>
+                <ScrollView
+                    style={GlobalStyles.scrollViewList}
+                    automaticallyAdjustContentInsets={false}
+                    keyboardDismissMode={'on-drag'}
+                    keyboardShouldPersistTaps={false}
+                    scrollsToTop={true}
+                    contentOffset={{x:0, y:_tmp_state.scrollOffset + Math.random()}}
+                    onScroll={(event: Object) => {_tmp_state.scrollOffset = event.nativeEvent.contentOffset.y;}}
+                    scrollEventThrottle={5}>
 
+                    {this.renderTop()}
+                    {this.renderNutritionalPr100g()}
+                    {this.renderMid()}
+                    {this.renderNutritionalPrServing()}
 
-
-				{this.renderBottom()}
-				{this.renderHealthClaims()}
-				{this.renderImages()}
-			</ScrollView>
+                    {this.renderBottom()}
+                    {this.renderHealthClaims()}
+                    {this.renderImages()}
+                </ScrollView>
+            </View>
 		);
 
 	},
@@ -537,7 +548,7 @@ var RegisterProduct = React.createClass({
 	},
 
     storeTmpState: function () {
-        console.log("## Storing TPM state", _tmp_state);
+        //console.log("## Storing TPM state", _tmp_state);
 
         this.setState({
             value: _tmp_state.value,
@@ -553,7 +564,7 @@ var RegisterProduct = React.createClass({
 
 	getProduct: function() {
 
-		this.storeTmpState();
+		//this.storeTmpState();
 
 		var value = this.refs.form.getValue();
 		if (value) {
@@ -575,10 +586,10 @@ var RegisterProduct = React.createClass({
                         else
                             newVal.nutritionalPr100g.sodium = Datastore.clone(this.refs.hundredSalt.getValue()).tValue;
                     }
-                    else return null;
+                    else {this.jumpToError(this.refs.hundredSalt); return null;}
 
                 }
-                else return null;
+                else {this.jumpToError(this.refs.form2); return null;}
             }
             //console.log("# Checkpoint 4");
             if(this.refs.form3) {
@@ -592,9 +603,9 @@ var RegisterProduct = React.createClass({
                         else
                             newVal.nutritionalPrServing.sodium = Datastore.clone(this.refs.servingSalt.getValue()).tValue;
                     }
-                    else return null;
+                    else {this.jumpToError(this.refs.servingSalt); return null;}
                 }
-                else return null;
+                else {this.jumpToError(this.refs.form3); return null;}
             }
 
 
@@ -620,8 +631,25 @@ var RegisterProduct = React.createClass({
 
 			return newVal;
 		}
-		else return null;
+		else
+        {
+            this.jumpToError(this.refs.form);
+            return null;
+        }
 	},
+
+    jumpToError(ref)
+    {
+        var firstError = ref.validate().errors[0].path[0];
+
+        ref.getComponent(firstError).refs.input.measure((ox,oy,width,height,px,py) =>
+        {
+            _tmp_state.scrollOffset += (py - 110.5);
+            //console.log("GO TO: " , _tmp_state.scrollOffset);
+            if(_tmp_state.scrollOffset < 0) _tmp_state.scrollOffset = 0;
+            this.storeTmpState();
+        });
+    },
 
 	onPress: function(){
 		var newVal = this.getProduct();
