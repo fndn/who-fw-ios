@@ -153,22 +153,22 @@ var RegisterProduct = React.createClass({
 			servingData = data.nutritionalPrServing;
 
             if(data.nutritionalPr100g.salt) {
-                hundredSaltSodiumValue = data.nutritionalPr100g.salt;
+                hundredSaltSodiumValue = {tValue:data.nutritionalPr100g.salt};
                 saltSodium = "Salt";
             }
             else if(data.nutritionalPr100g.sodium)
             {
-                hundredSaltSodiumValue = data.nutritionalPr100g.sodium;
+                hundredSaltSodiumValue = {tValue:data.nutritionalPr100g.sodium};
                 saltSodium = "Sodium";
             }
 
             if(data.nutritionalPrServing.salt) {
-                servingSaltSodiumValue = data.nutritionalPrServing.salt;
+                servingSaltSodiumValue = {tValue:data.nutritionalPrServing.salt};
                 saltSodium = "Salt";
             }
             else if(data.nutritionalPrServing.sodium)
             {
-                servingSaltSodiumValue = data.nutritionalPrServing.sodium;
+                servingSaltSodiumValue = {tValue:data.nutritionalPrServing.sodium};
                 saltSodium = "Sodium";
             }
 
@@ -281,7 +281,7 @@ var RegisterProduct = React.createClass({
         var saltSodium = (this.state.saltSodium) ? (<Form
             ref="hundredSalt"
             type={ t.struct({ tValue: t.maybe(t.Num) }) }
-            value={{tValue: this.state.hundredSaltSodiumValue}}
+            value={this.state.hundredSaltSodiumValue}
             options={{ fields:{tValue:{label:this.state.saltSodium + " (g)", keyboardType: 'numeric'}  }}}
             onChange={(value) => { _tmp_state.hundredSaltSodiumValue = value }}
             />) : null;
@@ -325,7 +325,7 @@ var RegisterProduct = React.createClass({
         var saltSodium = (this.state.saltSodium) ? (<Form
             ref="servingSalt"
             type={ t.struct({ tValue: t.maybe(t.Num) }) }
-            value={ { tValue : this.state.servingSaltSodiumValue } }
+            value={ this.state.servingSaltSodiumValue }
             options={{ fields:{tValue:{label:this.state.saltSodium + " (g)", keyboardType: 'numeric'}  }}}
             onChange={(value) => { _tmp_state.servingSaltSodiumValue = value }}
             />) : null;
@@ -536,9 +536,12 @@ var RegisterProduct = React.createClass({
 	},
 
     storeTmpState: function () {
+        console.log("## Storing TPM state", _tmp_state);
+
         this.setState({
             value: _tmp_state.value,
             nutHundredValue: _tmp_state.nutHundredValue,
+            nutServingValue: _tmp_state.nutServingValue,
             visualInfo: _tmp_state.visualInfo,
             healthClaims: _tmp_state.healthClaims,
             otherClaim: _tmp_state.otherClaim,
@@ -564,26 +567,25 @@ var RegisterProduct = React.createClass({
                 newVal.nutritionalPr100g = Datastore.clone(this.refs.form2.getValue());
                 if(this.refs.hundredSalt  && this.refs.hundredSalt.getValue())
                 {
-
-                    if(newVal.saltSodium == "Salt")
-                        newVal.nutritionalPr100g.salt = Datastore.clone(this.refs.hundredSalt.getValue()).hundredSaltSodiumValue;
+                    if(this.state.saltSodium == "Salt")
+                        newVal.nutritionalPr100g.salt = Datastore.clone(this.refs.hundredSalt.getValue()).tValue;
                     else
-                        newVal.nutritionalPr100g.sodium = Datastore.clone(this.refs.hundredSalt.getValue()).hundredSaltSodiumValue;
+                        newVal.nutritionalPr100g.sodium = Datastore.clone(this.refs.hundredSalt.getValue()).tValue;
                 }
                 else return null;
 
             }
             else return null;
 
-            if (this.refs.form3 && this.refs.form2.getValue()) {
+            if (this.refs.form3 && this.refs.form3.getValue()) {
                 newVal.nutritionalPrServing = Datastore.clone(this.refs.form3.getValue());
 
                 if(this.refs.servingSalt && this.refs.servingSalt.getValue())
                 {
-                    if(newVal.saltSodium == "Salt")
-                        newVal.nutritionalPrServing.salt = Datastore.clone(this.refs.servingSalt.getValue()).servingSaltSodiumValue;
+                    if(this.state.saltSodium == "Salt")
+                        newVal.nutritionalPrServing.salt = Datastore.clone(this.refs.servingSalt.getValue()).tValue;
                     else
-                        newVal.nutritionalPrServing.sodium = Datastore.clone(this.refs.servingSalt.getValue()).servingSaltSodiumValue;
+                        newVal.nutritionalPrServing.sodium = Datastore.clone(this.refs.servingSalt.getValue()).tValue;
                 }
                 else return null;
             }
@@ -621,7 +623,7 @@ var RegisterProduct = React.createClass({
 
 			console.log('-------------------------------');
 			console.log("[RegisterProduct] Saving newVal:", newVal);
-
+            //return;
 			var entry = Datastore.data.add('products', newVal);
 			
 			if(this.props.getProductData){

@@ -142,10 +142,11 @@ var SelectProduct = React.createClass ({
 		console.log("= [SelectProduct] ", rowData.name);
 		Datastore.M.product = rowData;
 		this.props.navigator.push({
-		 leftButtonTitle: 'Back',
-		 onLeftButtonPress: () => this.props.navigator.pop(),
-		 title: 'Validate Product',
-		 component: ValidateProduct
+		    leftButtonTitle: 'Back',
+		    onLeftButtonPress: () => this.props.navigator.pop(),
+		    title: 'Validate Product',
+            displayName: 'ValidateProduct',
+		    component: ValidateProduct
 
 		 });
 	},

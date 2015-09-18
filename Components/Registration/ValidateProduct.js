@@ -135,7 +135,9 @@ var {
 	AlertIOS,
 	Image
 	} = React;
+
 var navigatorEventListener;
+
 var ValidateProduct = React.createClass({
 
 	getInitialState: function() {
@@ -144,7 +146,8 @@ var ValidateProduct = React.createClass({
 
 		navigatorEventListener = this.props.navigator.navigationContext.addListener('willfocus', (event) =>
 		{
-			if(event.data.route.component.displayName === "ValidateProduct") {
+            console.log("########" , event.data);
+			if(event.data.route.displayName === "ValidateProduct") {
 				//console.log("ValidateProduct DATA: " , this.fillData());
 				this.setState(this.fillData());
 			}
@@ -458,7 +461,7 @@ var ValidateProduct = React.createClass({
 			   
 				console.log("-------------------------------");
 				console.log("# Saving Registration:", newVal);
-                return;
+
 				Datastore.data.add("registrations", newVal);
 
 
