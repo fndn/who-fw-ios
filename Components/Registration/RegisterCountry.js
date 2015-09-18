@@ -33,13 +33,13 @@ var RegisterCountry = React.createClass({
 					ref="form"
 					type={Models.Country()}
 					options={options}/>
-					<TouchableHighlight
-						style={GlobalStyles.button}
-						onPress = {this.onPress}
-						underlayColor={GlobalStyles.colors.formHighlightColor}
-						>
-						<Text style={GlobalStyles.buttonText}>Save</Text>
-					</TouchableHighlight>
+                <TouchableHighlight
+                    style={GlobalStyles.button}
+                    onPress = {this.onPress}
+                    underlayColor={GlobalStyles.colors.formHighlightColor}
+                    >
+                    <Text style={GlobalStyles.buttonText}>Save</Text>
+                </TouchableHighlight>
 			</ScrollView>
 		);
 	},

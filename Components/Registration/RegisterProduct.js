@@ -103,6 +103,7 @@ var {
 	TouchableHighlight,
 	TouchableOpacity,
 	ActivityIndicatorIOS,
+    SegmentedControlIOS,
 	NavigatorIOS,
 	Image,
 	ScrollView
@@ -119,12 +120,15 @@ var RegisterProduct = React.createClass({
 		var hundredData = null;
 		var servingData = null;
 		var nutBoolData = {boolValue:false};
-		var nutServingBoolData = {boolValue:false};
+        var nutServingBoolData = {boolValue:false};
 		var visualData = null;
-		var healthClaimsBool = {boolValue: false};
-		var healthClaims = null;
-		var otherBool = {boolValue: false};
-		var otherClaim = null;
+        var healthClaimsBool = {boolValue: false};
+        var healthClaims = null;
+        var otherBool = {boolValue: false};
+        var otherClaim = null;
+        var saltSodium = null;
+        var servingSaltSodiumValue = null;
+        var hundredSaltSodiumValue = null;
 
 		var images = {
 			front: null,
@@ -148,24 +152,45 @@ var RegisterProduct = React.createClass({
 			hundredData = data.nutritionalPr100g;
 			servingData = data.nutritionalPrServing;
 
-			if(servingData)
-				nutServingBoolData = {boolValue:true};
+            if(data.nutritionalPr100g.salt) {
+                hundredSaltSodiumValue = data.nutritionalPr100g.salt;
+                saltSodium = "Salt";
+            }
+            else if(data.nutritionalPr100g.sodium)
+            {
+                hundredSaltSodiumValue = data.nutritionalPr100g.sodium;
+                saltSodium = "Sodium";
+            }
 
-			if(hundredData)
-				nutBoolData = {boolValue:true};
+            if(data.nutritionalPrServing.salt) {
+                servingSaltSodiumValue = data.nutritionalPrServing.salt;
+                saltSodium = "Salt";
+            }
+            else if(data.nutritionalPrServing.sodium)
+            {
+                servingSaltSodiumValue = data.nutritionalPrServing.sodium;
+                saltSodium = "Sodium";
+            }
+
+
+            if(servingData)
+                nutServingBoolData = {boolValue:true};
+
+            if(hundredData)
+			    nutBoolData = {boolValue:true};
 
 			visualData = data.visualInformation;
-			if(data.healthClaims) {
-				healthClaimsBool = {boolValue: true};
-				healthClaims = data.healthClaims;
-			}
-			if(data.otherClaim) {
-				otherBool = {boolValue: true};
-				otherClaim = data.otherClaim;
-			}
+            if(data.healthClaims) {
+                healthClaimsBool = {boolValue: true};
+                healthClaims = data.healthClaims;
+            }
+            if(data.otherClaim) {
+                otherBool = {boolValue: true};
+                otherClaim = data.otherClaim;
+            }
 			//if(data.images) images = data.images;
-			//Datastore.MemoryStore.product = null;
-			console.log(hundredData);
+            //Datastore.MemoryStore.product = null;
+            console.log(hundredData);
 		}
 
 		_tmp_state.value = data;
@@ -179,14 +204,17 @@ var RegisterProduct = React.createClass({
 			options: options,
 			value: data,
 			nutBool: nutBoolData,
-			nutServingBool: nutServingBoolData,
+            nutServingBool: nutServingBoolData,
 			nutHundredValue: hundredData,
 			nutServingValue: servingData,
+            saltSodium: saltSodium,
+            servingSaltSodiumValue: servingSaltSodiumValue,
+            hundredSaltSodiumValue: hundredSaltSodiumValue,
 			visualInfo: visualData,
-			healthClaimsBool: healthClaimsBool,
-			healthClaims: healthClaims,
-			otherBool: otherBool,
-			otherClaim: otherClaim,
+            healthClaimsBool: healthClaimsBool,
+            healthClaims: healthClaims,
+            otherBool: otherBool,
+            otherClaim: otherClaim,
 			initialPosition: null,
 			images: images,
 			uuid: uuid,
@@ -201,87 +229,134 @@ var RegisterProduct = React.createClass({
 		);
 	},
 // <editor-fold desc=" Render methods">
-	renderTop: function(){
-		return(
-			<View>
-				<Form
-					ref="form"
-					type={Models.Product()}
-					value={this.state.value}
-					options={this.state.options}
-					onChange={(value) =>{_tmp_state.value = value}}
-				/>
+    renderTop: function(){
+        return(
+            <View>
+                <Form
+                    ref="form"
+                    type={Models.Product()}
+                    value={this.state.value}
+                    options={this.state.options}
+                    onChange={(value) =>{_tmp_state.value = value}}
+                />
 
-				<TouchableOpacity
-					style={styles.addBrandButton}
-					onPress = {this.onAddBrand}>
-					<Text style={styles.buttonText}>Add</Text>
-				</TouchableOpacity>
+                <TouchableOpacity
+                    style={styles.addBrandButton}
+                    onPress = {this.onAddBrand}>
+                    <Text style={styles.buttonText}>Add</Text>
+                </TouchableOpacity>
 
 
 
-				<Form
-					type={Models.SimpelBool()}
-					options={nutBoolOptions}
-					value={this.state.nutBool}
-					onChange={(value) =>{this.storeTmpState();this.setState({nutBool: value})}}
-					/>
-			</View>
-		);
-	},
+                <Form
+                    type={Models.SimpelBool()}
+                    options={nutBoolOptions}
+                    value={this.state.nutBool}
+                    onChange={(value) =>{this.storeTmpState();this.setState({nutBool: value})}}
+                    />
+            </View>
+        );
+    },
 
-	renderMid: function () {
-		return(
-			<Form
-				type={Models.SimpelBool()}
-				options={nutServingBoolOptions}
-				value={this.state.nutServingBool}
-				onChange={(value) =>{this.storeTmpState();this.setState({nutServingBool: value})}}
-				/>
-		);
-	},
+    renderMid: function () {
+        return(
+            <Form
+                type={Models.SimpelBool()}
+                options={nutServingBoolOptions}
+                value={this.state.nutServingBool}
+                onChange={(value) =>{this.storeTmpState();this.setState({nutServingBool: value})}}
+                />
+        );
+    },
 
-	renderNutritionalPr100g: function()
-	{
-		if(!this.state.nutBool.boolValue)
-			return;
+    renderNutritionalPr100g: function()
+    {
+        if(!this.state.nutBool.boolValue)
+            return;
 
-		return(
-			<View>
-				<Text style={GlobalStyles.title}>
-					Pr 100g
-				</Text>
-				<Form
-					ref="form2"
-					type={Models.Nutrition()}
-					value={this.state.nutHundredValue}
-					onChange={(value) =>{_tmp_state.nutHundredValue = value}}
-					options={this.state.options}
-					/>
-			</View>
-		)
-	},
 
-	renderNutritionalPrServing: function()
-	{
-		if(!this.state.nutServingBool.boolValue)
-			return;
 
-		return(
-			<View>
-				<Text style={GlobalStyles.title}>
-					Per serving
-				</Text>
-				<Form
-					ref="form3"
-					type={Models.NutritionServing()}
-					value={this.state.nutServingValue}
-					options={this.state.options}
-					onChange={(value) =>{_tmp_state.nutServingValue = value}}
-					/>
-			</View>
-		)
-	},
+        var saltSodium = (this.state.saltSodium) ? (<Form
+            ref="hundredSalt"
+            type={ t.struct({ hundredSaltSodiumValue: t.maybe(t.Num) }) }
+            value={this.state.hundredSaltSodiumValue}
+            options={{ fields:{hundredSaltSodiumValue:{label:this.state.saltSodium + " (g)", keyboardType: 'numeric'}  }}}
+            onChange={(value) => { _tmp_state.hundredSaltSodiumValue = value }}
+            />) : null;
+
+        return(
+            <View>
+                <Text style={GlobalStyles.title}>
+                    Pr 100g
+                </Text>
+                <Form
+                    ref="form2"
+                    type={Models.Nutrition()}
+                    value={this.state.nutHundredValue}
+                    onChange={(value) =>{_tmp_state.nutHundredValue = value}}
+                    options={this.state.options}
+                    />
+
+                <SegmentedControlIOS
+                    ref="salt1"
+                    values={["Salt", "Sodium"]}
+                    selectedIndex={this.state.saltSodium === "Salt" ? 0 : this.state.saltSodium === "Sodium" ? 1 : null}
+                    style={{marginBottom:15}}
+                    onValueChange={(value)=>{
+
+                        this.storeTmpState();
+                        this.setState({saltSodium: value});
+
+                    }}
+                    />
+
+                {saltSodium}
+            </View>
+        )
+    },
+
+    renderNutritionalPrServing: function()
+    {
+        if(!this.state.nutServingBool.boolValue)
+            return;
+
+        var saltSodium = (this.state.saltSodium) ? (<Form
+            ref="servingSalt"
+            type={ t.struct({ servingSaltSodiumValue: t.maybe(t.Num) }) }
+            value={this.state.servingSaltSodiumValue}
+            options={{ fields:{servingSaltSodiumValue:{label:this.state.saltSodium + " (g)", keyboardType: 'numeric'}  }}}
+            onChange={(value) => { _tmp_state.servingSaltSodiumValue = value }}
+            />) : null;
+
+        return(
+            <View>
+                <Text style={GlobalStyles.title}>
+                    Per serving
+                </Text>
+                <Form
+                    ref="form3"
+                    type={Models.NutritionServing()}
+                    value={this.state.nutServingValue}
+                    options={this.state.options}
+                    onChange={(value) =>{_tmp_state.nutServingValue = value}}
+                    />
+                <SegmentedControlIOS
+                    ref="salt2"
+                    values={["Salt", "Sodium"]}
+                    selectedIndex={this.state.saltSodium === "Salt" ? 0 : this.state.saltSodium === "Sodium" ? 1 : null}
+                    style={{marginBottom:15}}
+                    onValueChange={(value)=>{
+
+                        this.storeTmpState();
+                        this.setState({saltSodium: value});
+
+                    }}
+                    />
+
+                {saltSodium}
+            </View>
+        )
+    },
 
 	renderHealthClaims: function()
 	{
@@ -339,23 +414,23 @@ var RegisterProduct = React.createClass({
 	},
 
 
-	renderBottom: function()
-	{
-		return(
-			<View>
-				<Text style={GlobalStyles.title}>
-					Visual information
-				</Text>
-				<Form
-					ref="form4"
-					type={Models.VisualInformation()}
-					options={options}
-					value={this.state.visualInfo}
-					onChange={(value) =>{_tmp_state.visualInfo = value}}
-					/>
-			</View>
-		)
-	},
+    renderBottom: function()
+    {
+        return(
+            <View>
+                <Text style={GlobalStyles.title}>
+                    Visual information
+                </Text>
+                <Form
+                    ref="form4"
+                    type={Models.VisualInformation()}
+                    options={options}
+                    value={this.state.visualInfo}
+                    onChange={(value) =>{_tmp_state.visualInfo = value}}
+                    />
+            </View>
+        )
+    },
 
 	renderImages: function() {
 	  return(
@@ -458,15 +533,17 @@ var RegisterProduct = React.createClass({
 		});
 	},
 
-	storeTmpState: function () {
-		this.setState({
-			value: _tmp_state.value,
-			nutHundredValue: _tmp_state.nutHundredValue,
-			visualInfo: _tmp_state.visualInfo,
-			healthClaims: _tmp_state.healthClaims,
-			otherClaim: _tmp_state.otherClaim
-		});
-	},
+    storeTmpState: function () {
+        this.setState({
+            value: _tmp_state.value,
+            nutHundredValue: _tmp_state.nutHundredValue,
+            visualInfo: _tmp_state.visualInfo,
+            healthClaims: _tmp_state.healthClaims,
+            otherClaim: _tmp_state.otherClaim,
+            hundredSaltSodiumValue: _tmp_state.hundredSaltSodiumValue,
+            servingSaltSodiumValue: _tmp_state.servingSaltSodiumValue
+        });
+    },
 
 	getProduct: function() {
 
@@ -480,12 +557,34 @@ var RegisterProduct = React.createClass({
 			newVal.nutritionalPr100g = null;
 			newVal.nutritionalPrServing = null;
 
-			if (this.refs.form2) {
-				newVal.nutritionalPr100g = Datastore.clone(this.refs.form2.getValue());
-			}
-			if (this.refs.form3) {
-				newVal.nutritionalPrServing = Datastore.clone(this.refs.form3.getValue());
-			}
+
+            if (this.refs.form2) {
+                newVal.nutritionalPr100g = Datastore.clone(this.refs.form2.getValue());
+                if(this.refs.hundredSalt)
+                {
+
+                    if(newVal.saltSodium == "Salt")
+                        newVal.nutritionalPr100g.salt = Datastore.clone(this.refs.hundredSalt.getValue()).hundredSaltSodiumValue;
+                    else
+                        newVal.nutritionalPr100g.sodium = Datastore.clone(this.refs.hundredSalt.getValue()).hundredSaltSodiumValue;
+                }
+
+            }
+            if (this.refs.form3) {
+                newVal.nutritionalPrServing = Datastore.clone(this.refs.form3.getValue());
+
+                if(this.refs.servingSalt)
+                {
+                    if(newVal.saltSodium == "Salt")
+                        newVal.nutritionalPrServing.salt = Datastore.clone(this.refs.servingSalt.getValue()).servingSaltSodiumValue;
+                    else
+                        newVal.nutritionalPrServing.sodium = Datastore.clone(this.refs.servingSalt.getValue()).servingSaltSodiumValue;
+                }
+            }
+
+
+
+
 
 			if(this.refs.healthClaimsForm){
 				newVal.healthClaims = Datastore.clone(this.refs.healthClaimsForm.getValue());

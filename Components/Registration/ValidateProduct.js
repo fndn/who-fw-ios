@@ -164,6 +164,20 @@ var ValidateProduct = React.createClass({
 		data.ageGroup = Models.ageGroups.meta.map[data.ageGroup];
 		data.brand = Datastore.data.one('brands', {_id:data.brand}).name;
 
+        var saltSodium = null;
+        if(data.nutritionalPr100g) {
+            if (data.nutritionalPr100g.salt)
+                saltSodium = "Salt";
+            else if (data.nutritionalPr100g.sodium)
+                saltSodium = "Sodium";
+        }
+        if(data.nutritionalPrServing) {
+            if (data.nutritionalPrServing.salt)
+                saltSodium = "Salt";
+            else if (data.nutritionalPrServing.sodium)
+                saltSodium = "Sodium";
+        }
+
 
 		if(!data.images)
 		{
@@ -179,7 +193,8 @@ var ValidateProduct = React.createClass({
 		return {
 			options: options,
 			value: data,
-			initialPosition: null
+			initialPosition: null,
+            saltSodium: saltSodium
 		};
 	},
 
@@ -209,6 +224,15 @@ var ValidateProduct = React.createClass({
                 </View>
             );
 
+        var val = this.state.saltSodium == "Salt" ? this.state.value.nutritionalPr100g.salt : this.state.value.nutritionalPr100g.sodium;
+        console.log(this.state.value.nutritionalPr100g.sodium);
+        var saltSodium = (this.state.saltSodium) ? (<Form
+            ref="hundredSalt"
+            type={ t.struct({ tField: t.maybe(t.Num) }) }
+            value={{tField:val}}
+            options={{ fields:{tField:{label:this.state.saltSodium + " (g)", editable: false}  }}}
+            />) : null;
+
         return(
             <View>
                 <Text style={GlobalStyles.title}>
@@ -219,6 +243,7 @@ var ValidateProduct = React.createClass({
                     value={this.state.value.nutritionalPr100g}
                     options={this.state.options}
                     />
+                {saltSodium}
             </View>
         )
     },
@@ -234,6 +259,13 @@ var ValidateProduct = React.createClass({
                 </View>
             );
 
+        var saltSodium = (this.state.saltSodium) ? (<Form
+            ref="hundredSalt"
+            type={ t.struct({ tField: t.maybe(t.Num) }) }
+            value={this.state.saltSodium == "Salt" ? this.state.value.nutritionalPrServing.salt : this.state.value.nutritionalPrServing.sodium}
+            options={{ fields:{tField:{label:this.state.saltSodium + " (g)", editable: false}  }}}
+            />) : null;
+
         return(
             <View>
                 <Text style={GlobalStyles.title}>
@@ -244,6 +276,7 @@ var ValidateProduct = React.createClass({
                     value={this.state.value.nutritionalPrServing}
                     options={this.state.options}
                     />
+                {saltSodium}
             </View>
         )
     },
@@ -392,14 +425,18 @@ var ValidateProduct = React.createClass({
 				var newVal = {};
 				newVal.product = Datastore.clone(this.state.value); // foodType and ageGroup gets name
 				newVal.country = Datastore.M.country;
-				newVal.location = Datastore.M.location;
+				newVal.location = Datastore.clone(Datastore.M.location);
                 // Convert location to readable info
 
+
+                newVal.location.incomeType = Models.incomeTypes.meta.map[newVal.location.incomeType];
+                newVal.location.storeType = Models.storeTypes.meta.map[newVal.location.storeType];
+                newVal.location.storeBrand = Datastore.data.one('storeBrands', {_id:newVal.location.storeBrand}).name;
 
 				newVal.credentials = Datastore.M.credentials;
 				newVal.timeOfRegistration = Date.now(); // UTC in seconds
 
-				console.log("  this,state", this.state );
+				//console.log("  this,state", this.state );
 				
 				if( this.state.hasOwnProperty('initialPosition')){
 					newVal.gpsLocation = this.state.initialPosition;
@@ -418,7 +455,7 @@ var ValidateProduct = React.createClass({
 			   
 				console.log("-------------------------------");
 				console.log("# Saving Registration:", newVal);
-                //return;
+                return;
 				Datastore.data.add("registrations", newVal);
 
 

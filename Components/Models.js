@@ -10,6 +10,8 @@ var incomeTypes = t.enums({
 	H: 'High'
 });
 
+module.exports.incomeTypes = incomeTypes;
+
 var storeTypes = t.enums({
 	SUP: 'Supermarket',
 	PHA: 'Pharmacy',
@@ -178,8 +180,8 @@ module.exports.Nutrition = function(){
 		carbohydrateOfWhichSugars: t.maybe(t.Num),
 		carbohydrateOfWhichLactose: t.maybe(t.Num),
 		protein: t.maybe(t.Num),
-		salt: t.maybe(t.Num),
-		sodium: t.maybe(t.Num)
+		//salt: t.maybe(t.Num),
+		//sodium: t.maybe(t.Num)
 	});
 };
 
@@ -195,8 +197,8 @@ module.exports.NutritionServing = function(){
 		carbohydrateOfWhichSugars: t.maybe(t.Num),
 		carbohydrateOfWhichLactose: t.maybe(t.Num),
 		protein: t.maybe(t.Num),
-		salt: t.maybe(t.Num),
-		sodium: t.maybe(t.Num)
+		//salt: t.maybe(t.Num),
+		//sodium: t.maybe(t.Num)
 	});
 };
 
