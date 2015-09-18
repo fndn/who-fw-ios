@@ -152,26 +152,27 @@ var RegisterProduct = React.createClass({
 			hundredData = data.nutritionalPr100g;
 			servingData = data.nutritionalPrServing;
 
-            if(data.nutritionalPr100g.salt) {
-                hundredSaltSodiumValue = {tValue:data.nutritionalPr100g.salt};
-                saltSodium = "Salt";
-            }
-            else if(data.nutritionalPr100g.sodium)
-            {
-                hundredSaltSodiumValue = {tValue:data.nutritionalPr100g.sodium};
-                saltSodium = "Sodium";
-            }
-
-            if(data.nutritionalPrServing.salt) {
-                servingSaltSodiumValue = {tValue:data.nutritionalPrServing.salt};
-                saltSodium = "Salt";
-            }
-            else if(data.nutritionalPrServing.sodium)
-            {
-                servingSaltSodiumValue = {tValue:data.nutritionalPrServing.sodium};
-                saltSodium = "Sodium";
+            if(hundredData) {
+                if (data.nutritionalPr100g.salt) {
+                    hundredSaltSodiumValue = {tValue: data.nutritionalPr100g.salt};
+                    saltSodium = "Salt";
+                }
+                else if (data.nutritionalPr100g.sodium) {
+                    hundredSaltSodiumValue = {tValue: data.nutritionalPr100g.sodium};
+                    saltSodium = "Sodium";
+                }
             }
 
+            if(servingData) {
+                if (data.nutritionalPrServing.salt) {
+                    servingSaltSodiumValue = {tValue: data.nutritionalPrServing.salt};
+                    saltSodium = "Salt";
+                }
+                else if (data.nutritionalPrServing.sodium) {
+                    servingSaltSodiumValue = {tValue: data.nutritionalPrServing.sodium};
+                    saltSodium = "Sodium";
+                }
+            }
 
             if(servingData)
                 nutServingBoolData = {boolValue:true};
