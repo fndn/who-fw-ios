@@ -42,6 +42,7 @@ var ViewRegistrations = React.createClass ({
 			console.log("[ViewRegistrations]", event.data.route.displayName);
 			if(event.data.route.displayName === "ViewRegistrations"){
 				D.data.where("registrations", {locationID: D.M.location._id} , this.dataAvailable);
+				console.log("***** 2 ***** all registrations", D.data.all('registrations'));
 			}
 		});
 
@@ -49,10 +50,10 @@ var ViewRegistrations = React.createClass ({
 
 
 	componentDidMount: function() {
-		//console.log(D.all('registrations'));
+		console.log("***** 1 ***** all registrations", D.data.all('registrations'));
 		//D.all('products', this.dataAvailable);
 
-        D.data.where("registrations", {locationID: D.M.location._id} , this.dataAvailable);
+		D.data.where("registrations", {locationID: D.M.location._id} , this.dataAvailable);
 	},
 
 	dataAvailable: function(_data){
@@ -98,7 +99,8 @@ var ViewRegistrations = React.createClass ({
 				<View>
 					<View style={GlobalStyles.listrowContainer01}>
 						<View style={GlobalStyles.listrowContainer02}>
-							<Image style={GlobalStyles.rowImage} source={{ uri: 'http://facebook.github.io/react/img/logo_og.png'}} />
+							{/* <Image style={GlobalStyles.rowImage} source={{ uri: 'http://facebook.github.io/react/img/logo_og.png'}} /> */}
+							<Image style={GlobalStyles.rowImage} source={{ uri: D.ws.img("products", productInfo.uuid, 'front', '300x300') }} />
 							<View>
 								<Text style={GlobalStyles.listrowTitle}>{productInfo.name}</Text>
 								<Text style={GlobalStyles.listrowSubtitle}>{productInfo.foodType} by {productInfo.brand}, from age {productInfo.ageGroup}</Text>

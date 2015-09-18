@@ -6,6 +6,7 @@ var { Icon, } 		= require('react-native-icons');
 var GlobalStyles 	= require('../Styles/GlobalStyles');
 var ProgressBar 	= require('./Parts/ProgressBar');
 var SyncRoutine 	= require('./SyncRoutine');
+var SyncHelpers 	= require('./SyncHelpers');
 
 var {
 	AppRegistry,
@@ -227,91 +228,79 @@ var Sync = React.createClass({
 
 /*
 
+// images are named $id-$tag-$size, so we can 
+// upload with:
+upload({id:$id, files:[{name:$tag, path:$path},...]});
+// show with:
+<Image source={{ uri: Datastore.ws.img(this.state.uuid, 'front', 'iconsized') }} />
+// or
+http:/server/model/image/$id/$tag/$size
+// or better:
+http:/server/model/$id/image/$tag/$size)
+
 + make sure std sync works
-- test download
-- build download progress bar
-- test upload 
-- build upload progress bar
++ test download
++ build download progress bar
++ test upload 
++ build upload progress bar
 
 - await finnished registrations and products from jacob
-- finalize up, down and sync
+% finalize up, down and sync
 
 */
 	onPressSyncDev: function(){
+		/*
+		Procedure:
+			1) X extract files (images), add to imageQueue, clean product-obj -> _imagerw
+			2) sync -> _startSync
+			3) upload files -> __test__upload
+			4) download remote product images -> todo
+		*/
 		//this.__test__download();
-		this.__test__upload();
-	},
+		//this.__test__upload();
+		//this.__test__imagerw( Datastore.data.last("products") );
 
-	__test__upload: function(){
+		//console.log("***** 2 ***** all registrations", Datastore.data.all('registrations'));
 
-		var itms = [
-			{ 	crap: "hallo",
-				id: '_000-'+ Date.now(),
-				files: [
-					{name:'front', path:'00.jpg'},
-					{name:'back',  path:'01.jpg'}
-				]
+		var self = this;
+
+		var items = Datastore.data.all("registrations");
+		items = items.filter( function(el){ return !el.uploaded } );
+
+		// 1. extract files (images), add to imageQueue, clean product-obj -> _imagerw
+		//items = SyncHelpers.extractProductImages(items);
+		
+		// 2. Run standard sync (two-way)
+		//this._startSync();
+
+		/*
+		// 3. Upload all items in imageQueue
+		this.setState({working:true, show_log:false, show_dl:false, show_ul:true, progress_dl:0});
+		SyncHelpers.uploadImageQueue("products",
+			function progress(pct){
+				console.log("upload progress", pct);
+				self.setState({working:true, show_log:false, show_dl:false, show_ul:true, progress_dl:pct});
 			},
-			{	crap: "hallo",
-				id: '_001-'+ Date.now(),
-				files: [
-					{name:'front', path:'02.jpg'},
-					{name:'back',  path:'03.jpg'},
-					{name:'side',  path:'04.jpg'}
-				]
+			function complete(){
+				console.log("upload done")
+				console.log('imageQueue: ', Datastore.data.all("imageQueue") );
 			}
-		];
+		);
+		*/
 
-		this._upload_step(itms, 0, [], []);
-	},
-
-	_upload_step: function(itms, idx, done, failed){
-		console.log('_upload_step', idx);
-		if( idx == 0 ){
-			this.setState({working:true, show_log:false, show_dl:false, show_ul:true, progress_dl:0});
-		}else{
-			var percent = ((done.length-failed.length) / itms.length) * 100;
-			this.setState({working:true, show_log:false, show_dl:false, show_ul:true, progress_dl:percent});
-
-		}
-
-		if( idx < itms.length ){
-			this._upload_worker( itms, idx, done, failed, this._upload_step);
-		}else{
-			console.log('upload done!?');
-		}
-	},
-
-	_upload_worker: function(itms, idx, done, failed, cb){
-		var obj = {
-			remote: '/images/upload',
-			id: itms[idx].id,
-			files: itms[idx].files
-		};
-		console.log('_upload_item', obj);
-		Datastore.up(obj, function(err, res){
-			console.log('UP CB', err, res);
-			
-			if( err ){
-				console.log('upload ERROR', err, res);
-				failed.push(res.id);
-			}else{
-				//console.log('upload done [', res ,']');
-				console.log('upload confirmed for id:'+ res.id);
-				done.push(res.id);
-			}
-			idx ++;
-			cb(itms, idx, done, failed);
+		// 4. download remote product images
+		SyncHelpers.listMissingImages("products", ["300x300"], ["front", "back", "left", "right"], function(urls){
+			self._download(urls);
 		});
+		
 	},
-
-
 	
-	__test__download: function(){
+	__test__download: function(){		
 		var urls = [
-			"https://static.pexels.com/photos/183/nature-sunny-grass-moss.jpg",
-			"https://captbbrucato.files.wordpress.com/2011/08/dscf0585_stitch-besonhurst-2.jpg"
-			
+			//"https://static.pexels.com/photos/183/nature-sunny-grass-moss.jpg",
+			//"https://captbbrucato.files.wordpress.com/2011/08/dscf0585_stitch-besonhurst-2.jpg"
+			"http://127.0.0.1:8090/pub/products/img/NJheV3mC-left-300x300.jpg",
+			"http://127.0.0.1:8090/pub/products/img/cccNJheV3mC-left-300x300.jpg"
 		];
 		this._download(urls);
 	},
@@ -328,7 +317,7 @@ var Sync = React.createClass({
 		Datastore.dl({
 				urls:urls,
 				force:true,
-				directory:'downloads'
+				directory:'products'
 			},
 			function(err, res){
 				console.log('[STD] Proxied OnAllDone', err, res);
@@ -415,10 +404,11 @@ var Sync = React.createClass({
 		);
 	},
 
+	/*
 	_startUpload: function(){
 		_buffer += "Starting Upload\n";
 		this.setState({working:true, show_log:true});
-		/*
+		
 		var self = this;
 		
 		SyncRoutine.Run(
@@ -448,9 +438,9 @@ var Sync = React.createClass({
 			// mode:
 			"upload"
 		);
-		*/
+		
 	}
-	
+	*/
 });
 
 module.exports = Sync;

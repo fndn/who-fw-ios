@@ -24,14 +24,15 @@ var Datastore 		= require('fndn-rn-datastore');
 
 Datastore.opts({
 	data: {
-		database: 	'whofw-dev-0004',
+		database: 	'whofw-dev-0006',
 		tables: 	["countries", "locations", "brands", "incomeTypes", "storeTypes", "storeBrands", "ageGroups", "products"],
 		uploadOnly: ["registrations"],
 		localOnly:	["credentials", "imageQueue"]
 	},
 	net: {
-		remotehost: 'http://127.0.0.1:8080',
+		remotehost: 'http://127.0.0.1:8090',		
 		//remotehost: 'http://whofw.fndn.dk:8080',
+		//remotehost: 'https://whofw.fndn.dk',
 		auth_token: 'fr9a7as792jjd0293hddxonxo0x1309210cpdshcpihvq0823t373e4463'
 	}
 });
@@ -42,7 +43,10 @@ var fwa = React.createClass({
 	getInitialState: function() {
 
 		//console.log('opts:', Datastore.opts() );
-		//Datastore.info();
+		Datastore.info();
+		Datastore.fs.printDocumentsPath();
+		Datastore.ws.start(); //{port:ds.opts().localport, bonjourName:ds.opts().localbonjour});
+
 		//Datastore.test_reach();
 		//Datastore.test_native();
 		//Datastore.test_data();
@@ -54,17 +58,14 @@ var fwa = React.createClass({
 			self.setState({regs: Datastore.data.countWhereNo("registrations", "uploaded")});
 		});
 
-		//Datastore.reach.subscribe( function(state, responsetime){
-		//	console.log("ReachableStateChanged", state, responsetime);
-		//});
-		//Datastore.reach.enable();
+		Datastore.reach.enable();
 		
 		Datastore.data.subscribe( "registrations", function(data){
 			self.setState({regs: Datastore.data.countWhereNo("registrations", "uploaded")});
 		});
 
 		return {
-			selectedTab: 'Introduction', // initial view
+			selectedTab: 'Sync', // initial view
 			regs: 0,
 		};
 	},
