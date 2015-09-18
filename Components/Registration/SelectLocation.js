@@ -43,6 +43,7 @@ var SelectLocation = React.createClass ({
 
 		// Load all locations filtered by countryCode
 		Datastore.data.where('locations', {"countryCode": Datastore.M.country.countryCode }, this.dataAvailable);
+		//Datastore.data.where('locations', {"country": Datastore.M.country.name }, this.dataAvailable);
 	},
 	
 	componentWillUnmount: function(){
