@@ -562,42 +562,49 @@ var RegisterProduct = React.createClass({
 			newVal.nutritionalPr100g = null;
 			newVal.nutritionalPrServing = null;
 
+            //console.log("# Checkpoint 1", this.refs.form2);
+            if(this.refs.form2) {
+                if (this.refs.form2.getValue()) {
+                    newVal.nutritionalPr100g = Datastore.clone(this.refs.form2.getValue());
+                    //console.log("# Checkpoint 2");
+                    if (this.refs.hundredSalt && this.refs.hundredSalt.getValue()) {
+                        //console.log("# Checkpoint 3");
+                        if (this.state.saltSodium == "Salt")
+                            newVal.nutritionalPr100g.salt = Datastore.clone(this.refs.hundredSalt.getValue()).tValue;
+                        else
+                            newVal.nutritionalPr100g.sodium = Datastore.clone(this.refs.hundredSalt.getValue()).tValue;
+                    }
+                    else return null;
 
-            if (this.refs.form2 && this.refs.form2.getValue()) {
-                newVal.nutritionalPr100g = Datastore.clone(this.refs.form2.getValue());
-                if(this.refs.hundredSalt  && this.refs.hundredSalt.getValue())
-                {
-                    if(this.state.saltSodium == "Salt")
-                        newVal.nutritionalPr100g.salt = Datastore.clone(this.refs.hundredSalt.getValue()).tValue;
-                    else
-                        newVal.nutritionalPr100g.sodium = Datastore.clone(this.refs.hundredSalt.getValue()).tValue;
-                }
-                else return null;
-
-            }
-            else return null;
-
-            if (this.refs.form3 && this.refs.form3.getValue()) {
-                newVal.nutritionalPrServing = Datastore.clone(this.refs.form3.getValue());
-
-                if(this.refs.servingSalt && this.refs.servingSalt.getValue())
-                {
-                    if(this.state.saltSodium == "Salt")
-                        newVal.nutritionalPrServing.salt = Datastore.clone(this.refs.servingSalt.getValue()).tValue;
-                    else
-                        newVal.nutritionalPrServing.sodium = Datastore.clone(this.refs.servingSalt.getValue()).tValue;
                 }
                 else return null;
             }
-            else return null;
+            //console.log("# Checkpoint 4");
+            if(this.refs.form3) {
+                if (this.refs.form3.getValue()) {
+                    newVal.nutritionalPrServing = Datastore.clone(this.refs.form3.getValue());
+                    //console.log("# Checkpoint 5");
+                    if (this.refs.servingSalt && this.refs.servingSalt.getValue()) {
+                        //console.log("# Checkpoint 6");
+                        if (this.state.saltSodium == "Salt")
+                            newVal.nutritionalPrServing.salt = Datastore.clone(this.refs.servingSalt.getValue()).tValue;
+                        else
+                            newVal.nutritionalPrServing.sodium = Datastore.clone(this.refs.servingSalt.getValue()).tValue;
+                    }
+                    else return null;
+                }
+                else return null;
+            }
 
 
-
+            //console.log("# Checkpoint 7");
 
 
 			if(this.refs.healthClaimsForm){
 				newVal.healthClaims = Datastore.clone(this.refs.healthClaimsForm.getValue());
 			}
+
+            //console.log("# Checkpoint 8");
 
 			newVal.visualInformation = Datastore.clone(this.refs.form4.getValue());
 			//newVal.brand = Datastore.M.brand.name;
