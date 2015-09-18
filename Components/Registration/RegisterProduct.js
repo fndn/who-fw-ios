@@ -146,9 +146,9 @@ var RegisterProduct = React.createClass({
 			//was cloned
 
 			console.log('# 2 Product was cloned!');
-			console.log('# 2 with: ', Datastore.MemoryStore.product);
+			console.log('# 2 with: ', Datastore.M.product);
 
-			var data = Datastore.cloneObject(Datastore.MemoryStore.product);
+			var data = Datastore.clone(Datastore.M.product);
 			hundredData = data.nutritionalPr100g;
 			servingData = data.nutritionalPrServing;
 
@@ -189,7 +189,7 @@ var RegisterProduct = React.createClass({
                 otherClaim = data.otherClaim;
             }
 			//if(data.images) images = data.images;
-            //Datastore.MemoryStore.product = null;
+            //Datastore.M.product = null;
             console.log(hundredData);
 		}
 
@@ -264,8 +264,7 @@ var RegisterProduct = React.createClass({
                 type={Models.SimpelBool()}
                 options={nutServingBoolOptions}
                 value={this.state.nutServingBool}
-                onChange={(value) =>{this.storeTmpState();this.setState({nutServingBool: value})}}
-                />
+                onChange={(value) =>{this.storeTmpState();this.setState({nutServingBool: value})}}/>
         );
     },
 
@@ -560,8 +559,7 @@ var RegisterProduct = React.createClass({
 
             if (this.refs.form2) {
                 newVal.nutritionalPr100g = Datastore.clone(this.refs.form2.getValue());
-                if(this.refs.hundredSalt)
-                {
+                if(this.refs.hundredSalt){
 
                     if(newVal.saltSodium == "Salt")
                         newVal.nutritionalPr100g.salt = Datastore.clone(this.refs.hundredSalt.getValue()).hundredSaltSodiumValue;

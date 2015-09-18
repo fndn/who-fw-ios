@@ -84,16 +84,16 @@ var options = {
 		comparativeClaims: {disabled: true},
 		nutrientContentClaims: {disabled: true},
 		healthClaims: {disabled: true},
-        noSalt:{label: 'Unsaltet/No salt/No added salt', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB', disabled: true},
-        noSugar:{label: 'No added sugar/low in sugar', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB', disabled: true},
-        noSweeteners:{label: 'No artificial sweetners', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB', disabled: true},
-        vitamins:{label: 'Fortified with vitamins/minerals', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB', disabled: true},
-        noPreservatives:{label: 'No artificial preservatives', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB', disabled: true},
-        noStarch:{label: 'No added starch', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB', disabled: true},
-        noColors:{label: 'No artificial colors', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB', disabled: true},
-        noFlavours:{label: 'No artificial flavors', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB', disabled: true},
-        glutenFree:{label: 'Gluten free', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB', disabled: true},
-        organic:{label: 'Organic', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB', disabled: true},
+		noSalt:{label: 'Unsaltet/No salt/No added salt', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB', disabled: true},
+		noSugar:{label: 'No added sugar/low in sugar', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB', disabled: true},
+		noSweeteners:{label: 'No artificial sweetners', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB', disabled: true},
+		vitamins:{label: 'Fortified with vitamins/minerals', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB', disabled: true},
+		noPreservatives:{label: 'No artificial preservatives', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB', disabled: true},
+		noStarch:{label: 'No added starch', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB', disabled: true},
+		noColors:{label: 'No artificial colors', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB', disabled: true},
+		noFlavours:{label: 'No artificial flavors', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB', disabled: true},
+		glutenFree:{label: 'Gluten free', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB', disabled: true},
+		organic:{label: 'Organic', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB', disabled: true},
 		other: {template: GlobalStyles.indentedTextbox, editable: false}
 	}
 }; // optional rendering options (see documentation)
@@ -164,19 +164,19 @@ var ValidateProduct = React.createClass({
 		data.ageGroup = Models.ageGroups.meta.map[data.ageGroup];
 		data.brand = Datastore.data.one('brands', {_id:data.brand}).name;
 
-        var saltSodium = null;
-        if(data.nutritionalPr100g) {
-            if (data.nutritionalPr100g.salt)
-                saltSodium = "Salt";
-            else if (data.nutritionalPr100g.sodium)
-                saltSodium = "Sodium";
-        }
-        if(data.nutritionalPrServing) {
-            if (data.nutritionalPrServing.salt)
-                saltSodium = "Salt";
-            else if (data.nutritionalPrServing.sodium)
-                saltSodium = "Sodium";
-        }
+		var saltSodium = null;
+		if(data.nutritionalPr100g) {
+			if (data.nutritionalPr100g.salt)
+				saltSodium = "Salt";
+			else if (data.nutritionalPr100g.sodium)
+				saltSodium = "Sodium";
+		}
+		if(data.nutritionalPrServing) {
+			if (data.nutritionalPrServing.salt)
+				saltSodium = "Salt";
+			else if (data.nutritionalPrServing.sodium)
+				saltSodium = "Sodium";
+		}
 
 
 		if(!data.images)
@@ -194,7 +194,7 @@ var ValidateProduct = React.createClass({
 			options: options,
 			value: data,
 			initialPosition: null,
-            saltSodium: saltSodium
+			saltSodium: saltSodium
 		};
 	},
 
@@ -213,127 +213,127 @@ var ValidateProduct = React.createClass({
 
 	},
 
-    renderNutritionalPr100g: function()
-    {
-        if(!this.state.value.nutritionalPr100g)
-            return(
-                <View>
-                    <Text style={GlobalStyles.title}>
-                        No Nutritional information pr 100g
-                    </Text>
-                </View>
-            );
+	renderNutritionalPr100g: function()
+	{
+		if(!this.state.value.nutritionalPr100g)
+			return(
+				<View>
+					<Text style={GlobalStyles.title}>
+						No Nutritional information pr 100g
+					</Text>
+				</View>
+			);
 
-        var val = this.state.saltSodium == "Salt" ? this.state.value.nutritionalPr100g.salt : this.state.value.nutritionalPr100g.sodium;
-        console.log(this.state.value.nutritionalPr100g.sodium);
-        var saltSodium = (this.state.saltSodium) ? (<Form
-            ref="hundredSalt"
-            type={ t.struct({ tField: t.maybe(t.Num) }) }
-            value={{tField:val}}
-            options={{ fields:{tField:{label:this.state.saltSodium + " (g)", editable: false}  }}}
-            />) : null;
+		var val = this.state.saltSodium == "Salt" ? this.state.value.nutritionalPr100g.salt : this.state.value.nutritionalPr100g.sodium;
+		console.log(this.state.value.nutritionalPr100g.sodium);
+		var saltSodium = (this.state.saltSodium) ? (<Form
+			ref="hundredSalt"
+			type={ t.struct({ tField: t.maybe(t.Num) }) }
+			value={{tField:val}}
+			options={{ fields:{tField:{label:this.state.saltSodium + " (g)", editable: false}  }}}
+			/>) : null;
 
-        return(
-            <View>
-                <Text style={GlobalStyles.title}>
-                    Nutritional information pr 100g
-                </Text>
-                <Form
-                    type={Models.Nutrition()}
-                    value={this.state.value.nutritionalPr100g}
-                    options={this.state.options}
-                    />
-                {saltSodium}
-            </View>
-        )
-    },
+		return(
+			<View>
+				<Text style={GlobalStyles.title}>
+					Nutritional information pr 100g
+				</Text>
+				<Form
+					type={Models.Nutrition()}
+					value={this.state.value.nutritionalPr100g}
+					options={this.state.options}
+					/>
+				{saltSodium}
+			</View>
+		)
+	},
 
-    renderNutritionalPrServing: function()
-    {
-        if(!this.state.value.nutritionalPrServing)
-            return(
-                <View>
-                    <Text style={GlobalStyles.title}>
-                        No Nutritional information pr serving
-                    </Text>
-                </View>
-            );
+	renderNutritionalPrServing: function()
+	{
+		if(!this.state.value.nutritionalPrServing)
+			return(
+				<View>
+					<Text style={GlobalStyles.title}>
+						No Nutritional information pr serving
+					</Text>
+				</View>
+			);
 
-        var saltSodium = (this.state.saltSodium) ? (<Form
-            ref="hundredSalt"
-            type={ t.struct({ tField: t.maybe(t.Num) }) }
-            value={this.state.saltSodium == "Salt" ? this.state.value.nutritionalPrServing.salt : this.state.value.nutritionalPrServing.sodium}
-            options={{ fields:{tField:{label:this.state.saltSodium + " (g)", editable: false}  }}}
-            />) : null;
+		var saltSodium = (this.state.saltSodium) ? (<Form
+			ref="hundredSalt"
+			type={ t.struct({ tField: t.maybe(t.Num) }) }
+			value={this.state.saltSodium == "Salt" ? this.state.value.nutritionalPrServing.salt : this.state.value.nutritionalPrServing.sodium}
+			options={{ fields:{tField:{label:this.state.saltSodium + " (g)", editable: false}  }}}
+			/>) : null;
 
-        return(
-            <View>
-                <Text style={GlobalStyles.title}>
-                    Nutritional information pr serving
-                </Text>
-                <Form
-                    type={Models.NutritionServing()}
-                    value={this.state.value.nutritionalPrServing}
-                    options={this.state.options}
-                    />
-                {saltSodium}
-            </View>
-        )
-    },
+		return(
+			<View>
+				<Text style={GlobalStyles.title}>
+					Nutritional information pr serving
+				</Text>
+				<Form
+					type={Models.NutritionServing()}
+					value={this.state.value.nutritionalPrServing}
+					options={this.state.options}
+					/>
+				{saltSodium}
+			</View>
+		)
+	},
 
-    renderHealthClaims: function()
-    {
+	renderHealthClaims: function()
+	{
 
-        if(!this.state.value.healthClaims)
-            return(
-                <View>
-                    <Form
-                        type={Models.SimpelBool()}
-                        options={
-                            {fields:{boolValue:{ label:'Health claims', onTintColor:'#4B92DB', disabled: true}}}
-                        }
-                        value={{boolValue:false}}
-                        />
-                </View>
-            );
-        else
-            return(
-                <View>
-                    <Form
-                        type={Models.SimpelBool()}
-                        options={
-                            {fields:{boolValue:{ label:'Health claims', onTintColor:'#4B92DB', disabled: true}}}
-                        }
-                        value={{boolValue:true}}
-                        />
+		if(!this.state.value.healthClaims)
+			return(
+				<View>
+					<Form
+						type={Models.SimpelBool()}
+						options={
+							{fields:{boolValue:{ label:'Health claims', onTintColor:'#4B92DB', disabled: true}}}
+						}
+						value={{boolValue:false}}
+						/>
+				</View>
+			);
+		else
+			return(
+				<View>
+					<Form
+						type={Models.SimpelBool()}
+						options={
+							{fields:{boolValue:{ label:'Health claims', onTintColor:'#4B92DB', disabled: true}}}
+						}
+						value={{boolValue:true}}
+						/>
 
-                    <Form
-                        ref="healthClaims"
-                        type={Models.HealthClaims()}
-                        options={this.state.options
-                            /*{
-                            fields:{
-                                noSalt:{label: 'Unsaltet/No salt/No added salt', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB'},
-                                noSugar:{label: 'No added sugar/low in sugar', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB'},
-                                noSweeteners:{label: 'No artificial sweetners', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB'},
-                                vitamins:{label: 'Fortified with vitamins/minerals', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB'},
-                                noPreservatives:{label: 'No artificial preservatives', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB'},
-                                noStarch:{label: 'No added starch', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB'},
-                                noColors:{label: 'No artificial colors', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB'},
-                                noFlavours:{label: 'No artificial flavors', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB'},
-                                glutenFree:{label: 'Gluten free', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB'},
-                                organic:{label: 'Organic', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB'},
-                                other:{template: GlobalStyles.indentedTextbox}
-                                }
-                            }*/
-                        }
-                        value={this.state.value.healthClaims}
-                        />
+					<Form
+						ref="healthClaims"
+						type={Models.HealthClaims()}
+						options={this.state.options
+							/*{
+							fields:{
+								noSalt:{label: 'Unsaltet/No salt/No added salt', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB'},
+								noSugar:{label: 'No added sugar/low in sugar', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB'},
+								noSweeteners:{label: 'No artificial sweetners', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB'},
+								vitamins:{label: 'Fortified with vitamins/minerals', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB'},
+								noPreservatives:{label: 'No artificial preservatives', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB'},
+								noStarch:{label: 'No added starch', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB'},
+								noColors:{label: 'No artificial colors', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB'},
+								noFlavours:{label: 'No artificial flavors', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB'},
+								glutenFree:{label: 'Gluten free', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB'},
+								organic:{label: 'Organic', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB'},
+								other:{template: GlobalStyles.indentedTextbox}
+								}
+							}*/
+						}
+						value={this.state.value.healthClaims}
+						/>
 
-                </View>
-            );
+				</View>
+			);
 
-    },
+	},
 
 
 	render: function(){
@@ -346,15 +346,15 @@ var ValidateProduct = React.createClass({
 					options={this.state.options}
 					value={this.state.value}
 					/>
-                {this.renderNutritionalPr100g()}
-                {this.renderNutritionalPrServing()}
+				{this.renderNutritionalPr100g()}
+				{this.renderNutritionalPrServing()}
 				<Form
 					ref="form4"
 					type={Models.VisualInformation()}                    
 					options={options}
 					value={this.state.value.visualInformation}
 					/>
-                {this.renderHealthClaims()}
+				{this.renderHealthClaims()}
 				<Text style={GlobalStyles.title}>
 					Pictures
 				</Text>
@@ -426,12 +426,12 @@ var ValidateProduct = React.createClass({
 				newVal.product = Datastore.clone(this.state.value); // foodType and ageGroup gets name
 				newVal.country = Datastore.M.country;
 				newVal.location = Datastore.clone(Datastore.M.location);
-                // Convert location to readable info
+				// Convert location to readable info
 
 
-                newVal.location.incomeType = Models.incomeTypes.meta.map[newVal.location.incomeType];
-                newVal.location.storeType = Models.storeTypes.meta.map[newVal.location.storeType];
-                newVal.location.storeBrand = Datastore.data.one('storeBrands', {_id:newVal.location.storeBrand}).name;
+				newVal.location.incomeType = Models.incomeTypes.meta.map[newVal.location.incomeType];
+				newVal.location.storeType = Models.storeTypes.meta.map[newVal.location.storeType];
+				newVal.location.storeBrand = Datastore.data.one('storeBrands', {_id:newVal.location.storeBrand}).name;
 
 				newVal.credentials = Datastore.M.credentials;
 				newVal.timeOfRegistration = Date.now(); // UTC in seconds
@@ -455,7 +455,6 @@ var ValidateProduct = React.createClass({
 			   
 				console.log("-------------------------------");
 				console.log("# Saving Registration:", newVal);
-                return;
 				Datastore.data.add("registrations", newVal);
 
 
