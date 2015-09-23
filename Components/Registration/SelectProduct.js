@@ -28,7 +28,6 @@ var productNames = {};
 var SelectProduct = React.createClass ({
 
 	componentWillMount: function() {
-
 		var dataSource = new ListView.DataSource({rowHasChanged: (r1, r2) => r1["_id"] !== r2["_id"]});
 		this.state = {
 			isLoading: false,
@@ -43,21 +42,17 @@ var SelectProduct = React.createClass ({
 				//TODO: Filter by what?
 				//Datastore.data.where('products', {"": Datastore.M. }, this.dataAvailable);
 
-				Datastore.data.all('products', this.dataAvailable);
+				Datastore.data.where('products', {"country": Datastore.M.country.name}, this.dataAvailable);
 			}
 		});
-		Datastore.data.all('products', this.dataAvailable);
+        console.log(Datastore.M.country.name);
+		Datastore.data.where('products', {"country": Datastore.M.country.name}, this.dataAvailable);
 	},
 	
 	componentWillUnmount: function() {
 		navigatorEventListener.remove();
 	},
 
-	/*
-	componentDidMount: function() {
-		Datastore.data.all('products', this.dataAvailable);
-	},
-	*/
 
 	dataAvailable: function(_data){
 		console.log('[SelectProduct] dataAvailable', _data);
@@ -88,16 +83,7 @@ var SelectProduct = React.createClass ({
 
 	},
 
-	// dev:
 	_renderRowWithImage: function(rowData, sectionID, rowID) {
-		/*
-		 console.log('renderRow', rowData, sectionID, rowID);
-		 console.log('renderRow', Object.keys(rowData)) ;
-		 console.log('renderRow', rowData["_id"]) ;
-		 console.log('renderRow', rowData._id) ;
-		 */
-		 
-
 		 // test: Read image from Documents folder
 
 		var _foodType = Models.foodTypes.meta.map[rowData.foodType];
@@ -114,7 +100,7 @@ var SelectProduct = React.createClass ({
 
 							<View>
 								<Text style={GlobalStyles.listrowTitle}>{rowData.name}</Text>
-								<Text style={GlobalStyles.listrowSubtitle}>{_foodType}{"\n"}by {Datastore.data.one('brands', {_id:rowData.brand}).name}{"\n"}from age {_ageGroup}</Text>
+								<Text style={GlobalStyles.listrowSubtitle}>{_foodType + '\n'}by {Datastore.data.one('brands', {_id:rowData.brand}).name + '\n'}from age {_ageGroup}</Text>
 							</View>
 						</View>                        
 					</View>
@@ -124,28 +110,6 @@ var SelectProduct = React.createClass ({
 		);
 	},
 
-
-	/*_renderRow: function(rowData, sectionID, rowID) {
-
-
-		var _foodType = Models.foodTypes.meta.map[rowData.foodType];
-		var _ageGroup = Models.ageGroups.meta.map[rowData.ageGroup];
-
-
-		return (
-			<TouchableHighlight underlayColor='#EEE' onPress={() => this.rowPressed(rowData)}>
-				<View>
-					<View style={GlobalStyles.listrowContainer}>
-						<View>
-							<Text style={GlobalStyles.listrowTitle}>{rowData.name}</Text>
-							<Text style={GlobalStyles.listrowSubtitle}>{_foodType} by {Datastore.data.one('brands', rowData.brand).name}, from age {_ageGroup}</Text>
-						</View>
-					</View>
-					<View style={GlobalStyles.listrowSeparator}/>
-				</View>
-			</TouchableHighlight>
-		);
-	},*/
 	rowPressed: function(rowData) {
 		console.log("= [SelectProduct] ", rowData.name);
 		Datastore.M.product = rowData;
@@ -157,22 +121,7 @@ var SelectProduct = React.createClass ({
 			component: ValidateProduct
 
 		 });
-	},
-
-	// Maybe use this to make diff?? it returns the values that are different on a compared to b
-	diff: function(a,b) {
-		var r = {};
-		_.each(a, function(v,k) {
-			if(b[k] === v) return;
-			// but what if it returns an empty object? still attach?
-			r[k] = _.isObject(v)
-				? _.diff(v, b[k])
-				: v
-			;
-		});
-		return r;
 	}
-
 });
 
 module.exports = SelectProduct;

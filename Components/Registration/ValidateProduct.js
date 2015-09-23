@@ -413,17 +413,6 @@ var ValidateProduct = React.createClass({
 		);
 	},
 
-/*
- <View style={styles.doubleButtonContainer}>
- <TouchableHighlight style={[styles.button,styles.button_notlast]} onPress = {this.onPress} underlayColor='#C8E5F3'>
- <Text style={GlobalStyles.buttonText}>Submit</Text>
- </TouchableHighlight>
- <TouchableHighlight style={styles.button} onPress = {this.onEdit} underlayColor='#FF92A6'>
- <Text style={GlobalStyles.buttonText}>Clone &amp; Edit</Text>
- </TouchableHighlight>
- </View>
- */
-
 
 	onPress: function()
 	{
@@ -469,7 +458,8 @@ var ValidateProduct = React.createClass({
 
 				// Strip local _id fields
 				newVal = Datastore.data.removeIDs( newVal );
-				newVal.locationID = Datastore.M.location._id;
+                // Registrations is sortable by location hash
+				newVal.locationID = Datastore.M.location.hash;
 			   
 				console.log("-------------------------------");
 				console.log("# Saving Registration:", newVal);

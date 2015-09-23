@@ -119,9 +119,12 @@ var RegisterLocation = React.createClass({
 			// storeBrands are stored as letters such as A = 1 C = 2 AA = 27 etc.
 			// Therefore we need to convert it back to a number to retrieve from Datastore
 			newVal.storeBrand = Models.letterToNumbers(newVal.storeBrand);
+            // Then convert it to plain text
+			newVal.storeBrand = Datastore.data.one('storeBrands', {_id:newVal.storeBrand}).name;
 
-			//newVal.storeBrand = Datastore.data.one('storeBrands', {_id:newVal.storeBrand}).name;
-
+            // Convert IncomeType to plain text
+            newVal.incomeType = Models.incomeTypes.meta.map[newVal.incomeType];
+            newVal.storeType = Models.storeTypes.meta.map[newVal.storeType];
 			console.log("[RegisterLocation] new location: ", newVal);
 			Datastore.data.add('locations', newVal);
 			this.props.navigator.pop();

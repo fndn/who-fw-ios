@@ -614,6 +614,8 @@ var RegisterProduct = React.createClass({
 				else {this.jumpToError(this.refs.form3); return null;}
 			}
 
+            // convert foodtype, brand and agegroup
+
 
 			//console.log("# Checkpoint 7");
 

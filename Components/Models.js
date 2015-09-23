@@ -144,7 +144,7 @@ module.exports.StoreBrand = function(){
 };
 
 module.exports.Product = function(){
-	var data = Datastore.data.all('brands');
+	var data = Datastore.data.where('brands', {'country':Datastore.M.country.name});
 	var brands = {};
 	//console.log('brands', data);
 	for(var i = 0; i < data.length; i++)

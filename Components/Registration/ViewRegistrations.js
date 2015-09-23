@@ -46,33 +46,11 @@ var ViewRegistrations = React.createClass ({
 				console.log("***** 2 ***** all registrations", D.data.all('registrations'));
 			}
 		});
+        D.data.where("registrations", {locationID: D.M.location._id} , this.dataAvailable);
 
-	},
-
-
-	componentDidMount: function() {
-		
-		console.log("***** 1 A ***** all registrations", D.data.all('registrations'));
-		console.log("***** 1 B *****  this location ", D.M.location );
-		/*
-		//console.log("***** 1 C *****  filter test ", D.data.where("registrations", {location: D.M.location}) );
-
-		D.data.all('registrations').filter( function(reg){
-			console.log('compare reg', reg.location, "cleaned:", D.data.removeIDs(reg.location), " to ", D.M.location);
-			console.log(' -> 1 result', (reg.location == D.M.location) );
-			console.log(' -> 2 result', (ObjectEquals( D.data.removeIDs(reg.location), D.M.location)) );
-		});
-
-		//D.all('products', this.dataAvailable);
-		*/
-		D.data.where("registrations", {locationID: D.M.location._id} , this.dataAvailable);
 	},
 
 	dataAvailable: function(_data){
-		//console.log('SelectProduct dataAvailable', _data);
-		//locationRegistrations = D.all("locationRegistrations");
-
-		//console.log("registrations: " , _data);
 		this.setState({
 			isLoading:false,
 			message:'loaded',

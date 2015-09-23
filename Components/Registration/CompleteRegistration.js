@@ -28,7 +28,9 @@ var CompleteRegistration = React.createClass({
 
 	render: function(){
 		return (
-			<ScrollView style={[GlobalStyles.scrollViewContainer, GlobalStyles.scrollViewList]}>
+			<ScrollView
+                style={[GlobalStyles.scrollViewContainer, GlobalStyles.scrollViewList] }
+                automaticallyAdjustContentInsets = {false}>
 				<Text style={styles.text}>
 					{titleText}
 				</Text>
