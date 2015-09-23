@@ -86,8 +86,8 @@ var SelectProduct = React.createClass ({
 	_renderRowWithImage: function(rowData, sectionID, rowID) {
 		 // test: Read image from Documents folder
 
-		var _foodType = Models.foodTypes.meta.map[rowData.foodType];
-		var _ageGroup = Models.ageGroups.meta.map[rowData.ageGroup];
+		//var _foodType = Models.foodTypes.meta.map[rowData.foodType];
+		//var _ageGroup = Models.ageGroups.meta.map[rowData.ageGroup];
 
 		return (
 			<TouchableHighlight underlayColor='#EEE' onPress={() => this.rowPressed(rowData)}>
@@ -100,7 +100,7 @@ var SelectProduct = React.createClass ({
 
 							<View>
 								<Text style={GlobalStyles.listrowTitle}>{rowData.name}</Text>
-								<Text style={GlobalStyles.listrowSubtitle}>{_foodType + '\n'}by {Datastore.data.one('brands', {_id:rowData.brand}).name + '\n'}from age {_ageGroup}</Text>
+								<Text style={GlobalStyles.listrowSubtitle}>{rowData.foodType + '\n'}by {rowData.brand + '\n'}from age {rowData.ageGroup}</Text>
 							</View>
 						</View>                        
 					</View>

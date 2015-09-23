@@ -148,7 +148,7 @@ var RegisterProduct = React.createClass({
 			console.log('# 2 Product was cloned!');
 			console.log('# 2 with: ', Datastore.M.product);
 
-			var data = Datastore.clone(Datastore.M.product);
+			data = Datastore.clone(Datastore.M.product);
 			hundredData = data.nutritionalPr100g;
 			servingData = data.nutritionalPrServing;
 
@@ -615,7 +615,10 @@ var RegisterProduct = React.createClass({
 			}
 
             // convert foodtype, brand and agegroup
-
+            newVal.brand = Models.letterToNumbers(newVal.brand);
+            newVal.brand = Datastore.data.one("brands", {_id:newVal.brand}).name;
+            newVal.foodType = Models.foodTypes.meta.map[newVal.foodType];
+            newVal.ageGroup = Models.ageGroups.meta.map[newVal.ageGroup];
 
 			//console.log("# Checkpoint 7");
 
@@ -630,6 +633,7 @@ var RegisterProduct = React.createClass({
 			//newVal.brand = Datastore.M.brand.name;
 
 			newVal.images = this.state.images; //Datastore.clone(this.state.images);
+            newVal.imgstore = this.state.imgstore;
 			
 			newVal.country = Datastore.M.country.name;
 

@@ -145,11 +145,12 @@ module.exports.StoreBrand = function(){
 
 module.exports.Product = function(){
 	var data = Datastore.data.where('brands', {'country':Datastore.M.country.name});
+    data = Datastore.data.orderBy(data, "name");
 	var brands = {};
 	//console.log('brands', data);
 	for(var i = 0; i < data.length; i++)
 	{
-		brands[data[i]._id] = data[i].name;
+		brands[this.numberToLetters(data[i]._id)] = data[i].name;
 	}
 
 	return t.struct({

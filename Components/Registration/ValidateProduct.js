@@ -163,9 +163,9 @@ var ValidateProduct = React.createClass({
 		var data = Datastore.clone(Datastore.M.product);
 		//Models.storeTypes.meta.map["SUP"]
 		console.log("getInitialState, ", data);
-		data.foodType = Models.foodTypes.meta.map[data.foodType];
-		data.ageGroup = Models.ageGroups.meta.map[data.ageGroup];
-		data.brand = Datastore.data.one('brands', {_id:data.brand}).name;
+		//data.foodType = Models.foodTypes.meta.map[data.foodType];
+		//data.ageGroup = Models.ageGroups.meta.map[data.ageGroup];
+		//data.brand = Datastore.data.one('brands', {_id:data.brand}).name;
 
 		var saltSodium = null;
 		if(data.nutritionalPr100g) {
@@ -436,9 +436,9 @@ var ValidateProduct = React.createClass({
 				// Convert location to readable info
 
 
-				newVal.location.incomeType = Models.incomeTypes.meta.map[newVal.location.incomeType];
-				newVal.location.storeType = Models.storeTypes.meta.map[newVal.location.storeType];
-				newVal.location.storeBrand = Datastore.data.one('storeBrands', {_id:newVal.location.storeBrand}).name;
+				//newVal.location.incomeType = Models.incomeTypes.meta.map[newVal.location.incomeType];
+				//newVal.location.storeType = Models.storeTypes.meta.map[newVal.location.storeType];
+				//newVal.location.storeBrand = Datastore.data.one('storeBrands', {_id:newVal.location.storeBrand}).name;
 
 				newVal.credentials = Datastore.M.credentials;
 				newVal.timeOfRegistration = Date.now(); // UTC in seconds
