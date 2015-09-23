@@ -236,3 +236,13 @@ module.exports.Responent = function(){
 		affiliation: t.Str
 	});
 };
+
+module.exports.getKeyByValue = function(object, value)
+{
+    for(var i in object)
+    {
+        if(object[i] == value)
+            return i;
+    }
+    return null;
+};

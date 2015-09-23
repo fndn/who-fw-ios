@@ -149,6 +149,14 @@ var RegisterProduct = React.createClass({
 			console.log('# 2 with: ', Datastore.M.product);
 
 			data = Datastore.clone(Datastore.M.product);
+
+            // remap enums
+            data.foodType = Models.getKeyByValue(Models.foodTypes.meta.map, data.foodType);
+            data.ageGroup = Models.getKeyByValue(Models.ageGroups.meta.map, data.ageGroup);
+
+            data.brand = Models.numberToLetters(Datastore.data.where("brands", {country: Datastore.M.country.name, name: data.brand})[0]._id)
+
+
 			hundredData = data.nutritionalPr100g;
 			servingData = data.nutritionalPrServing;
 
