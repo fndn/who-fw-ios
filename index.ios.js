@@ -24,13 +24,13 @@ var Datastore 		= require('fndn-rn-datastore');
 
 Datastore.opts({
 	data: {
-		database: 	'whofw-dev-2000',
+		database: 	'whofwa-070',
 		tables: 	["countries", "locations", "brands", "incomeTypes", "storeTypes", "storeBrands", "ageGroups", "products"],
-		uploadOnly: ["registrations"],
-		localOnly:	["credentials"]
+		uploadOnly: ["register"],
+		localOnly:	["registrations", "credentials"]
 	},
 	net: {
-		//remotehost: 'http://127.0.0.1:8090',		
+		remotehost: 'http://127.0.0.1:8090',		
 		//remotehost: 'http://whofw.fndn.dk:8080',
 		remotehost: 'https://whofw.fndn.dk',
 		auth_token: 'fr9a7as792jjd0293hddxonxo0x1309210cpdshcpihvq0823t373e4463'
@@ -50,19 +50,16 @@ var fwa = React.createClass({
 			Datastore.info();
 			Datastore.reach.enable();
 
-
 			Datastore.M.credentials = Datastore.data.removeIDs( Datastore.data.last("credentials") );
-			//console.log('Loaded Datastore.M.credentials', Datastore.M.credentials);
 			
+			/// Badge
 			Datastore.data.subscribe( "registrations", function(data){
 				self.setState({regs: Datastore.data.countWhereNo("registrations", "uploaded")});
 			});
 			self.setState({regs: Datastore.data.countWhereNo("registrations", "uploaded")});
+
 		});
 		
-		
-		
-
 		return {
 			selectedTab: 'Introduction', // initial view
 			regs: 0,

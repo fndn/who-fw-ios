@@ -19,19 +19,21 @@ var {
 } = React;
 
 var Sync = React.createClass({
+	
+	is_setup: false,
 
-	componentDidMount: function(){
+	_setup: function(){
+		console.log('@ Sync _setup');
 		var self = this;
 
-		Datastore.data.init(function(){
+		/// untested: 
+		//if( !Datastore.ready ){
+		//	Datastore.data.init( self._setup );
+		//}else{
+		//Datastore.data.init(function(){
 			
 			console.log('@ Sync Datastore.init.cb > ready');
 
-			var lastSync = Datastore.data.last("synclog");
-			if( lastSync != undefined ){
-				self.setState({since_lastsync_str:"alo "+ lastSync.date});
-			}
-			
 			Datastore.reach.subscribe( function(state, ms){
 				self.setState({
 					remote_reachable:    state,
@@ -39,24 +41,32 @@ var Sync = React.createClass({
 				});
 			});
 
-			Datastore.data.subscribe( "registrations", function(data){
-				console.log('[Sync] Datastore registrations OnChange() > countWhereNo: '+ Datastore.data.countWhereNo("registrations", "uploaded") );
-			});
-
 			Datastore.data.subscribe( "synclog", function(data){
 				console.log('[Sync] Datastore synclog OnChange()', data );
-				self.setState({since_lastsync_str:"alo "+ data.date});
+				self.setState({since_lastsync_str: data.date});
 			});
-		});
-	},
+			var lastSync = Datastore.data.last("synclog");
+			console.log('lastSync:', lastSync);
+			if( lastSync != undefined ){
+				self.setState({since_lastsync_str:""+ lastSync.date});
+			}
 
-	getInitialState: function() {
+			self.setState({is_setup:true});
+		//});
+		//}
+
+		
+
+	},
 	
+	getInitialState: function() {
+
 		var _tables = Datastore.opts().data.tables.filter( function(el){ return Datastore.opts().data.uploadOnly.indexOf(el) == -1 });//.join(", ");
 		var _last_table = _tables.pop();
 		var tables_str = _tables.join(", ") + " and "+ _last_table;
 
 		return {
+			is_setup: false,
 			progress_message: "idle",
 			working: false,
 			show_log: false,
@@ -99,6 +109,9 @@ var Sync = React.createClass({
 
 	render: function(){
 
+		if( !this.state.is_setup ){
+			this._setup();
+		}
 
 		if( !this.state.remote_reachable ){
 			return this._render_noreach();
@@ -242,9 +255,11 @@ var Sync = React.createClass({
 
 	onPressSync: function(){
 		console.log('RunSyncChain - begin');
+		
 		Datastore.sync.chained(this, function(){
 			console.log('onPressSyncDev > RunSyncChain done!');
 		});
+		
 		//Datastore.sync.abort();
 	}
 	
