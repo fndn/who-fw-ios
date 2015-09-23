@@ -16,14 +16,14 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
 	
-
+	/*
 	/// pipe console log to a file, so we can tail it (and keep xcode hidden)
 	NSString *logPath =[NSString stringWithFormat:@"/fwa-xcode.log"];
 	NSLog(@"Logging to %@", logPath );
 	
 	freopen([logPath fileSystemRepresentation], "w+", stderr);
 	NSLog(@"-----\nLogging to %@", logPath );
-
+	*/
 	
 	NSURL *jsCodeLocation;
 
@@ -41,8 +41,9 @@
    * on the same Wi-Fi network.
    */
 
-	jsCodeLocation = [NSURL URLWithString:@"http://localhost:8081/index.ios.bundle"];
+		jsCodeLocation = [NSURL URLWithString:@"http://localhost:8081/index.ios.bundle"];
 		//jsCodeLocation = [NSURL URLWithString:@"http://10.0.1.1:8081/index.ios.bundle"];
+		//jsCodeLocation = [NSURL URLWithString:@"http://192.168.0.41:8081/index.ios.bundle"];
 
   /**
    * OPTION 2

@@ -61,6 +61,11 @@ var SelectLocation = React.createClass ({
 	render: function() {
 		return (
 			<View style={GlobalStyles.scrollViewContainer}>
+
+				<View style={GlobalStyles.info_view_wrap}>
+					<Text style={GlobalStyles.info_view_text}>Create or Select a Location</Text>
+				</View>
+
 				<ListView
 					style={GlobalStyles.list}
 					automaticallyAdjustContentInsets={false}
@@ -97,6 +102,7 @@ var SelectLocation = React.createClass ({
 	rowPressed: function(rowData) {
 		console.log("= [SelectLocation] ", rowData.name);
 		
+		//Datastore.M.location = Datastore.data.removeIDs( rowData ); // ideally we should not have _id's in the stores - as these will not match between clients
 		Datastore.M.location = rowData;
 
 		this.props.navigator.push({

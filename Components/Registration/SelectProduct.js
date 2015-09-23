@@ -46,7 +46,7 @@ var SelectProduct = React.createClass ({
 				Datastore.data.all('products', this.dataAvailable);
 			}
 		});
-        Datastore.data.all('products', this.dataAvailable);
+		Datastore.data.all('products', this.dataAvailable);
 	},
 	
 	componentWillUnmount: function() {
@@ -74,6 +74,10 @@ var SelectProduct = React.createClass ({
 
 			<View style={GlobalStyles.scrollViewContainer}>
 
+				<View style={GlobalStyles.info_view_wrap}>
+					<Text style={GlobalStyles.info_view_text}>These Products are available in {Datastore.M.location.country}:</Text>
+				</View>
+
 				<ListView
 					style={GlobalStyles.list}
 					automaticallyAdjustContentInsets={false}
@@ -92,6 +96,7 @@ var SelectProduct = React.createClass ({
 		 console.log('renderRow', rowData["_id"]) ;
 		 console.log('renderRow', rowData._id) ;
 		 */
+		 
 
 		 // test: Read image from Documents folder
 
@@ -103,10 +108,13 @@ var SelectProduct = React.createClass ({
 				<View>
 					<View style={GlobalStyles.listrowContainer01}>
 						<View style={GlobalStyles.listrowContainer02}>
-							<Image style={GlobalStyles.rowImage} source={{ uri: 'http://lorempixel.com/100/100/sports/'}} />
+							
+							<Image style={GlobalStyles.rowImage} source={{ uri: Datastore.ws.img("products", rowData.uuid, 'front', '300x300') }} />
+							{/*<Image style={GlobalStyles.rowImage} source={{ uri: 'http://lorempixel.com/100/100/sports/'}} /> */}
+
 							<View>
 								<Text style={GlobalStyles.listrowTitle}>{rowData.name}</Text>
-								<Text style={GlobalStyles.listrowSubtitle}>{_foodType} by {Datastore.data.one('brands', {_id:rowData.brand}).name}, from age {_ageGroup}</Text>
+								<Text style={GlobalStyles.listrowSubtitle}>{_foodType}{"\n"}by {Datastore.data.one('brands', {_id:rowData.brand}).name}{"\n"}from age {_ageGroup}</Text>
 							</View>
 						</View>                        
 					</View>
@@ -142,11 +150,11 @@ var SelectProduct = React.createClass ({
 		console.log("= [SelectProduct] ", rowData.name);
 		Datastore.M.product = rowData;
 		this.props.navigator.push({
-		    leftButtonTitle: 'Back',
-		    onLeftButtonPress: () => this.props.navigator.pop(),
-		    title: 'Validate Product',
-            displayName: 'ValidateProduct',
-		    component: ValidateProduct
+			leftButtonTitle: 'Back',
+			onLeftButtonPress: () => this.props.navigator.pop(),
+			title: 'Validate Product',
+			displayName: 'ValidateProduct',
+			component: ValidateProduct
 
 		 });
 	},

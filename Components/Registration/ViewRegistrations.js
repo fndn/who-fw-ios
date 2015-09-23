@@ -9,6 +9,7 @@ var GlobalStyles    = require('../../Styles/GlobalStyles');
 var D 		        = require('fndn-rn-datastore');
 var SelectProduct 	= require('./SelectProduct');
 var Models          = require('../Models');
+var ObjectEquals 	= require('../../node_modules/fndn-rn-datastore/lib/object.compare.js');
 
 var {
 	StyleSheet,
@@ -50,9 +51,20 @@ var ViewRegistrations = React.createClass ({
 
 
 	componentDidMount: function() {
-		console.log("***** 1 ***** all registrations", D.data.all('registrations'));
-		//D.all('products', this.dataAvailable);
+		
+		console.log("***** 1 A ***** all registrations", D.data.all('registrations'));
+		console.log("***** 1 B *****  this location ", D.M.location );
+		/*
+		//console.log("***** 1 C *****  filter test ", D.data.where("registrations", {location: D.M.location}) );
 
+		D.data.all('registrations').filter( function(reg){
+			console.log('compare reg', reg.location, "cleaned:", D.data.removeIDs(reg.location), " to ", D.M.location);
+			console.log(' -> 1 result', (reg.location == D.M.location) );
+			console.log(' -> 2 result', (ObjectEquals( D.data.removeIDs(reg.location), D.M.location)) );
+		});
+
+		//D.all('products', this.dataAvailable);
+		*/
 		D.data.where("registrations", {locationID: D.M.location._id} , this.dataAvailable);
 	},
 
@@ -68,8 +80,7 @@ var ViewRegistrations = React.createClass ({
 		});
 	},
 
-	componentWillUnmount: function()
-	{
+	componentWillUnmount: function(){
 		navigatorEventListener.remove();
 	},
 
@@ -78,6 +89,10 @@ var ViewRegistrations = React.createClass ({
 		return (
 
 			<View style={GlobalStyles.scrollViewContainer}>
+
+				<View style={GlobalStyles.info_view_wrap}>
+					<Text style={GlobalStyles.info_view_text}>These Products have been Registered:{"\n"}(and can not be edited)</Text>
+				</View>
 
 				<ListView
 					style={GlobalStyles.list}

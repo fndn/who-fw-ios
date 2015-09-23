@@ -55,14 +55,18 @@ var CameraCapture = React.createClass({
 
 				captureTarget={Camera.constants.CaptureTarget.disk}
 
-				type={this.state.cameraType}
-				>
+				type={this.state.cameraType}>
 
-				<Text style={styles.buttonText}>{captureText}</Text>
+					<View style={styles.buttonwrap}>
+						<View style={styles.buttonwrap_center}>
+							<Text style={styles.buttonText}>{captureText}</Text>
+							
+							<TouchableHighlight style={styles.roundbutton} onPress={this._takePicture}>
+								<Text></Text>
+							</TouchableHighlight>
+						</View>
+					</View>
 
-				<TouchableHighlight style={styles.button} onPress={this._takePicture}>
-					<Text style={styles.buttonText}>Take Picture</Text>
-				</TouchableHighlight>
 			</Camera>
 		);
 	},
@@ -133,24 +137,34 @@ var CameraCapture = React.createClass({
 var styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		justifyContent: 'center',
+		justifyContent: 'flex-end',
 		alignItems: 'center',
 		backgroundColor: 'transparent',
-		padding: 20
 	},
-	welcome: {
-		fontSize: 20,
-		textAlign: 'center',
-		margin: 10,
+
+	buttonwrap: {
+		bottom:120,
 	},
-	instructions: {
-		textAlign: 'center',
-		color: '#333333',
+
+	roundbutton:{
+		backgroundColor: '#48BBEC',
+		height:60,
+		width:60,
+		borderRadius:30,
+		borderWidth: 2,
+		borderColor: '#fff',
+		padding:10,
+		marginTop:20,
+		alignSelf: 'center',
 	},
+
 	buttonText: {
 		fontSize: 18,
 		color: 'white',
-		alignSelf: 'center'
+		fontWeight: '500',
+		alignSelf: 'center',
+		backgroundColor: 'rgba(0,0,0,0.2',
+		padding:20
 	},
 	button: {
 		height: 36,

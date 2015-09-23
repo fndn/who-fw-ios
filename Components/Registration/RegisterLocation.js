@@ -32,7 +32,7 @@ var _tmp_state = {};
 var RegisterLocation = React.createClass({
 	
 	getInitialState: function() {
-        _tmp_state.scrollOffset = 0;
+		_tmp_state.scrollOffset = 0;
 
 		return {
 			value: null,
@@ -43,15 +43,16 @@ var RegisterLocation = React.createClass({
 
 		return (
 			<View style={GlobalStyles.scrollViewContainer}>
+
 				<ScrollView
-                    style={GlobalStyles.scrollViewList}
-                    automaticallyAdjustContentInsets={false}
-                    keyboardDismissMode={'on-drag'}
-                    keyboardShouldPersistTaps={false}
-                    scrollsToTop={true}
-                    contentOffset={{x:0, y:_tmp_state.scrollOffset + Math.random()}}
-                    onScroll={(event: Object) => {_tmp_state.scrollOffset = event.nativeEvent.contentOffset.y;}}
-                    scrollEventThrottle={5}>
+					style={GlobalStyles.scrollViewList}
+					automaticallyAdjustContentInsets={false}
+					keyboardDismissMode={'on-drag'}
+					keyboardShouldPersistTaps={false}
+					scrollsToTop={true}
+					contentOffset={{x:0, y:_tmp_state.scrollOffset + Math.random()}}
+					onScroll={(event: Object) => {_tmp_state.scrollOffset = event.nativeEvent.contentOffset.y;}}
+					scrollEventThrottle={5}>
 					<Form
 						ref="form"
 						type={Models.Location()}
@@ -99,22 +100,25 @@ var RegisterLocation = React.createClass({
 
 	onPress: function(){
 		var value = this.refs.form.getValue();
-        var firstError = (this.refs.form.validate().errors[0].path[0]);
 
-        this.refs.form.getComponent(firstError).refs.input.measure((ox,oy,width,height,px,py) =>
-        {
-            _tmp_state.scrollOffset += (py - 110.5);
-            this.setState({value: _tmp_state});
-        });
+		if( value == null ){
+			var firstError = (this.refs.form.validate().errors[0].path[0]);
+
+			this.refs.form.getComponent(firstError).refs.input.measure((ox,oy,width,height,px,py) => {
+				_tmp_state.scrollOffset += (py - 110.5); // navigator height + element height, ish
+				this.setState({value: _tmp_state});
+			});
+		}
+		
 		if (value) {
 			var newVal = Datastore.clone(value);
 			newVal.country = Datastore.M.country.name;
 			newVal.countryCode = Datastore.M.country.countryCode;
 
 
-            // storeBrands are stored as letters such as A = 1 C = 2 AA = 27 etc.
-            // Therefore we need to convert it back to a number to retrieve from Datastore
-            newVal.storeBrand = Models.letterToNumbers(newVal.storeBrand);
+			// storeBrands are stored as letters such as A = 1 C = 2 AA = 27 etc.
+			// Therefore we need to convert it back to a number to retrieve from Datastore
+			newVal.storeBrand = Models.letterToNumbers(newVal.storeBrand);
 
 			//newVal.storeBrand = Datastore.data.one('storeBrands', {_id:newVal.storeBrand}).name;
 

@@ -50,3 +50,12 @@ Add the following to ~/.bash_profile
 
 
 
+// images are named $id-$tag-$size, so we can 
+// upload with:
+upload({id:$id, files:[{name:$tag, path:$path},...]});
+// show with:
+<Image source={{ uri: Datastore.ws.img(this.state.uuid, 'front', 'iconsized') }} />
+// or
+http:/server/model/image/$id/$tag/$size
+// or better:
+http:/server/model/$id/image/$tag/$size)

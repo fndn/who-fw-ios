@@ -7,6 +7,13 @@ var GlobalStyles 		= require('../../Styles/GlobalStyles');
 var SelectLocation 		= require('./SelectLocation');
 var RegisterLocation    = require('./RegisterLocation');
 
+
+/*
+// for layout testing
+var CameraCapture 				= require('./CameraCapture');
+var CompleteRegistration 		= require('./CompleteRegistration');
+*/
+
 var {
 	StyleSheet,
 	View,
@@ -69,6 +76,11 @@ var SelectCountry = React.createClass ({
 	render: function(){
 		return (
 			<View style={[GlobalStyles.scrollViewContainer, GlobalStyles.theme.scrollViewContainer]}>
+				
+				<View style={GlobalStyles.info_view_wrap}>
+					<Text style={GlobalStyles.info_view_text}>Which Country are you in?</Text>
+				</View>
+
 				<ListView
 					style={GlobalStyles.list}
 					automaticallyAdjustContentInsets={false}
@@ -99,6 +111,41 @@ var SelectCountry = React.createClass ({
 
 		Datastore.M.country = rowData;
 
+		//// Testing camera
+		/*
+		this.props.navigator.push({
+			leftButtonTitle: 'Cancel',
+			onLeftButtonPress: () => this.props.navigator.pop(),
+			title: 'Capture Picture',
+			component: CameraCapture,
+			passProps: {
+				location: this.state.initialPosition,
+				camCallback: this.onReturnedFromCamera,
+				productPosition: 0
+			}
+
+		});
+		*/
+
+		//// Testing CompleteRegistration
+		/*
+		this.props.navigator.push({
+			leftButtonTitle: 'Cancel',
+			onLeftButtonPress: () => this.props.navigator.pop(),
+			title: 'Capture Picture',
+			component: CompleteRegistration,
+			passProps: {
+				location: this.state.initialPosition,
+				camCallback: this.onReturnedFromCamera,
+				productPosition: 0
+			}
+
+		});
+		*/
+
+
+
+
 		this.props.navigator.push({
 			leftButtonTitle: 'Back',
 			onLeftButtonPress: () => this.props.navigator.pop(),
@@ -118,8 +165,8 @@ var SelectCountry = React.createClass ({
 			//passProps: {countryId: rowData._id, countryName: rowData.name },
 
 		});
+
 	}
 });
 
 module.exports = SelectCountry;
-

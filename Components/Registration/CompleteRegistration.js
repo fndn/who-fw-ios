@@ -9,9 +9,6 @@ var React 			= require('react-native');
 var Datastore 		= require('fndn-rn-datastore');
 var GlobalStyles 	= require('../../Styles/GlobalStyles');
 
-
-
-
 var {
 	StyleSheet,
 	View,
@@ -31,7 +28,7 @@ var CompleteRegistration = React.createClass({
 
 	render: function(){
 		return (
-			<View style={[GlobalStyles.scrollViewContainer, GlobalStyles.scrollViewList]}>
+			<ScrollView style={[GlobalStyles.scrollViewContainer, GlobalStyles.scrollViewList]}>
 				<Text style={styles.text}>
 					{titleText}
 				</Text>
@@ -64,7 +61,7 @@ var CompleteRegistration = React.createClass({
 						> View Registrations
 					</Text>
 				</TouchableHighlight>
-			</View>
+			</ScrollView>
 		);
 	},
 

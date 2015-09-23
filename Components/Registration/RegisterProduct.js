@@ -103,7 +103,7 @@ var {
 	TouchableHighlight,
 	TouchableOpacity,
 	ActivityIndicatorIOS,
-    SegmentedControlIOS,
+	SegmentedControlIOS,
 	NavigatorIOS,
 	Image,
 	ScrollView
@@ -120,15 +120,15 @@ var RegisterProduct = React.createClass({
 		var hundredData = null;
 		var servingData = null;
 		var nutBoolData = {boolValue:false};
-        var nutServingBoolData = {boolValue:false};
+		var nutServingBoolData = {boolValue:false};
 		var visualData = null;
-        var healthClaimsBool = {boolValue: false};
-        var healthClaims = null;
-        var otherBool = {boolValue: false};
-        var otherClaim = null;
-        var saltSodium = null;
-        var servingSaltSodiumValue = null;
-        var hundredSaltSodiumValue = null;
+		var healthClaimsBool = {boolValue: false};
+		var healthClaims = null;
+		var otherBool = {boolValue: false};
+		var otherClaim = null;
+		var saltSodium = null;
+		var servingSaltSodiumValue = null;
+		var hundredSaltSodiumValue = null;
 
 		var images = {
 			front: null,
@@ -152,46 +152,46 @@ var RegisterProduct = React.createClass({
 			hundredData = data.nutritionalPr100g;
 			servingData = data.nutritionalPrServing;
 
-            if(hundredData) {
-                if (data.nutritionalPr100g.salt) {
-                    hundredSaltSodiumValue = {tValue: data.nutritionalPr100g.salt};
-                    saltSodium = "Salt";
-                }
-                else if (data.nutritionalPr100g.sodium) {
-                    hundredSaltSodiumValue = {tValue: data.nutritionalPr100g.sodium};
-                    saltSodium = "Sodium";
-                }
-            }
+			if(hundredData) {
+				if (data.nutritionalPr100g.salt) {
+					hundredSaltSodiumValue = {tValue: data.nutritionalPr100g.salt};
+					saltSodium = "Salt";
+				}
+				else if (data.nutritionalPr100g.sodium) {
+					hundredSaltSodiumValue = {tValue: data.nutritionalPr100g.sodium};
+					saltSodium = "Sodium";
+				}
+			}
 
-            if(servingData) {
-                if (data.nutritionalPrServing.salt) {
-                    servingSaltSodiumValue = {tValue: data.nutritionalPrServing.salt};
-                    saltSodium = "Salt";
-                }
-                else if (data.nutritionalPrServing.sodium) {
-                    servingSaltSodiumValue = {tValue: data.nutritionalPrServing.sodium};
-                    saltSodium = "Sodium";
-                }
-            }
+			if(servingData) {
+				if (data.nutritionalPrServing.salt) {
+					servingSaltSodiumValue = {tValue: data.nutritionalPrServing.salt};
+					saltSodium = "Salt";
+				}
+				else if (data.nutritionalPrServing.sodium) {
+					servingSaltSodiumValue = {tValue: data.nutritionalPrServing.sodium};
+					saltSodium = "Sodium";
+				}
+			}
 
-            if(servingData)
-                nutServingBoolData = {boolValue:true};
+			if(servingData)
+				nutServingBoolData = {boolValue:true};
 
-            if(hundredData)
-			    nutBoolData = {boolValue:true};
+			if(hundredData)
+				nutBoolData = {boolValue:true};
 
 			visualData = data.visualInformation;
-            if(data.healthClaims) {
-                healthClaimsBool = {boolValue: true};
-                healthClaims = data.healthClaims;
-            }
-            if(data.otherClaim) {
-                otherBool = {boolValue: true};
-                otherClaim = data.otherClaim;
-            }
+			if(data.healthClaims) {
+				healthClaimsBool = {boolValue: true};
+				healthClaims = data.healthClaims;
+			}
+			if(data.otherClaim) {
+				otherBool = {boolValue: true};
+				otherClaim = data.otherClaim;
+			}
 			//if(data.images) images = data.images;
-            //Datastore.M.product = null;
-            console.log(hundredData);
+			//Datastore.M.product = null;
+			console.log(hundredData);
 		}
 
 		_tmp_state.value = data;
@@ -200,25 +200,25 @@ var RegisterProduct = React.createClass({
 		_tmp_state.visualInfo = visualData;
 		_tmp_state.otherClaim = otherClaim;
 		_tmp_state.healthClaims = healthClaims;
-        _tmp_state.servingSaltSodiumValue = servingSaltSodiumValue;
-        _tmp_state.hundredSaltSodiumValue = hundredSaltSodiumValue;
-        _tmp_state.scrollOffset = 0;
+		_tmp_state.servingSaltSodiumValue = servingSaltSodiumValue;
+		_tmp_state.hundredSaltSodiumValue = hundredSaltSodiumValue;
+		_tmp_state.scrollOffset = 0;
 
 		return {
 			options: options,
 			value: data,
 			nutBool: nutBoolData,
-            nutServingBool: nutServingBoolData,
+			nutServingBool: nutServingBoolData,
 			nutHundredValue: hundredData,
 			nutServingValue: servingData,
-            saltSodium: saltSodium,
-            servingSaltSodiumValue: servingSaltSodiumValue,
-            hundredSaltSodiumValue: hundredSaltSodiumValue,
+			saltSodium: saltSodium,
+			servingSaltSodiumValue: servingSaltSodiumValue,
+			hundredSaltSodiumValue: hundredSaltSodiumValue,
 			visualInfo: visualData,
-            healthClaimsBool: healthClaimsBool,
-            healthClaims: healthClaims,
-            otherBool: otherBool,
-            otherClaim: otherClaim,
+			healthClaimsBool: healthClaimsBool,
+			healthClaims: healthClaims,
+			otherBool: otherBool,
+			otherClaim: otherClaim,
 			initialPosition: null,
 			images: images,
 			uuid: uuid,
@@ -233,134 +233,134 @@ var RegisterProduct = React.createClass({
 		);
 	},
 // <editor-fold desc=" Render methods">
-    renderTop: function(){
-        return(
-            <View>
-                <Form
-                    ref="form"
-                    type={Models.Product()}
-                    value={this.state.value}
-                    options={this.state.options}
-                    onChange={(value) =>{_tmp_state.value = value}}
-                />
+	renderTop: function(){
+		return(
+			<View>
+				<Form
+					ref="form"
+					type={Models.Product()}
+					value={this.state.value}
+					options={this.state.options}
+					onChange={(value) =>{_tmp_state.value = value}}
+				/>
 
-                <TouchableOpacity
-                    style={styles.addBrandButton}
-                    onPress = {this.onAddBrand}>
-                    <Text style={styles.buttonText}>Add</Text>
-                </TouchableOpacity>
-
-
-
-                <Form
-                    type={Models.SimpelBool()}
-                    options={nutBoolOptions}
-                    value={this.state.nutBool}
-                    onChange={(value) =>{this.storeTmpState();this.setState({nutBool: value})}}
-                    />
-            </View>
-        );
-    },
-
-    renderMid: function () {
-        return(
-            <Form
-                type={Models.SimpelBool()}
-                options={nutServingBoolOptions}
-                value={this.state.nutServingBool}
-                onChange={(value) =>{this.storeTmpState();this.setState({nutServingBool: value})}}
-                />
-        );
-    },
-
-    renderNutritionalPr100g: function()
-    {
-        if(!this.state.nutBool.boolValue)
-            return;
+				<TouchableOpacity
+					style={styles.addBrandButton}
+					onPress = {this.onAddBrand}>
+					<Text style={styles.buttonText}>Add</Text>
+				</TouchableOpacity>
 
 
 
-        var saltSodium = (this.state.saltSodium) ? (<Form
-            ref="hundredSalt"
-            type={ t.struct({ tValue: t.maybe(t.Num) }) }
-            value={this.state.hundredSaltSodiumValue}
-            options={{ fields:{tValue:{label:this.state.saltSodium + " (g)", keyboardType: 'numeric'}  }}}
-            onChange={(value) => { _tmp_state.hundredSaltSodiumValue = value }}
-            />) : null;
+				<Form
+					type={Models.SimpelBool()}
+					options={nutBoolOptions}
+					value={this.state.nutBool}
+					onChange={(value) =>{this.storeTmpState();this.setState({nutBool: value})}}
+					/>
+			</View>
+		);
+	},
 
-        return(
-            <View>
-                <Text style={GlobalStyles.title}>
-                    Pr 100g
-                </Text>
-                <Form
-                    ref="form2"
-                    type={Models.Nutrition()}
-                    value={this.state.nutHundredValue}
-                    onChange={(value) =>{_tmp_state.nutHundredValue = value}}
-                    options={this.state.options}
-                    />
+	renderMid: function () {
+		return(
+			<Form
+				type={Models.SimpelBool()}
+				options={nutServingBoolOptions}
+				value={this.state.nutServingBool}
+				onChange={(value) =>{this.storeTmpState();this.setState({nutServingBool: value})}}
+				/>
+		);
+	},
 
-                <SegmentedControlIOS
-                    ref="salt1"
-                    values={["Salt", "Sodium"]}
-                    selectedIndex={this.state.saltSodium === "Salt" ? 0 : this.state.saltSodium === "Sodium" ? 1 : null}
-                    style={{marginBottom:15}}
-                    onValueChange={(value)=>{
+	renderNutritionalPr100g: function()
+	{
+		if(!this.state.nutBool.boolValue)
+			return;
 
-                        this.storeTmpState();
-                        this.setState({saltSodium: value});
 
-                    }}
-                    />
 
-                {saltSodium}
-            </View>
-        )
-    },
+		var saltSodium = (this.state.saltSodium) ? (<Form
+			ref="hundredSalt"
+			type={ t.struct({ tValue: t.maybe(t.Num) }) }
+			value={this.state.hundredSaltSodiumValue}
+			options={{ fields:{tValue:{label:this.state.saltSodium + " (g)", keyboardType: 'numeric'}  }}}
+			onChange={(value) => { _tmp_state.hundredSaltSodiumValue = value }}
+			/>) : null;
 
-    renderNutritionalPrServing: function()
-    {
-        if(!this.state.nutServingBool.boolValue)
-            return;
+		return(
+			<View>
+				<Text style={GlobalStyles.title}>
+					Pr 100g
+				</Text>
+				<Form
+					ref="form2"
+					type={Models.Nutrition()}
+					value={this.state.nutHundredValue}
+					onChange={(value) =>{_tmp_state.nutHundredValue = value}}
+					options={this.state.options}
+					/>
 
-        var saltSodium = (this.state.saltSodium) ? (<Form
-            ref="servingSalt"
-            type={ t.struct({ tValue: t.maybe(t.Num) }) }
-            value={ this.state.servingSaltSodiumValue }
-            options={{ fields:{tValue:{label:this.state.saltSodium + " (g)", keyboardType: 'numeric'}  }}}
-            onChange={(value) => { _tmp_state.servingSaltSodiumValue = value }}
-            />) : null;
+				<SegmentedControlIOS
+					ref="salt1"
+					values={["Salt", "Sodium"]}
+					selectedIndex={this.state.saltSodium === "Salt" ? 0 : this.state.saltSodium === "Sodium" ? 1 : null}
+					style={{marginBottom:15}}
+					onValueChange={(value)=>{
 
-        return(
-            <View>
-                <Text style={GlobalStyles.title}>
-                    Per serving
-                </Text>
-                <Form
-                    ref="form3"
-                    type={Models.NutritionServing()}
-                    value={this.state.nutServingValue}
-                    options={this.state.options}
-                    onChange={(value) =>{_tmp_state.nutServingValue = value}}
-                    />
-                <SegmentedControlIOS
-                    ref="salt2"
-                    values={["Salt", "Sodium"]}
-                    selectedIndex={this.state.saltSodium === "Salt" ? 0 : this.state.saltSodium === "Sodium" ? 1 : null}
-                    style={{marginBottom:15}}
-                    onValueChange={(value)=>{
+						this.storeTmpState();
+						this.setState({saltSodium: value});
 
-                        this.storeTmpState();
-                        this.setState({saltSodium: value});
+					}}
+					/>
 
-                    }}
-                    />
+				{saltSodium}
+			</View>
+		)
+	},
 
-                {saltSodium}
-            </View>
-        )
-    },
+	renderNutritionalPrServing: function()
+	{
+		if(!this.state.nutServingBool.boolValue)
+			return;
+
+		var saltSodium = (this.state.saltSodium) ? (<Form
+			ref="servingSalt"
+			type={ t.struct({ tValue: t.maybe(t.Num) }) }
+			value={ this.state.servingSaltSodiumValue }
+			options={{ fields:{tValue:{label:this.state.saltSodium + " (g)", keyboardType: 'numeric'}  }}}
+			onChange={(value) => { _tmp_state.servingSaltSodiumValue = value }}
+			/>) : null;
+
+		return(
+			<View>
+				<Text style={GlobalStyles.title}>
+					Per serving
+				</Text>
+				<Form
+					ref="form3"
+					type={Models.NutritionServing()}
+					value={this.state.nutServingValue}
+					options={this.state.options}
+					onChange={(value) =>{_tmp_state.nutServingValue = value}}
+					/>
+				<SegmentedControlIOS
+					ref="salt2"
+					values={["Salt", "Sodium"]}
+					selectedIndex={this.state.saltSodium === "Salt" ? 0 : this.state.saltSodium === "Sodium" ? 1 : null}
+					style={{marginBottom:15}}
+					onValueChange={(value)=>{
+
+						this.storeTmpState();
+						this.setState({saltSodium: value});
+
+					}}
+					/>
+
+				{saltSodium}
+			</View>
+		)
+	},
 
 	renderHealthClaims: function()
 	{
@@ -418,24 +418,24 @@ var RegisterProduct = React.createClass({
 	},
 
 
-    renderBottom: function()
-    {
-        return(
-            <View>
-                <Text style={GlobalStyles.title}>
-                    Visual information
-                </Text>
-                <Form
-                    ref="form4"
-                    type={Models.VisualInformation()}
-                    options={options}
-                    value={this.state.visualInfo}
-                    onChange={(value) =>{_tmp_state.visualInfo = value}}
-                    />
+	renderBottom: function()
+	{
+		return(
+			<View>
+				<Text style={GlobalStyles.title}>
+					Visual information
+				</Text>
+				<Form
+					ref="form4"
+					type={Models.VisualInformation()}
+					options={options}
+					value={this.state.visualInfo}
+					onChange={(value) =>{_tmp_state.visualInfo = value}}
+					/>
 
-            </View>
-        )
-    },
+			</View>
+		)
+	},
 
 	renderImages: function() {
 	  return(
@@ -474,29 +474,29 @@ var RegisterProduct = React.createClass({
 
 
 	render: function(){
-        console.log("Rendeer with offset " , _tmp_state.scrollOffset);
+		console.log("Rendeer with offset " , _tmp_state.scrollOffset);
 		return (
-            <View style={GlobalStyles.scrollViewContainer}>
-                <ScrollView
-                    style={GlobalStyles.scrollViewList}
-                    automaticallyAdjustContentInsets={false}
-                    keyboardDismissMode={'on-drag'}
-                    keyboardShouldPersistTaps={false}
-                    scrollsToTop={true}
-                    contentOffset={{x:0, y:_tmp_state.scrollOffset + Math.random()}}
-                    onScroll={(event: Object) => {_tmp_state.scrollOffset = event.nativeEvent.contentOffset.y;}}
-                    scrollEventThrottle={5}>
+			<View style={GlobalStyles.scrollViewContainer}>
+				<ScrollView
+					style={GlobalStyles.scrollViewList}
+					automaticallyAdjustContentInsets={false}
+					keyboardDismissMode={'on-drag'}
+					keyboardShouldPersistTaps={false}
+					scrollsToTop={true}
+					contentOffset={{x:0, y:_tmp_state.scrollOffset + Math.random()}}
+					onScroll={(event: Object) => {_tmp_state.scrollOffset = event.nativeEvent.contentOffset.y;}}
+					scrollEventThrottle={5}>
 
-                    {this.renderTop()}
-                    {this.renderNutritionalPr100g()}
-                    {this.renderMid()}
-                    {this.renderNutritionalPrServing()}
+					{this.renderTop()}
+					{this.renderNutritionalPr100g()}
+					{this.renderMid()}
+					{this.renderNutritionalPrServing()}
 
-                    {this.renderBottom()}
-                    {this.renderHealthClaims()}
-                    {this.renderImages()}
-                </ScrollView>
-            </View>
+					{this.renderBottom()}
+					{this.renderHealthClaims()}
+					{this.renderImages()}
+				</ScrollView>
+			</View>
 		);
 
 	},
@@ -524,15 +524,21 @@ var RegisterProduct = React.createClass({
 
 		var pics = Datastore.clone(_pics);
 		var uuid = this.state.uuid;
+
+		/// store images in two props:
+		// $images for state and display
+		// $imgstore for upload
 		var images = [];
+		var imgstore = [];
 		Object.keys( pics ).forEach( function(el){
-			images.push({name: el, path: pics[el]});
+			imgstore.push({name: el, path: pics[el]});
 			// e.g.: {name:front, path:/a/b.jpg}
+			images[el] = pics[el];
 		});
 		
 		console.log("= [RegisterProduct] onReturnedFromCamera ", 'uuid', this.state.uuid, "images:", images);
 
-		this.setState({images: images});
+		this.setState({images: images, imgstore:imgstore});
 	},
 
 	onAddBrand: function () {
@@ -547,20 +553,20 @@ var RegisterProduct = React.createClass({
 		});
 	},
 
-    storeTmpState: function () {
-        //console.log("## Storing TPM state", _tmp_state);
+	storeTmpState: function () {
+		//console.log("## Storing TPM state", _tmp_state);
 
-        this.setState({
-            value: _tmp_state.value,
-            nutHundredValue: _tmp_state.nutHundredValue,
-            nutServingValue: _tmp_state.nutServingValue,
-            visualInfo: _tmp_state.visualInfo,
-            healthClaims: _tmp_state.healthClaims,
-            otherClaim: _tmp_state.otherClaim,
-            hundredSaltSodiumValue: _tmp_state.hundredSaltSodiumValue,
-            servingSaltSodiumValue: _tmp_state.servingSaltSodiumValue
-        });
-    },
+		this.setState({
+			value: _tmp_state.value,
+			nutHundredValue: _tmp_state.nutHundredValue,
+			nutServingValue: _tmp_state.nutServingValue,
+			visualInfo: _tmp_state.visualInfo,
+			healthClaims: _tmp_state.healthClaims,
+			otherClaim: _tmp_state.otherClaim,
+			hundredSaltSodiumValue: _tmp_state.hundredSaltSodiumValue,
+			servingSaltSodiumValue: _tmp_state.servingSaltSodiumValue
+		});
+	},
 
 	getProduct: function() {
 
@@ -574,49 +580,49 @@ var RegisterProduct = React.createClass({
 			newVal.nutritionalPr100g = null;
 			newVal.nutritionalPrServing = null;
 
-            //console.log("# Checkpoint 1", this.refs.form2);
-            if(this.refs.form2) {
-                if (this.refs.form2.getValue()) {
-                    newVal.nutritionalPr100g = Datastore.clone(this.refs.form2.getValue());
-                    //console.log("# Checkpoint 2");
-                    if (this.refs.hundredSalt && this.refs.hundredSalt.getValue()) {
-                        //console.log("# Checkpoint 3");
-                        if (this.state.saltSodium == "Salt")
-                            newVal.nutritionalPr100g.salt = Datastore.clone(this.refs.hundredSalt.getValue()).tValue;
-                        else
-                            newVal.nutritionalPr100g.sodium = Datastore.clone(this.refs.hundredSalt.getValue()).tValue;
-                    }
-                    else {this.jumpToError(this.refs.hundredSalt); return null;}
+			//console.log("# Checkpoint 1", this.refs.form2);
+			if(this.refs.form2) {
+				if (this.refs.form2.getValue()) {
+					newVal.nutritionalPr100g = Datastore.clone(this.refs.form2.getValue());
+					//console.log("# Checkpoint 2");
+					if (this.refs.hundredSalt && this.refs.hundredSalt.getValue()) {
+						//console.log("# Checkpoint 3");
+						if (this.state.saltSodium == "Salt")
+							newVal.nutritionalPr100g.salt = Datastore.clone(this.refs.hundredSalt.getValue()).tValue;
+						else
+							newVal.nutritionalPr100g.sodium = Datastore.clone(this.refs.hundredSalt.getValue()).tValue;
+					}
+					else {this.jumpToError(this.refs.hundredSalt); return null;}
 
-                }
-                else {this.jumpToError(this.refs.form2); return null;}
-            }
-            //console.log("# Checkpoint 4");
-            if(this.refs.form3) {
-                if (this.refs.form3.getValue()) {
-                    newVal.nutritionalPrServing = Datastore.clone(this.refs.form3.getValue());
-                    //console.log("# Checkpoint 5");
-                    if (this.refs.servingSalt && this.refs.servingSalt.getValue()) {
-                        //console.log("# Checkpoint 6");
-                        if (this.state.saltSodium == "Salt")
-                            newVal.nutritionalPrServing.salt = Datastore.clone(this.refs.servingSalt.getValue()).tValue;
-                        else
-                            newVal.nutritionalPrServing.sodium = Datastore.clone(this.refs.servingSalt.getValue()).tValue;
-                    }
-                    else {this.jumpToError(this.refs.servingSalt); return null;}
-                }
-                else {this.jumpToError(this.refs.form3); return null;}
-            }
+				}
+				else {this.jumpToError(this.refs.form2); return null;}
+			}
+			//console.log("# Checkpoint 4");
+			if(this.refs.form3) {
+				if (this.refs.form3.getValue()) {
+					newVal.nutritionalPrServing = Datastore.clone(this.refs.form3.getValue());
+					//console.log("# Checkpoint 5");
+					if (this.refs.servingSalt && this.refs.servingSalt.getValue()) {
+						//console.log("# Checkpoint 6");
+						if (this.state.saltSodium == "Salt")
+							newVal.nutritionalPrServing.salt = Datastore.clone(this.refs.servingSalt.getValue()).tValue;
+						else
+							newVal.nutritionalPrServing.sodium = Datastore.clone(this.refs.servingSalt.getValue()).tValue;
+					}
+					else {this.jumpToError(this.refs.servingSalt); return null;}
+				}
+				else {this.jumpToError(this.refs.form3); return null;}
+			}
 
 
-            //console.log("# Checkpoint 7");
+			//console.log("# Checkpoint 7");
 
 
 			if(this.refs.healthClaimsForm){
 				newVal.healthClaims = Datastore.clone(this.refs.healthClaimsForm.getValue());
 			}
 
-            //console.log("# Checkpoint 8");
+			//console.log("# Checkpoint 8");
 
 			newVal.visualInformation = Datastore.clone(this.refs.form4.getValue());
 			//newVal.brand = Datastore.M.brand.name;
@@ -632,24 +638,24 @@ var RegisterProduct = React.createClass({
 			return newVal;
 		}
 		else
-        {
-            this.jumpToError(this.refs.form);
-            return null;
-        }
+		{
+			this.jumpToError(this.refs.form);
+			return null;
+		}
 	},
 
-    jumpToError(ref)
-    {
-        var firstError = ref.validate().errors[0].path[0];
+	jumpToError(ref)
+	{
+		var firstError = ref.validate().errors[0].path[0];
 
-        ref.getComponent(firstError).refs.input.measure((ox,oy,width,height,px,py) =>
-        {
-            _tmp_state.scrollOffset += (py - 110.5);
-            //console.log("GO TO: " , _tmp_state.scrollOffset);
-            if(_tmp_state.scrollOffset < 0) _tmp_state.scrollOffset = 0;
-            this.storeTmpState();
-        });
-    },
+		ref.getComponent(firstError).refs.input.measure((ox,oy,width,height,px,py) =>
+		{
+			_tmp_state.scrollOffset += (py - 110.5);
+			//console.log("GO TO: " , _tmp_state.scrollOffset);
+			if(_tmp_state.scrollOffset < 0) _tmp_state.scrollOffset = 0;
+			this.storeTmpState();
+		});
+	},
 
 	onPress: function(){
 		var newVal = this.getProduct();
@@ -659,7 +665,7 @@ var RegisterProduct = React.createClass({
 
 			console.log('-------------------------------');
 			console.log("[RegisterProduct] Saving newVal:", newVal);
-            //return;
+			//return;
 			var entry = Datastore.data.add('products', newVal);
 			
 			if(this.props.getProductData){
