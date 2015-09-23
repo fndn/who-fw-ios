@@ -42,11 +42,17 @@ var ViewRegistrations = React.createClass ({
 		navigatorEventListener = this.props.navigator.navigationContext.addListener('willfocus', (event) => {
 			console.log("[ViewRegistrations]", event.data.route.displayName);
 			if(event.data.route.displayName === "ViewRegistrations"){
-				D.data.where("registrations", {locationID: D.M.location._id} , this.dataAvailable);
+				//D.data.where("registrations", {locationID: D.M.location._id} , this.dataAvailable);
+				D.data.where('registrations', {locationID:D.M.location.hash}, this.dataAvailable);
 				console.log("***** 2 ***** all registrations", D.data.all('registrations'));
 			}
 		});
-        D.data.where("registrations", {locationID: D.M.location._id} , this.dataAvailable);
+		
+		//console.log("***** H1 ***** all registrations", D.data.all('registrations'));
+		console.log("***** H2 ***** all registrations", D.data.where('registrations', {locationID:D.M.location.hash}, this.dataAvailable));
+
+		//D.data.where("registrations", {locationID: D.M.location._id} , this.dataAvailable);
+		D.data.where('registrations', {locationID:D.M.location.hash}, this.dataAvailable);
 
 	},
 
