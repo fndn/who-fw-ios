@@ -163,7 +163,7 @@ var Sync = React.createClass({
 		var logview = this.state.show_log 
 				? ( <View>
 						<Text style={styles.infotext_title}>
-							PROGRESS
+							SYNCHRONISING RECORDS
 						</Text>
 
 						<View style={styles.progressbar}><ProgressBar
@@ -272,16 +272,17 @@ var Sync = React.createClass({
 	onPressCancelSync: function(){
 		console.log('onPressCancelSync');
 		Datastore.sync.abort();
+		this.setState({working:false, show_log:false, show_dl:false, show_ul:false, progress_dl:0});
 	},
 
 	onPressSync: function(){
 		console.log('RunSyncChain - begin');
 		
-		Datastore.sync.chained(this, function(){
-			console.log('onPressSyncDev > RunSyncChain done!');
+		Datastore.sync.chained(this, (err, res) => {
+			console.log('[Sync] Datastore.sync.chaine completed:', err, res);
+			this.setState({working:false, show_log:true, show_dl:false, show_ul:false, progress_dl:0});
+			//this.setState({working:false, show_log:false, show_dl:false, show_ul:false, progress_dl:0});
 		});
-		
-		//Datastore.sync.abort();
 	}
 	
 });

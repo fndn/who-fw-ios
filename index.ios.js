@@ -32,9 +32,9 @@ Datastore.opts({
 	net: {
 		remotehost: 'http://127.0.0.1:8090',
 		remotehost: 'http://172.20.10.13:8090',		// kanda ipad
-		remotehost: 'http://10.0.1.2:8090',			// base.io
+		//remotehost: 'http://10.0.1.2:8090',			// base.io
 		//remotehost: 'http://whofw.fndn.dk:8080',	
-		//remotehost: 'https://whofw.fndn.dk',
+		remotehost: 'https://whofw.fndn.dk',
 		auth_token: 'fr9a7as792jjd0293hddxonxo0x1309210cpdshcpihvq0823t373e4463'
 	}
 });
