@@ -25,7 +25,7 @@ var {
 
 var navigatorEventListener;
 var productNames = {};
-var locationRegistrations;
+var locationRegistrations = [];
 
 var ViewRegistrations = React.createClass ({
 
@@ -37,7 +37,9 @@ var ViewRegistrations = React.createClass ({
 			message: 'init',
 			dataSource: dataSource
 		};
-
+        // Reset current registrations
+        locationRegistrations = [];
+        D.M.locationRegistrations = null;
 
 		navigatorEventListener = this.props.navigator.navigationContext.addListener('willfocus', (event) => {
 			console.log("[ViewRegistrations]", event.data.route.displayName);
@@ -49,7 +51,7 @@ var ViewRegistrations = React.createClass ({
 		});
 		
 		//console.log("***** H1 ***** all registrations", D.data.all('registrations'));
-		console.log("***** H2 ***** all registrations", D.data.where('registrations', {locationID:D.M.location.hash}, this.dataAvailable));
+		//console.log("***** H2 ***** all registrations", D.data.where('registrations', {locationID:D.M.location.hash}, this.dataAvailable));
 
 		//D.data.where("registrations", {locationID: D.M.location._id} , this.dataAvailable);
 		D.data.where('registrations', {locationID:D.M.location.hash}, this.dataAvailable);
@@ -90,6 +92,7 @@ var ViewRegistrations = React.createClass ({
 
 
 	// dev:
+
 	_renderRowWithImage: function(rowData, sectionID, rowID) {
 		var productInfo = rowData.product;
 
@@ -115,6 +118,8 @@ var ViewRegistrations = React.createClass ({
 		}
 		*/
 
+        locationRegistrations.push(productInfo.hash);
+        D.M.locationRegistrations = locationRegistrations;
 		return (
 			<TouchableHighlight underlayColor='#EEE' onPress={() => this.rowPressed(rowData)}>
 				<View>
@@ -165,20 +170,6 @@ var ViewRegistrations = React.createClass ({
 			component: ValidateProduct
 
 		});*/
-	},
-
-	// Maybe use this to make diff?? it returns the values that are different on a compared to b
-	diff: function(a,b) {
-		var r = {};
-		_.each(a, function(v,k) {
-			if(b[k] === v) return;
-			// but what if it returns an empty object? still attach?
-			r[k] = _.isObject(v)
-				? _.diff(v, b[k])
-				: v
-			;
-		});
-		return r;
 	}
 
 });

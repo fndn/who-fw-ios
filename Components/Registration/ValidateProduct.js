@@ -472,7 +472,7 @@ var ValidateProduct = React.createClass({
 				console.log("-------------------------------");
 				console.log("# Saving Registration:", newVal);
 
-				Datastore.data.add("registrations", newVal);
+				Datastore.data.addu("registrations", newVal);
 
 
 				/*var locationRegistration = {};
