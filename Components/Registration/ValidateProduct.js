@@ -344,6 +344,9 @@ var ValidateProduct = React.createClass({
 
 	render: function(){
 
+		//console.log('value', this.state.value);
+
+
 		return (
 
 			<View style={GlobalStyles.scrollViewContainer}>
@@ -376,21 +379,26 @@ var ValidateProduct = React.createClass({
 				</Text>
 
 				<View style={GlobalStyles.imageGrid}>
-					<Image style={GlobalStyles.image} source={{ uri: this.state.value.images.front }} />
+					{/* <Image style={GlobalStyles.image} source={{ uri: this.state.value.images.front }} /> */}
+					<Image style={GlobalStyles.image} source={{ uri: Datastore.ws.img("products", this.state.value.uuid, 'front', '300x300') }} />
 					<Text style={GlobalStyles.imageText}>Front</Text>
 				</View>
 				<View style={GlobalStyles.imageGrid}>
-					<Image style={GlobalStyles.image} source={{ uri: this.state.value.images.back }} />
+					{/* <Image style={GlobalStyles.image} source={{ uri: this.state.value.images.back }} /> */}
+					<Image style={GlobalStyles.image} source={{ uri: Datastore.ws.img("products", this.state.value.uuid, 'back', '300x300') }} />
 					<Text style={GlobalStyles.imageText}>Back</Text>
 				</View>
 				<View style={GlobalStyles.imageGrid}>
-					<Image style={GlobalStyles.image} source={{ uri: this.state.value.images.left }} />
+					{/* <Image style={GlobalStyles.image} source={{ uri: this.state.value.images.left }} /> */}
+					<Image style={GlobalStyles.image} source={{ uri: Datastore.ws.img("products", this.state.value.uuid, 'left', '300x300') }} />
 					<Text style={GlobalStyles.imageText}>Left</Text>
 				</View>
 				<View style={GlobalStyles.imageGrid}>
-					<Image style={GlobalStyles.image} source={{ uri: this.state.value.images.right }} />
+					{/* <Image style={GlobalStyles.image} source={{ uri: this.state.value.images.right }} /> */}
+					<Image style={GlobalStyles.image} source={{ uri: Datastore.ws.img("products", this.state.value.uuid, 'right', '300x300') }} />
 					<Text style={GlobalStyles.imageText}>Right</Text>
 				</View>
+				
 				<View>
 					<Text style={styles.text}>
 						Click CONFIRM to confirm that this product matches the one in the store to every detail.
@@ -458,7 +466,7 @@ var ValidateProduct = React.createClass({
 
 				// Strip local _id fields
 				newVal = Datastore.data.removeIDs( newVal );
-                // Registrations is sortable by location hash
+				// Registrations is sortable by location hash
 				newVal.locationID = Datastore.M.location.hash;
 			   
 				console.log("-------------------------------");

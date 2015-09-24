@@ -93,12 +93,33 @@ var ViewRegistrations = React.createClass ({
 	_renderRowWithImage: function(rowData, sectionID, rowID) {
 		var productInfo = rowData.product;
 
+		
+		/*
+		/// resolve image
+		console.log('_renderRowWithImage', rowData);
+		var image = (<Image style={GlobalStyles.rowImage} source={{ uri: D.ws.img("products", productInfo.uuid, 'front', '300x300') }} />);
+		if( ! rowData.hasImages ){
+			/// see if we registered this record locally
+			var d = D.data.one("registrations", {hash:rowData.hash})
+			//console.log(' > ONE', d );
+
+			var PP = D.data.one("products", {uuid:productInfo.uuid})
+			console.log(' > ONE PP', PP );
+
+
+			if( d.product.imgstore ){
+				console.log('**** this record can use Registration images');
+				var filename = d.product.imgstore[0].path.split("Documents/").slice(-1);
+				image = (<Image style={GlobalStyles.rowImage} source={{ uri: D.ws.raw(filename) }} />);
+			}
+		}
+		*/
+
 		return (
 			<TouchableHighlight underlayColor='#EEE' onPress={() => this.rowPressed(rowData)}>
 				<View>
 					<View style={GlobalStyles.listrowContainer01}>
 						<View style={GlobalStyles.listrowContainer02}>
-							{/* <Image style={GlobalStyles.rowImage} source={{ uri: 'http://facebook.github.io/react/img/logo_og.png'}} /> */}
 							<Image style={GlobalStyles.rowImage} source={{ uri: D.ws.img("products", productInfo.uuid, 'front', '300x300') }} />
 							<View>
 								<Text style={GlobalStyles.listrowTitle}>{productInfo.name}</Text>

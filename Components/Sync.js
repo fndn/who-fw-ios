@@ -23,8 +23,8 @@ var Sync = React.createClass({
 	is_setup: false,
 
 	_setup: function(){
-		console.log('@ Sync _setup');
-		var self = this;
+		//console.log('@ Sync _setup');
+		//var self = this;
 
 		/// untested: 
 		//if( !Datastore.ready ){
@@ -32,6 +32,7 @@ var Sync = React.createClass({
 		//}else{
 		//Datastore.data.init(function(){
 			
+			/*
 			console.log('@ Sync Datastore.init.cb > ready');
 
 			Datastore.reach.subscribe( function(state, ms){
@@ -45,13 +46,15 @@ var Sync = React.createClass({
 				console.log('[Sync] Datastore synclog OnChange()', data );
 				self.setState({since_lastsync_str: data.date});
 			});
-			var lastSync = Datastore.data.last("synclog");
-			console.log('lastSync:', lastSync);
-			if( lastSync != undefined ){
-				self.setState({since_lastsync_str:""+ lastSync.date});
-			}
-
-			self.setState({is_setup:true});
+			*/
+			/*	
+				var lastSync = Datastore.data.last("synclog");
+				//console.log('lastSync:', lastSync);
+				if( lastSync != undefined ){
+					self.setState({since_lastsync_str:""+ lastSync.date});
+				}
+				self.setState({is_setup:true});
+			*/	
 		//});
 		//}
 
@@ -61,9 +64,25 @@ var Sync = React.createClass({
 	
 	getInitialState: function() {
 
+		var self = this;
+
+		Datastore.reach.subscribe( function(state, ms){
+			self.setState({
+				remote_reachable:    state,
+				remote_responseTime: ms
+			});
+		});
+
+		Datastore.data.subscribe( "synclog", function(data){
+			console.log('[Sync] Datastore synclog OnChange()', data );
+			self.setState({since_lastsync_str: data.date});
+		});
+
 		var _tables = Datastore.opts().data.tables.filter( function(el){ return Datastore.opts().data.uploadOnly.indexOf(el) == -1 });//.join(", ");
 		var _last_table = _tables.pop();
 		var tables_str = _tables.join(", ") + " and "+ _last_table;
+
+		var lastSync = Datastore.data.last("synclog") ? Datastore.data.last("synclog").date : "n/a";
 
 		return {
 			is_setup: false,
@@ -78,7 +97,7 @@ var Sync = React.createClass({
 			remote_reachable: true,
 			remote_responseTime: '-',
 			tables_str: tables_str,
-			since_lastsync_str: '-'
+			since_lastsync_str: lastSync
 		};
 	},
 	
@@ -109,9 +128,11 @@ var Sync = React.createClass({
 
 	render: function(){
 
+		/*
 		if( !this.state.is_setup ){
 			this._setup();
 		}
+		*/
 
 		if( !this.state.remote_reachable ){
 			return this._render_noreach();
