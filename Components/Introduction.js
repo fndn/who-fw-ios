@@ -52,7 +52,9 @@ var Introduction = React.createClass ({
 	render: function(){
 		return (
 			<View style={styles.unbg}>
-			<ScrollView>
+			<ScrollView
+				keyboardDismissMode={'on-drag'}
+				>
 				<View style={styles.imagewrap}>
 					<Image
 						style={styles.logo}
@@ -67,7 +69,13 @@ var Introduction = React.createClass ({
 						value={this.state.value}
 						onChange={this.onChange}
 						/>
+
+					<View style={styles.welcome_wrap}>
+						<Text style={styles.welcome_text}>(show project title here?)</Text>
+					</View>
 				</View>
+
+				
 			</ScrollView>
 			</View>
 		);
@@ -100,26 +108,34 @@ var styles = StyleSheet.create({
 	unbg:{
 		flex: 1,
 		backgroundColor: '#4B92DB',
-
 	},
 
-	login: {
-		padding: 20,
-		paddingBottom: 300,
-	},
 	imagewrap: {
+		top: 5,
 		alignItems: 'center',
 		justifyContent: 'center',
 		flex: 1,
-		height: 300,
+		height: 160,
 	},
 	logo: {
 		width: 250,
 	},
 
-	textbox:{
-		color: '#f00',
-	}
+	login: {
+		padding: 20,
+		paddingBottom: 300,
+		paddingTop: 10,
+	},
 
+	welcome_wrap: {
+		alignItems: 'center',
+		justifyContent: 'center',
+		flex: 1,
+		paddingTop: 30,
+	},
+	welcome_text: {
+		color: '#fff',
+		fontSize: 16,
+	}
 
 });
