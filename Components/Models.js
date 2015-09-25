@@ -154,8 +154,8 @@ module.exports.Product = function(){
 	}
 
 	return t.struct({
+        brand: t.enums(brands),
 		name: t.Str,
-		brand: t.enums(brands),
 		foodType: foodTypes,
 		ageGroup: ageGroups
 	});

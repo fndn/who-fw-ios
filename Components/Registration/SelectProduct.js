@@ -121,7 +121,7 @@ var SelectProduct = React.createClass ({
         else
         {
             return(
-                <View style={{opacity: 0.3}}>
+                <View style={{opacity: 0.5}}>
                     <View style={GlobalStyles.listrowContainer01}>
                         <View style={GlobalStyles.listrowContainer02}>
 

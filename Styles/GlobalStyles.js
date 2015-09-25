@@ -328,15 +328,19 @@ var formStyleSheet = {
 		normal: {
 			marginBottom: 4,
 			backgroundColor: '#F8F8F8',
-			paddingLeft: 20,
-			paddingRight: 20,
+            marginLeft: 20,
+            marginRight: 20,
+			paddingLeft: 0,
+			paddingRight: 0
 		},
 		// the style applied when a validation error occours
 		error: {
 			marginBottom: 4,
 			backgroundColor: '#F8F8F8',
-			paddingLeft: 20,
-			paddingRight: 20,
+			paddingLeft: 0,
+			paddingRight: 0,
+            marginLeft: 20,
+            marginRight: 20
 		}
 	},
 	datepicker: {

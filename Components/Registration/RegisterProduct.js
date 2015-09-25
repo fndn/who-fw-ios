@@ -112,6 +112,7 @@ var {
 
 
 var _tmp_state = {};
+var this_exists = false;
 
 var RegisterProduct = React.createClass({
 
@@ -234,12 +235,21 @@ var RegisterProduct = React.createClass({
 	},
 
 	componentDidMount: function() {
+        this_exists = true;
 		navigator.geolocation.getCurrentPosition(
-			(initialPosition) => this.setState({initialPosition}),
+			(initialPosition) => {if(this_exists) this.setState({initialPosition});},
 			(error) => alert(error.message),
 			{enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
 		);
 	},
+
+    componentWillUnmount: function()
+    {
+        // This is to prevent warning when geolocation returns, if component has unmounted
+        this_exists = false;
+    },
+
+
 // <editor-fold desc=" Render methods">
 	renderTop: function(){
 		return(
@@ -720,7 +730,7 @@ var RegisterProduct = React.createClass({
 var styles = StyleSheet.create({
 	addBrandButton:{
 		position: 'absolute',
-		top: 78.5,
+		top: 0,
 		right: 0
 
 	},

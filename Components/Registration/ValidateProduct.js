@@ -137,6 +137,7 @@ var {
 	} = React;
 
 var navigatorEventListener;
+var this_exists = false;
 
 var ValidateProduct = React.createClass({
 
@@ -202,18 +203,26 @@ var ValidateProduct = React.createClass({
 	},
 
 	componentDidMount: function() {
+        this_exists = true;
 		navigator.geolocation.getCurrentPosition(
-			(initialPosition) => this.setState({initialPosition}),
+			(initialPosition) => {if(this_exists) this.setState({initialPosition});},
 			(error) => { this._noGPS(error)},
 			{enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
 		);
 	},
 
-	_noGPS: function(err){
-		alert(err.message);
-		//this.setState({'initialPosition':{'coords':{}} });
-		this.setState({'initialPosition':{} });
+    componentWillUnmount: function()
+    {
+        // This is to prevent warning when geolocation returns, if component has unmounted
+        this_exists = false;
+    },
 
+	_noGPS: function(err){
+        if(this) {
+            alert(err.message);
+            //this.setState({'initialPosition':{'coords':{}} });
+            this.setState({'initialPosition': {}});
+        }
 	},
 
 	renderNutritionalPr100g: function()
@@ -403,14 +412,14 @@ var ValidateProduct = React.createClass({
 					<Text style={styles.text}>
 						Click CONFIRM to confirm that this product matches the one in the store to every detail.
 					</Text>
-					<TouchableHighlight style={styles.buttonConfirm} onPress = {this.onPress} underlayColor='#FF92A6'>
+					<TouchableHighlight style={styles.buttonConfirm} onPress = {this.onPress} underlayColor='#A0F584'>
 						<Text style={GlobalStyles.buttonText}>CONFIRM</Text>
 					</TouchableHighlight>
 					<Text style={styles.text}>
 						Click CLONE AND EDIT if there is any difference between the product in the store and this.
 						On the next page you will be able to edit the information.
 					</Text>
-					<TouchableHighlight style={[styles.buttonConfirm, styles.buttonClone]} onPress = {this.onEdit} underlayColor='#FF92A6'>
+					<TouchableHighlight style={[styles.buttonConfirm, styles.buttonClone]} onPress = {this.onEdit} underlayColor='#FFD599'>
 						<Text style={GlobalStyles.buttonText}>CLONE AND EDIT</Text>
 					</TouchableHighlight>
 				</View>
