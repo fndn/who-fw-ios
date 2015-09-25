@@ -52,8 +52,8 @@ var RegisterStoreBrand = React.createClass({
 			newVal.countryCode = Datastore.M.country.countryCode;
 
 			console.log("[RegisterStoreBrand]", newVal);
-			Datastore.data.add('storeBrands', newVal)
 
+            this.props.route.callback(Datastore.data.add('storeBrands', newVal).insert_id);
 			this.props.navigator.pop();
 		}
 	}

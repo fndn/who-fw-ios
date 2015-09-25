@@ -87,9 +87,16 @@ var RegisterLocation = React.createClass({
 			leftButtonTitle: 'Cancel',
 			onLeftButtonPress: () => this.props.navigator.pop(),
 			title: 'Register Store Brand',
-			component: RegisterStoreBrand
+			component: RegisterStoreBrand,
+            callback: this.onReturnFromAdd
 		});
 	},
+
+    onReturnFromAdd(id)
+    {
+        _tmp_state.storeBrand = Models.numberToLetters(id);
+        this.setState({value: _tmp_state});
+    },
 
 
 	onChange: function(value){

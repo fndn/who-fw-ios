@@ -64,9 +64,10 @@ var RegisterBrand = React.createClass({
 			newVal.country = Datastore.M.country.name;
 			//Datastore.MemoryStore.brand = value
 			console.log("RegisterBrand add: " , newVal);
-			Datastore.data.add('brands', newVal);
+            //Datastore.data.add('brands', newVal);
 			//Datastore.Set("name", value.name);
 			//Datastore.add('locations', value);
+            this.props.route.callback(Datastore.data.add('brands', newVal).insert_id);
 			this.props.navigator.pop();
 		}
 	}

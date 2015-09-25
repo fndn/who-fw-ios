@@ -556,12 +556,21 @@ var RegisterProduct = React.createClass({
 			leftButtonTitle: 'Cancel',
 			onLeftButtonPress: () => this.props.navigator.pop(),
 			title: 'Register Brand',
-			component: RegisterBrand
+			component: RegisterBrand,
+            callback: this.onReturnFromAddBrand
 
 		});
 	},
 
-	storeTmpState: function () {
+    onReturnFromAddBrand(id)
+    {
+        console.log("Returned with", id);
+        _tmp_state.brand = Models.numberToLetters(id);
+        this.setState({value: _tmp_state});
+    },
+
+
+    storeTmpState: function () {
 		//console.log("## Storing TPM state", _tmp_state);
 
 		this.setState({
