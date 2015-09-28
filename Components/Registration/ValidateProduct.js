@@ -11,7 +11,8 @@ var Datastore 				= require('fndn-rn-datastore');
 var Models          		= require('../Models');
 var t               		= require('tcomb-form-native');
 var RegisterProduct 		= require('./RegisterProduct');
-var CompleteRegistration    = require('./CompleteRegistration');
+
+var RegisterPriceAndPromo   = require('./RegisterPriceAndPromo');
 
 var Form = t.form.Form;
 
@@ -481,7 +482,7 @@ var ValidateProduct = React.createClass({
 				console.log("-------------------------------");
 				console.log("# Saving Registration:", newVal);
 
-				Datastore.data.addu("registrations", newVal);
+				//Datastore.data.addu("registrations", newVal);
 
 
 				/*var locationRegistration = {};
@@ -492,9 +493,10 @@ var ValidateProduct = React.createClass({
 
 				//this.props.navigator.popN(2); // pop back to view registrations past select product
 				this.props.navigator.push({
-					onLeftButtonPress: () => this.props.navigator.popN(2),
-					leftButtonTitle: 'Products',
-				   component: CompleteRegistration
+					onLeftButtonPress: () => this.props.navigator.pop(),
+					leftButtonTitle: 'Back',
+				    component: RegisterPriceAndPromo,
+                    passProps: { productToRegister: newVal}
 				});
 			}
 		}

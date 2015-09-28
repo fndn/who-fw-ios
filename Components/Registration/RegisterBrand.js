@@ -60,14 +60,10 @@ var RegisterBrand = React.createClass({
 		var value = this.refs.form.getValue();
 		if (value) { // if validation fails, value will be null
 			// Copy value because it is not extensible, then add "private" values
-			var newVal = JSON.parse(JSON.stringify(value));
+			var newVal = Datastore.clone(value);
 			newVal.country = Datastore.M.country.name;
-			//Datastore.MemoryStore.brand = value
 			console.log("RegisterBrand add: " , newVal);
-            //Datastore.data.add('brands', newVal);
-			//Datastore.Set("name", value.name);
-			//Datastore.add('locations', value);
-            this.props.route.callback(Datastore.data.add('brands', newVal).insert_id);
+            this.props.route.callback( Datastore.data.add('brands', newVal).insert_id );
 			this.props.navigator.pop();
 		}
 	}

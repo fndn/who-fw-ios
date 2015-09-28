@@ -237,6 +237,23 @@ module.exports.Responent = function(){
 	});
 };
 
+module.exports.Price = function(){
+    return t.struct({
+        currentPrice: t.Num,
+        normalPrice: t.maybe(t.Num)
+    });
+};
+
+module.exports.Promotion = function()
+{
+    return t.struct({
+        priceReduction: t.Bool,
+        freeGiveAways: t.Bool,
+        multiBuyDiscount: t.Bool,
+        otherTextOnPackage: t.maybe(t.Str)
+    });
+};
+
 module.exports.getKeyByValue = function(object, value)
 {
     for(var i in object)
