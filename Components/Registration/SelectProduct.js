@@ -25,17 +25,25 @@ var {
 var navigatorEventListener;
 var productNames = {};
 
+
 var SelectProduct = React.createClass ({
 
+    changed: function(r1, r2)
+    {
+        // In order to force redrawing registered rows, we need this comparison as r1 and r2 are the same
+        if(Datastore.M.locationRegistrations)
+            return Datastore.M.locationRegistrations.indexOf(r2.hash) > -1;
+        else
+            return r1 !== r2;
+    },
+
 	componentWillMount: function() {
-		var dataSource = new ListView.DataSource({rowHasChanged: (r1, r2) => r1["_id"] !== r2["_id"]});
-		var alreadyRegistered = this.props.registered;
+		var dataSource = new ListView.DataSource({rowHasChanged: this.changed});
 
         this.state = {
 			isLoading: false,
 			message: 'init',
-			dataSource: dataSource,
-            alreadyRegistered: alreadyRegistered
+			dataSource: dataSource
 		};
 
 		navigatorEventListener = this.props.navigator.navigationContext.addListener('willfocus', (event) => {
@@ -44,7 +52,6 @@ var SelectProduct = React.createClass ({
 
 				//TODO: Filter by what?
 				//Datastore.data.where('products', {"": Datastore.M. }, this.dataAvailable);
-
 				Datastore.data.where('products', {"country": Datastore.M.country.name}, this.dataAvailable);
 			}
 		});
@@ -58,16 +65,14 @@ var SelectProduct = React.createClass ({
 
 
 	dataAvailable: function(_data){
-		console.log('[SelectProduct] dataAvailable', _data);
+		//console.log('[SelectProduct] dataAvailable', _data);
+        // Add property "registered" to force redraw of newly registered row.
 		this.setState({
-			isLoading:false,
-			message:'loaded',
 			dataSource: this.state.dataSource.cloneWithRows(_data)
 		});
 	},
 
 	render: function() {
-
 		return (
 
 			<View style={GlobalStyles.scrollViewContainer}>
@@ -92,8 +97,7 @@ var SelectProduct = React.createClass ({
         //var _foodType = Models.foodTypes.meta.map[rowData.foodType];
         //var _ageGroup = Models.ageGroups.meta.map[rowData.ageGroup];
         //console.log("LOCATION REGISTRATIONS: ", Datastore.M.locationRegistrations, rowData.hash);
-
-        if (!Datastore.M.locationRegistrations || Datastore.M.locationRegistrations.indexOf(rowData.hash) == -1) // not in registered array
+        if (Datastore.M.locationRegistrations && Datastore.M.locationRegistrations.indexOf(rowData.hash) == -1) // not in registered array
         {
             return (
                 <TouchableHighlight underlayColor='#EEE' onPress={() => this.rowPressed(rowData)}>
@@ -144,7 +148,8 @@ var SelectProduct = React.createClass ({
 	},
 
 	rowPressed: function(rowData) {
-		console.log("= [SelectProduct] ", rowData.name);
+        console.log("= [SelectProduct] ", rowData.name);
+
 		Datastore.M.product = rowData;
 		this.props.navigator.push({
 			leftButtonTitle: 'Back',
