@@ -746,7 +746,7 @@ var RegisterProduct = React.createClass({
                 newVal.locationID = Datastore.M.location.hash;
 
                 this.props.navigator.push({
-                    onLeftButtonPress: () => this.props.navigator.pop(),
+                    onLeftButtonPress: () => this.props.navigator.popToRoute(Datastore.M.SelectProductRoute),
                     leftButtonTitle: 'Back',
                     component: RegisterPriceAndPromo,
                     passProps: {productToRegister: newVal}
