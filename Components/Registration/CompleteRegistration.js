@@ -70,7 +70,7 @@ var CompleteRegistration = React.createClass({
 	onProducts: function()
 	{
 		Datastore.M.product = null;
-		this.props.navigator.popN(3);
+		this.props.navigator.popToRoute(Datastore.M.SelectProductRoute);
 
 	},
 
@@ -79,19 +79,19 @@ var CompleteRegistration = React.createClass({
 		Datastore.M.product = null;
 		Datastore.M.location = null;
 		// TODO: Set location to complete
-		this.props.navigator.popN(5);
+		this.props.navigator.popToRoute(Datastore.M.SelectLocationRoute);
 	},
 
 	onLocation: function()
 	{
 		Datastore.M.product = null;
 		Datastore.M.location = null;
-		this.props.navigator.popN(5);
+		this.props.navigator.popToRoute(Datastore.M.SelectLocationRoute);
 	},
 
 	onReview: function () {
 		Datastore.M.product = null;
-		this.props.navigator.popN(4);
+		this.props.navigator.popToRoute(Datastore.M.ViewRegistrationsRoute);
 	}
 });
 

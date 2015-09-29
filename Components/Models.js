@@ -91,13 +91,14 @@ module.exports.Location = function(){
 
 
 	return t.struct({
-		name: t.Str,
+        //name: t.Str,
+        street: t.Str,
+        neighbourhood: t.maybe(t.Str),
 		city: t.Str,
-		neighbourhood: t.maybe(t.Str),
-		street: t.Str,
 		incomeType: incomeTypes,
-		storeBrand: t.enums(storeBrands),
-		storeType: storeTypes
+        storeType: storeTypes,
+		storeBrand: t.enums(storeBrands)
+
 	});
 };
 

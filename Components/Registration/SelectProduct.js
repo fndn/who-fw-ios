@@ -46,6 +46,7 @@ var SelectProduct = React.createClass ({
 			dataSource: dataSource
 		};
 
+        Datastore.M.SelectProductRoute = this.props.route;
 		navigatorEventListener = this.props.navigator.navigationContext.addListener('willfocus', (event) => {
 			console.log("[SelectProduct] willfocus", event.data.route.displayName);
 			if(event.data.route.displayName === "SelectProduct"){
@@ -67,6 +68,7 @@ var SelectProduct = React.createClass ({
 	dataAvailable: function(_data){
 		//console.log('[SelectProduct] dataAvailable', _data);
         // Add property "registered" to force redraw of newly registered row.
+
 		this.setState({
 			dataSource: this.state.dataSource.cloneWithRows(_data)
 		});

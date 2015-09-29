@@ -33,6 +33,8 @@ var SelectLocation = React.createClass ({
 			dataSource: dataSource
 		};
 
+        Datastore.M.SelectLocationRoute = this.props.route;
+
 		navigatorEventListener = this.props.navigator.navigationContext.addListener('willfocus', (event) => {
 			console.log("[SelectLocation] willfocus ", event.data.route.displayName);
 			if(event.data.route.displayName === "SelectLocation"){
@@ -89,7 +91,7 @@ var SelectLocation = React.createClass ({
 				<View>
 					<View style={GlobalStyles.listrowContainer}>
 						<View>
-							<Text style={GlobalStyles.listrowTitle}>{rowData.name}</Text>
+							<Text style={GlobalStyles.listrowTitle}>{rowData.storeBrand}</Text>
 							<Text style={GlobalStyles.listrowSubtitle}>{subtext}</Text>
 						</View>
 					</View>

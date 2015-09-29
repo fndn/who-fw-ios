@@ -29,13 +29,19 @@ var navigatorEventListener;
 
 var _tmp_state = {};
 
+
 var RegisterLocation = React.createClass({
 	
 	getInitialState: function() {
 		_tmp_state.scrollOffset = 0;
 
+        console.log(Datastore.M.city);
+
+        if(Datastore.M.city)
+            _tmp_state.city = Datastore.clone(Datastore.M.city);
+
 		return {
-			value: null,
+			value: _tmp_state
 		};
 	},
 
@@ -133,7 +139,9 @@ var RegisterLocation = React.createClass({
             newVal.incomeType = Models.incomeTypes.meta.map[newVal.incomeType];
             newVal.storeType = Models.storeTypes.meta.map[newVal.storeType];
 			console.log("[RegisterLocation] new location: ", newVal);
-			Datastore.data.add('locations', newVal);
+
+            Datastore.M.city = newVal.city;
+			Datastore.data.addu('locations', newVal);
 			this.props.navigator.pop();
 		}
 	}

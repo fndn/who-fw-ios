@@ -1,12 +1,13 @@
 'use strict';
 
-var React 			= require('react-native');
-var Datastore 		= require('fndn-rn-datastore');
-var t 				= require('tcomb-form-native');
-var CameraCapture 	= require('./CameraCapture');
-var RegisterBrand 	= require('./RegisterBrand');
-var Models 			= require('../Models');
-var GlobalStyles 	= require('../../Styles/GlobalStyles');
+var React 			        = require('react-native');
+var Datastore 		        = require('fndn-rn-datastore');
+var t 				        = require('tcomb-form-native');
+var CameraCapture 	        = require('./CameraCapture');
+var RegisterBrand 	        = require('./RegisterBrand');
+var Models 			        = require('../Models');
+var GlobalStyles 	        = require('../../Styles/GlobalStyles');
+var RegisterPriceAndPromo   = require('./RegisterPriceAndPromo');
 
 var Form = t.form.Form;
 
@@ -708,14 +709,54 @@ var RegisterProduct = React.createClass({
 
 			console.log('-------------------------------');
 			console.log("[RegisterProduct] Saving newVal:", newVal);
-			//return;
+			// Register product
 			var entry = Datastore.data.add('products', newVal);
-			
-			if(this.props.getProductData){
-				Datastore.M.product = newVal;
-			}
 
-			this.props.navigator.pop();
+            Datastore.M.product = newVal;
+            // Begin new flow where we jump directly to price
+            newVal = {};
+            newVal.product = Datastore.data.one('products', {_id:entry.insert_id});
+            if(newVal.product) {
+                newVal.country = Datastore.M.country;
+                newVal.location = Datastore.clone(Datastore.M.location);
+                // Convert location to readable info
+
+
+                //newVal.location.incomeType = Models.incomeTypes.meta.map[newVal.location.incomeType];
+                //newVal.location.storeType = Models.storeTypes.meta.map[newVal.location.storeType];
+                //newVal.location.storeBrand = Datastore.data.one('storeBrands', {_id:newVal.location.storeBrand}).name;
+
+                newVal.credentials = Datastore.M.credentials;
+                newVal.timeOfRegistration = Date.now(); // UTC in seconds
+
+                //console.log("  this,state", this.state );
+
+                if (this.state.hasOwnProperty('initialPosition')) {
+                    newVal.gpsLocation = this.state.initialPosition;
+                } else {
+                    newVal.gpsLocation = {};
+                }
+
+                // Create a unique "name":
+                newVal.name = Datastore.shortid.generate();
+
+                // Strip local _id fields
+                newVal = Datastore.data.removeIDs(newVal);
+                // Registrations is sortable by location hash
+                newVal.locationID = Datastore.M.location.hash;
+
+                this.props.navigator.push({
+                    onLeftButtonPress: () => this.props.navigator.pop(),
+                    leftButtonTitle: 'Back',
+                    component: RegisterPriceAndPromo,
+                    passProps: {productToRegister: newVal}
+                });
+            }
+            else {
+                this.props.navigator.pop();
+            }
+            // End new flow
+
 
 		}
 	}

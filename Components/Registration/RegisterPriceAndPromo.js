@@ -73,13 +73,13 @@ var RegisterPriceAndPromo = React.createClass({
 
             if(!Datastore.M.locationRegistrations)
                 Datastore.M.locationRegistrations = [];
-            console.log("Before", Datastore.M.locationRegistrations);
+
             Datastore.M.locationRegistrations.push(newVal.product.hash);
-            console.log("After", Datastore.M.locationRegistrations);
+
             Datastore.M.product = null;
 
             this.props.navigator.push({
-                onLeftButtonPress: () => this.props.navigator.popN(3),
+                onLeftButtonPress: () => this.props.navigator.popToRoute(Datastore.M.SelectProductRoute),
                 leftButtonTitle: 'Products',
                 component: CompleteRegistration
             });
