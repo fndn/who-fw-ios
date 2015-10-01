@@ -71,7 +71,7 @@ var Introduction = React.createClass ({
 						/>
 
 					<View style={styles.welcome_wrap}>
-						<Text style={styles.welcome_text}>(show project title here?)</Text>
+						<Text style={styles.welcome_text}>Availability of Commercially Produced Complementary Food Products in the Market Place in the WHO European Region</Text>
 					</View>
 				</View>
 
@@ -136,6 +136,7 @@ var styles = StyleSheet.create({
 	welcome_text: {
 		color: '#fff',
 		fontSize: 16,
+        textAlign: 'center'
 	}
 
 });

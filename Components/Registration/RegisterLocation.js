@@ -33,12 +33,11 @@ var _tmp_state = {};
 var RegisterLocation = React.createClass({
 	
 	getInitialState: function() {
+        // _tmp_state is kept in a session
+
+        if(_tmp_state.street)
+            _tmp_state.street = null;
 		_tmp_state.scrollOffset = 0;
-
-        console.log(Datastore.M.city);
-
-        if(Datastore.M.city)
-            _tmp_state.city = Datastore.clone(Datastore.M.city);
 
 		return {
 			value: _tmp_state
@@ -140,7 +139,6 @@ var RegisterLocation = React.createClass({
             newVal.storeType = Models.storeTypes.meta.map[newVal.storeType];
 			console.log("[RegisterLocation] new location: ", newVal);
 
-            Datastore.M.city = newVal.city;
 			Datastore.data.addu('locations', newVal);
 			this.props.navigator.pop();
 		}
@@ -155,13 +153,13 @@ var RegisterLocation = React.createClass({
 var styles = StyleSheet.create({
 	addStoreBrandButton:{
 		position: 'absolute',
-		top: 78.5 * 4 + 257.5,
+		top: 78.5 * 3 + 257.5 * 2,
 		right: 0
 
 	},
 	addStoreTypeButton:{
 		position: 'absolute',
-		top: 78.5 * 4 + 257.5 * 2,
+		top: 78.5 * 3 + 257.5 * 1,
 		right: 0
 
 	},

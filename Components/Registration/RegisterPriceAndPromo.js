@@ -15,7 +15,10 @@ var CompleteRegistration    = require('./CompleteRegistration');
 var Form = t.form.Form;
 
 var options = {
-
+    fields:{
+        currentPrice:{keyboardType: 'numeric'},
+        normalPrice:{keyboardType: 'numeric'}
+    }
 }; // optional rendering options (see documentation)
 
 var {

@@ -10,7 +10,13 @@ var Models          = require('../Models');
 
 var Form = t.form.Form;
 
-var options = {};
+var options = {
+    fields:{
+        countryCode:{
+            autoCapitalize: 'characters'
+        }
+    }
+};
 
 var {
 	StyleSheet,

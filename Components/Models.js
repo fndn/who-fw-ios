@@ -73,7 +73,7 @@ module.exports.Respondent = function(){
 module.exports.Country = function(){
 	return t.struct({
 		name: t.Str,
-		countryCode: t.maybe(t.Str)
+		countryCode: t.Str
 	});
 };
 
