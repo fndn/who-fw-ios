@@ -54,9 +54,9 @@ var RegisterCountry = React.createClass({
 	onPress: function(){
 		var value = this.refs.form.getValue();
 		if (value) {
-            console.log(value);
-			//Datastore.data.add('countries', Datastore.clone(value) );
-			//this.props.navigator.pop();
+            //console.log(value);
+			Datastore.data.add('countries', Datastore.clone(value) );
+			this.props.navigator.pop();
 		}
 	}
 });
