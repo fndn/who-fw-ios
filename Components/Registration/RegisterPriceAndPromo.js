@@ -38,25 +38,32 @@ var RegisterPriceAndPromo = React.createClass({
     render: function(){
 
         return (
-            <ScrollView style={GlobalStyles.scrollViewList}>
-                <Form
-                    ref="price_form"
-                    type={Models.Price()}
-                    options={options}
-                    />
-                <Form
-                    ref="promo_form"
-                    type={Models.Promotion()}
-                    options={options}
-                    />
-                <TouchableHighlight
-                    style={GlobalStyles.button}
-                    onPress = {this.onPress}
-                    underlayColor={GlobalStyles.colors.formHighlightColor}
-                    >
-                    <Text style={GlobalStyles.buttonText}>Register</Text>
-                </TouchableHighlight>
-            </ScrollView>
+            <View style={GlobalStyles.scrollViewContainer}>
+                <ScrollView
+                    style={GlobalStyles.scrollViewList}
+                    automaticallyAdjustContentInsets={false}
+                    keyboardDismissMode={'on-drag'}
+                    keyboardShouldPersistTaps={false}
+                    scrollsToTop={true}>
+                    <Form
+                        ref="price_form"
+                        type={Models.Price()}
+                        options={options}
+                        />
+                    <Form
+                        ref="promo_form"
+                        type={Models.Promotion()}
+                        options={options}
+                        />
+                    <TouchableHighlight
+                        style={GlobalStyles.button}
+                        onPress = {this.onPress}
+                        underlayColor={GlobalStyles.colors.formHighlightColor}
+                        >
+                        <Text style={GlobalStyles.buttonText}>Register</Text>
+                    </TouchableHighlight>
+                </ScrollView>
+            </View>
         );
     },
 

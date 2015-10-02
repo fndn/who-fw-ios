@@ -143,12 +143,8 @@ var this_exists = false;
 var ValidateProduct = React.createClass({
 
 	getInitialState: function() {
-
-
-
 		navigatorEventListener = this.props.navigator.navigationContext.addListener('willfocus', (event) =>
 		{
-			console.log("########" , event.data);
 			if(event.data.route.displayName === "ValidateProduct") {
 				//console.log("ValidateProduct DATA: " , this.fillData());
 				this.setState(this.fillData());

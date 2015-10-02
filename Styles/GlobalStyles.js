@@ -1,6 +1,7 @@
 'use strict';
 
-var React = require('react-native');
+var React   = require('react-native');
+var t       = require('tcomb-form-native');
 
 var { View, Text, TextInput, SwitchIOS, PickerIOS, DatePickerIOS } = React;
 
@@ -463,24 +464,21 @@ module.exports.indentedTextbox = function(locals) {
 	);
 };
 
-/*
-function mergeObjects(base, curry){
-	var bkeys = Object.keys(base);
-	console.log('#0 curry:', Object.keys(curry), curry['scrollViewContainer'] );
-	console.log('#0 base: ', bkeys );
-	Object.keys(curry).forEach( function(ck){
-		console.log('#1 ', ck);
-		if( bkeys.indexOf(ck) > -1 ){
-			console.log('#2 found $ck', ck, " at bkeys.pos:", bkeys.indexOf(ck) );
-			console.log('#2 ', curry[ck]);
-			console.log('#2 ', Object.keys(curry[ck]));
+var Nil = t.Nil;
 
-			Object.keys(curry[ck]).forEach( function(cck){
-				//base[ck][cck] = curry[ck][cck];
-				console.log('setting base[ck][cck]:', base[ck][cck] , " to curry[ck][cck]:", curry[ck][cck] );
-			});
-		}
-	});
-	return base;
+function toNull(value) {
+    return (t.Str.is(value) && value.trim() === '') || Nil.is(value) ? null : value;
 }
-*/
+// Number transformer that handles decimal numbers with both , and . (default only handle .)
+var myNumberTransformer = {
+    format: value => Nil.is(value) ? null : String(value),
+    parse: value =>{
+        if(value)
+            value = value.replace(/,/g, '.');
+        var n = parseFloat(value);
+        var isNumeric = (value - n + 1) >= 0;
+        return isNumeric ? n : toNull(value);
+    }
+};
+// Globally set number transformer
+t.form.Textbox.numberTransformer = myNumberTransformer;

@@ -31,7 +31,10 @@ var SelectCountry = React.createClass ({
 
 	componentWillMount: function(){
 		console.log('[SelectCountry] componentWillMount');
-
+        var value = "26,6";
+        console.log("#", value);
+        value = value.replace(/,/g, '.');
+        console.log("## ", value);
 		var dataSource = new ListView.DataSource({rowHasChanged: (r1, r2) => r1["_id"] !== r2["_id"] });
 		this.state = {
 			isLoading: false,
@@ -110,40 +113,6 @@ var SelectCountry = React.createClass ({
 		console.log("= [SelectCountry] ", rowData.name );
 
 		Datastore.M.country = rowData;
-
-		//// Testing camera
-		/*
-		this.props.navigator.push({
-			leftButtonTitle: 'Cancel',
-			onLeftButtonPress: () => this.props.navigator.pop(),
-			title: 'Capture Picture',
-			component: CameraCapture,
-			passProps: {
-				location: this.state.initialPosition,
-				camCallback: this.onReturnedFromCamera,
-				productPosition: 0
-			}
-
-		});
-		*/
-
-		//// Testing CompleteRegistration
-		/*
-		this.props.navigator.push({
-			leftButtonTitle: 'Cancel',
-			onLeftButtonPress: () => this.props.navigator.pop(),
-			title: 'Capture Picture',
-			component: CompleteRegistration,
-			passProps: {
-				location: this.state.initialPosition,
-				camCallback: this.onReturnedFromCamera,
-				productPosition: 0
-			}
-
-		});
-		*/
-
-
 
 
 		this.props.navigator.push({

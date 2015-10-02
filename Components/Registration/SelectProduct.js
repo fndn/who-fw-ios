@@ -99,9 +99,32 @@ var SelectProduct = React.createClass ({
         //var _foodType = Models.foodTypes.meta.map[rowData.foodType];
         //var _ageGroup = Models.ageGroups.meta.map[rowData.ageGroup];
         //console.log("LOCATION REGISTRATIONS: ", Datastore.M.locationRegistrations, rowData.hash);
-        if (Datastore.M.locationRegistrations && Datastore.M.locationRegistrations.indexOf(rowData.hash) == -1) // not in registered array
+        if (Datastore.M.locationRegistrations && Datastore.M.locationRegistrations.indexOf(rowData.hash) > -1) // registered for this location
         {
             return (
+                <View style={{opacity: 0.5}}>
+                    <View style={GlobalStyles.listrowContainer01}>
+                        <View style={GlobalStyles.listrowContainer02}>
+
+                            <Image style={GlobalStyles.rowImage}
+                                   source={{ uri: Datastore.ws.img("products", rowData.uuid, 'front', '300x300') }}/>
+                            {/*<Image style={GlobalStyles.rowImage} source={{ uri: 'http://lorempixel.com/100/100/sports/'}} /> */}
+
+                            <View>
+                                <Text style={GlobalStyles.listrowTitle}>{rowData.name}</Text>
+                                <Text
+                                    style={GlobalStyles.listrowSubtitle}>{rowData.foodType + '\n'}by {rowData.brand + '\n'}from
+                                    age {rowData.ageGroup}</Text>
+                            </View>
+                        </View>
+                    </View>
+                    <View style={GlobalStyles.listrowSeparator}/>
+                </View>
+            );
+        }
+        else
+        {
+            return(
                 <TouchableHighlight underlayColor='#EEE' onPress={() => this.rowPressed(rowData)}>
                     <View>
                         <View style={GlobalStyles.listrowContainer01}>
@@ -122,29 +145,6 @@ var SelectProduct = React.createClass ({
                         <View style={GlobalStyles.listrowSeparator}/>
                     </View>
                 </TouchableHighlight>
-            );
-        }
-        else
-        {
-            return(
-                <View style={{opacity: 0.5}}>
-                    <View style={GlobalStyles.listrowContainer01}>
-                        <View style={GlobalStyles.listrowContainer02}>
-
-                            <Image style={GlobalStyles.rowImage}
-                                   source={{ uri: Datastore.ws.img("products", rowData.uuid, 'front', '300x300') }}/>
-                            {/*<Image style={GlobalStyles.rowImage} source={{ uri: 'http://lorempixel.com/100/100/sports/'}} /> */}
-
-                            <View>
-                                <Text style={GlobalStyles.listrowTitle}>{rowData.name}</Text>
-                                <Text
-                                    style={GlobalStyles.listrowSubtitle}>{rowData.foodType + '\n'}by {rowData.brand + '\n'}from
-                                    age {rowData.ageGroup}</Text>
-                            </View>
-                        </View>
-                    </View>
-                    <View style={GlobalStyles.listrowSeparator}/>
-                </View>
             );
         }
 	},

@@ -10,6 +10,7 @@ var Models          = require('../Models');
 
 var Form = t.form.Form;
 
+
 var options = {
     fields:{
         countryCode:{
@@ -53,8 +54,9 @@ var RegisterCountry = React.createClass({
 	onPress: function(){
 		var value = this.refs.form.getValue();
 		if (value) {
-			Datastore.data.add('countries', Datastore.clone(value) );
-			this.props.navigator.pop();
+            console.log(value);
+			//Datastore.data.add('countries', Datastore.clone(value) );
+			//this.props.navigator.pop();
 		}
 	}
 });

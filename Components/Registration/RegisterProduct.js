@@ -608,7 +608,7 @@ var RegisterProduct = React.createClass({
 			newVal.nutritionalPr100g = null;
 			newVal.nutritionalPrServing = null;
 
-			console.log("# Checkpoint 1", this.refs.form2);
+			console.log("# Checkpoint 1");
 			if(this.refs.form2) {
 				if (this.refs.form2.getValue()) {
 					newVal.nutritionalPr100g = Datastore.clone(this.refs.form2.getValue());
