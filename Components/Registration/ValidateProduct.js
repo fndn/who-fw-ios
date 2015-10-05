@@ -492,6 +492,8 @@ var ValidateProduct = React.createClass({
 					onLeftButtonPress: () => this.props.navigator.pop(),
 					leftButtonTitle: 'Back',
 				    component: RegisterPriceAndPromo,
+                    title: 'Price Information',
+                    displayName: 'RegisterPriceAndPromo',
                     passProps: { productToRegister: newVal}
 				});
 			}

@@ -61,6 +61,7 @@ var ViewRegistrations = React.createClass ({
 	},
 
 	dataAvailable: function(_data){
+        console.log("REGISTRATIONS ", _data);
 		this.setState({
 			isLoading:false,
 			message:'loaded',

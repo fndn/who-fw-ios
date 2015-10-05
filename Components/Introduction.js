@@ -61,8 +61,11 @@ var Introduction = React.createClass ({
 						resizeMode="contain"
 						source={require('image!who_logo')}/>
 				</View>
-
+                <View style={styles.welcome_wrap}>
+                    <Text style={styles.welcome_text}>Availability of Commercially Produced Complementary Food Products in the Market Place in the WHO European Region</Text>
+                </View>
 				<View style={styles.login}>
+                    <Text>{"\n"}</Text>
 					<Form
 						ref="form"
 						type={Models.Respondent()}
@@ -70,9 +73,7 @@ var Introduction = React.createClass ({
 						onChange={this.onChange}
 						/>
 
-					<View style={styles.welcome_wrap}>
-						<Text style={styles.welcome_text}>Availability of Commercially Produced Complementary Food Products in the Market Place in the WHO European Region</Text>
-					</View>
+
 				</View>
 
 				

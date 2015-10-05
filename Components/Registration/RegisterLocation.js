@@ -139,7 +139,7 @@ var RegisterLocation = React.createClass({
             newVal.storeType = Models.storeTypes.meta.map[newVal.storeType];
 			console.log("[RegisterLocation] new location: ", newVal);
 
-			Datastore.data.addu('locations', newVal);
+			Datastore.data.add('locations', newVal);
 			this.props.navigator.pop();
 		}
 	}

@@ -53,6 +53,7 @@ var SelectLocation = React.createClass ({
 	},
 
 	dataAvailable: function(_data){
+        Datastore.M.location = null;
 		this.setState({
 			isLoading:false,
 			message:'loaded',
@@ -102,7 +103,7 @@ var SelectLocation = React.createClass ({
 	},
 
 	rowPressed: function(rowData) {
-		console.log("= [SelectLocation] ", rowData.name);
+		console.log("= [SelectLocation] ", rowData);
 		
 		//Datastore.M.location = Datastore.data.removeIDs( rowData ); // ideally we should not have _id's in the stores - as these will not match between clients
 		Datastore.M.location = rowData;

@@ -272,6 +272,7 @@ var RegisterProduct = React.createClass({
 
 
 				<Form
+                    ref="per100Bool"
 					type={Models.SimpelBool()}
 					options={nutBoolOptions}
 					value={this.state.nutBool}
@@ -284,6 +285,7 @@ var RegisterProduct = React.createClass({
 	renderMid: function () {
 		return(
 			<Form
+                ref="perServingBool"
 				type={Models.SimpelBool()}
 				options={nutServingBoolOptions}
 				value={this.state.nutServingBool}
@@ -390,7 +392,7 @@ var RegisterProduct = React.createClass({
 					<Form
 						type={Models.SimpelBool()}
 						options={
-							{fields:{boolValue:{ label:'Health claims', onTintColor:'#4B92DB'}}}
+							{fields:{boolValue:{ label:'Nutrient content claims', onTintColor:'#4B92DB'}}}
 						}
 						value={this.state.healthClaimsBool}
 						onChange={(value) =>{this.storeTmpState();this.setState({healthClaimsBool: value})}}
@@ -612,10 +614,29 @@ var RegisterProduct = React.createClass({
 			if(this.refs.form2) {
 				if (this.refs.form2.getValue()) {
 					newVal.nutritionalPr100g = Datastore.clone(this.refs.form2.getValue());
-					console.log("# Checkpoint 2");
+                    console.log(newVal.nutritionalPr100g);
+                    var hasInfo = false;
+                    for(var key in newVal.nutritionalPr100g)
+                    {
+                        if(newVal.nutritionalPr100g.hasOwnProperty(key))
+                        {
+                            if(newVal.nutritionalPr100g[key]) {
+                                hasInfo = true;
+                                break;
+                            }
+                        }
+                    }
+                    if(!hasInfo)
+                    {
+                        alert("Please fill in some information under \"Nutritional information per 100 g\" or uncheck it");
+
+                        this.jumpToError(this.refs.per100Bool, "boolValue");
+                        return null;
+                    }
+					//console.log("# Checkpoint 2");
 					if (this.refs.hundredSalt) {
                         if (this.refs.hundredSalt.getValue()) {
-                            console.log("# Checkpoint 3");
+                            //console.log("# Checkpoint 3");
                             if (this.state.saltSodium == "Salt")
                                 newVal.nutritionalPr100g.salt = Datastore.clone(this.refs.hundredSalt.getValue()).tValue;
                             else
@@ -629,14 +650,34 @@ var RegisterProduct = React.createClass({
 				}
 				else {this.jumpToError(this.refs.form2); return null;}
 			}
-			console.log("# Checkpoint 4");
+			//console.log("# Checkpoint 4");
 			if(this.refs.form3) {
 				if (this.refs.form3.getValue()) {
 					newVal.nutritionalPrServing = Datastore.clone(this.refs.form3.getValue());
-					console.log("# Checkpoint 5");
+					//console.log("# Checkpoint 5");
+
+                    var hasInfo = false;
+                    for(var key in newVal.nutritionalPrServing)
+                    {
+                        if(newVal.nutritionalPrServing.hasOwnProperty(key))
+                        {
+                            if(newVal.nutritionalPrServing[key]) {
+                                hasInfo = true;
+                                break;
+                            }
+                        }
+                    }
+                    if(!hasInfo)
+                    {
+                        alert("Please fill in some information under \"Nutritional information per serving\" or uncheck it");
+
+                        this.jumpToError(this.refs.perServingBool, "boolValue");
+                        return null;
+                    }
+
 					if (this.refs.servingSalt) {
                         if (this.refs.servingSalt.getValue()) {
-                            console.log("# Checkpoint 6");
+                            //console.log("# Checkpoint 6");
                             if (this.state.saltSodium == "Salt")
                                 newVal.nutritionalPrServing.salt = Datastore.clone(this.refs.servingSalt.getValue()).tValue;
                             else
@@ -657,18 +698,27 @@ var RegisterProduct = React.createClass({
             newVal.foodType = Models.foodTypes.meta.map[newVal.foodType];
             newVal.ageGroup = Models.ageGroups.meta.map[newVal.ageGroup];
 
-			console.log("# Checkpoint 7");
+			//console.log("# Checkpoint 7");
 
 
 			if(this.refs.healthClaimsForm){
 				newVal.healthClaims = Datastore.clone(this.refs.healthClaimsForm.getValue());
 			}
 
-			console.log("# Checkpoint 8");
+			//console.log("# Checkpoint 8");
 
 			newVal.visualInformation = Datastore.clone(this.refs.form4.getValue());
 			//newVal.brand = Datastore.M.brand.name;
-
+            for(var key in this.state.images)
+            {
+                if(this.state.images.hasOwnProperty(key))
+                {
+                    if(!this.state.images[key]) {
+                        alert("You need to take pictures of the product!");
+                        return null;
+                    }
+                }
+            }
 			newVal.images = this.state.images; //Datastore.clone(this.state.images);
             newVal.imgstore = this.state.imgstore;
 			
@@ -687,10 +737,11 @@ var RegisterProduct = React.createClass({
 		}
 	},
 
-	jumpToError(ref)
+	jumpToError(ref, firstError = null)
 	{
 
-		var firstError = ref.validate().errors[0].path[0];
+        if(!firstError)
+		    firstError = ref.validate().errors[0].path[0];
 
 		ref.getComponent(firstError).refs.input.measure((ox,oy,width,height,px,py) =>
 		{
@@ -749,6 +800,8 @@ var RegisterProduct = React.createClass({
                     onLeftButtonPress: () => this.props.navigator.popToRoute(Datastore.M.SelectProductRoute),
                     leftButtonTitle: 'Back',
                     component: RegisterPriceAndPromo,
+                    title: 'Price Information',
+                    displayName: 'RegisterPriceAndPromo',
                     passProps: {productToRegister: newVal}
                 });
             }

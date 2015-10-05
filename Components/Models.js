@@ -59,7 +59,7 @@ module.exports.foodTypes = foodTypes;
 
 module.exports.SimpelBool = function(){
 	return t.struct({
-	   boolValue: t.Bool
+	   boolValue: t.maybe(t.Bool)
 	});
 };
 
@@ -207,26 +207,26 @@ module.exports.NutritionServing = function(){
 
 module.exports.VisualInformation = function(){
 	return t.struct({
-		cartoons: t.Bool,
-		picturesOfInfantsOrYoungChildren: t.Bool,
-		picturesOfMothers: t.Bool,
-		comparativeClaims: t.Bool,
-		nutrientContentClaims: t.Bool
+		cartoons: t.maybe(t.maybe(t.Bool)),
+		picturesOfInfantsOrYoungChildren: t.maybe(t.Bool),
+		picturesOfMothers: t.maybe(t.Bool),
+		comparativeClaims: t.maybe(t.Bool),
+		healthClaims: t.maybe(t.Bool)
 	});
 };
 
 module.exports.HealthClaims = function(){
     return t.struct({
-        noSalt: t.Bool,
-        noSugar: t.Bool,
-        noSweeteners: t.Bool,
-        vitamins: t.Bool,
-        noPreservatives: t.Bool,
-        noStarch: t.Bool,
-        noColors: t.Bool,
-        noFlavours: t.Bool,
-        glutenFree: t.Bool,
-        organic: t.Bool,
+        noSalt: t.maybe(t.Bool),
+        noSugar: t.maybe(t.Bool),
+        noSweeteners: t.maybe(t.Bool),
+        vitamins: t.maybe(t.Bool),
+        noPreservatives: t.maybe(t.Bool),
+        noStarch: t.maybe(t.Bool),
+        noColors: t.maybe(t.Bool),
+        noFlavours: t.maybe(t.Bool),
+        glutenFree: t.maybe(t.Bool),
+        organic: t.maybe(t.Bool),
         other: t.maybe(t.Str)
     });
 };
@@ -248,9 +248,9 @@ module.exports.Price = function(){
 module.exports.Promotion = function()
 {
     return t.struct({
-        priceReduction: t.Bool,
-        freeGiveAways: t.Bool,
-        multiBuyDiscount: t.Bool,
+        priceReduction: t.maybe(t.Bool),
+        freeGiveAways: t.maybe(t.Bool),
+        multiBuyDiscount: t.maybe(t.Bool),
         otherTextOnPackage: t.maybe(t.Str)
     });
 };

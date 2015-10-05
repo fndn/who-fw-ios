@@ -21,7 +21,7 @@ var {
 	ScrollView,
 	} = React;
 
-var titleText = "Thanks!\n\nThe registration will be pushed to the database next time you Sync. \n\nWould you like to register more products in this store?"
+var titleText = "Thank you for the input!\n\nThe registration will be pushed to the database next time you Sync. \n\nWould you like to register more products in this store?"
 
 var CompleteRegistration = React.createClass({
 
@@ -36,10 +36,10 @@ var CompleteRegistration = React.createClass({
 				</Text>
 				<TouchableHighlight style={styles.buttonConfirm}  onPress = {this.onProducts} underlayColor='#A0F584'>
 					<Text style={GlobalStyles.buttonText}>
-						> Select Product
+						> Register more products
 					</Text>
 				</TouchableHighlight>
-				<Text style={styles.text}>
+                {/*<Text style={styles.text}>
 					Or mark the store as complete?
 				</Text>
 				<TouchableHighlight style={styles.buttonConfirm}  onPress = {this.onComplete} underlayColor='#A0F584'>
@@ -47,12 +47,13 @@ var CompleteRegistration = React.createClass({
 						> Complete
 					</Text>
 				</TouchableHighlight>
+				*/}
 				<Text style={styles.text}>
 					Or continue in another store?
 				</Text>
 				<TouchableHighlight style={styles.buttonConfirm}  onPress = {this.onLocation} underlayColor='#A0F584'>
 					<Text style={GlobalStyles.buttonText}>
-						> Select Location
+						> Register new store location
 					</Text>
 				</TouchableHighlight>
 				<Text style={styles.text}>

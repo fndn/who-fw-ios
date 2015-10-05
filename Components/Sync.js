@@ -246,7 +246,7 @@ var Sync = React.createClass({
 					</Text>
 					
 					<Text style={styles.nr_icontxtlabel_text_em}>
-						{num_regs_str}{"\n"}
+						{num_regs_str} {"\n"}
 					</Text>
 
 				</View>
@@ -261,7 +261,7 @@ var Sync = React.createClass({
 
 				<View>
 					<Text style={styles.nr_icontxtlabel_text_em}>
-						{"\n\n"}Last sync:{"\n"}{ this.state.since_lastsync_str }
+						{"\n\n"}Last sync:{"\n"} { this.state.since_lastsync_str }
 					</Text>
 				</View>
 

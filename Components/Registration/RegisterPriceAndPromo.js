@@ -79,7 +79,7 @@ var RegisterPriceAndPromo = React.createClass({
             newVal.price = Datastore.clone(value);
             newVal.promotion = Datastore.clone(this.refs.promo_form.getValue());
             console.log("[Register Price] Registering product", newVal);
-            Datastore.data.addu("registrations", newVal);
+            Datastore.data.add("registrations", newVal);
 
             if(!Datastore.M.locationRegistrations)
                 Datastore.M.locationRegistrations = [];
@@ -91,6 +91,8 @@ var RegisterPriceAndPromo = React.createClass({
             this.props.navigator.push({
                 onLeftButtonPress: () => this.props.navigator.popToRoute(Datastore.M.SelectProductRoute),
                 leftButtonTitle: 'Products',
+                title: "Complete Registration",
+                displayName: 'CompleteRegistration',
                 component: CompleteRegistration
             });
         }

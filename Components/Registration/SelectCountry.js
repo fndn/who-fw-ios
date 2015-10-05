@@ -57,16 +57,10 @@ var SelectCountry = React.createClass ({
 		navigatorEventListener.remove();
 	},
 
-	/*
-	componentDidMount: function(){
-		console.log('[SelectCountry] componentDidMount');
-		Datastore.data.all('countries', this.dataAvailable);
-	},
-	*/
 
 	dataAvailable: function(_data){
-		console.log('[SelectCountry] dataAvailable', _data);
-		
+		//console.log('[SelectCountry] dataAvailable', _data);
+        Datastore.M.country = null;
 		Datastore.data.orderBy(_data, "name"); // orders *in place*
 
 		this.setState({
