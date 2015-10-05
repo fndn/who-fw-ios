@@ -25,7 +25,7 @@ var Datastore 		= require('fndn-rn-datastore');
 Datastore.opts({
 	data: {
 		database: 	'whofwa-071',
-		tables: 	["countries", "locations", "brands", "incomeTypes", "storeTypes", "storeBrands", "ageGroups", "products"],
+		tables: 	["countries", "locations", "brands", "incomeTypes", "storeTypes", "storeBrands", "ageGroups", "products", "currencies"],
 		uploadOnly: ["register"],
 		localOnly:	["registrations", "credentials"]
 	},

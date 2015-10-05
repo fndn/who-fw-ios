@@ -239,9 +239,26 @@ module.exports.Responent = function(){
 };
 
 module.exports.Price = function(){
+    var data = Datastore.data.all("currencies");
+
+    data = Datastore.data.orderBy(data, "currency");
+    var currencies = {};
+    //console.log('brands', data);
+    for(var i = 0; i < data.length; i++)
+    {
+        currencies[(data[i].currency)] = data[i].currency; // A:"DKK"
+    }
     return t.struct({
         currentPrice: t.Num,
-        normalPrice: t.maybe(t.Num)
+        normalPrice: t.maybe(t.Num),
+        currency: t.enums(currencies)
+    });
+};
+
+module.exports.Currency = function()
+{
+    return t.struct({
+        currency: t.Str
     });
 };
 
