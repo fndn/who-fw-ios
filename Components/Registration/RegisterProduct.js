@@ -405,7 +405,7 @@ var RegisterProduct = React.createClass({
 					<Form
 						type={Models.SimpelBool()}
 						options={
-							{fields:{boolValue:{ label:'Health claims', onTintColor:'#4B92DB'}}}
+							{fields:{boolValue:{ label:'Nutrient content claims', onTintColor:'#4B92DB'}}}
 						}
 						value={this.state.healthClaimsBool}
 						onChange = {(value) =>{this.storeTmpState();this.setState({healthClaimsBool: value})}}/>
