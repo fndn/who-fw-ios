@@ -72,7 +72,7 @@ var options = {
 }; // optional rendering options (see documentation)
 
 // theme "checkboxes":
-['cartoons', 'picturesOfInfantsOrYoungChildren', 'picturesOfMothers', 'comparativeClaims', 'nutrientContentClaims', 'healthClaims', 'other'].forEach( function(el){
+['cartoons', 'picturesOfInfantsOrYoungChildren', 'picturesOfMothers', 'comparativeClaims', 'nutrientContentClaims', 'nutrientContentClaims', 'other'].forEach( function(el){
 	options.fields[el]['onTintColor'] = '#4B92DB';
 });
 
@@ -124,8 +124,8 @@ var RegisterProduct = React.createClass({
 		var nutBoolData = {boolValue:false};
 		var nutServingBoolData = {boolValue:false};
 		var visualData = null;
-		var healthClaimsBool = {boolValue: false};
-		var healthClaims = null;
+		var nutrientContentClaimsBool = {boolValue: false};
+		var nutrientContentClaims = null;
 		var otherBool = {boolValue: false};
 		var otherClaim = null;
 		var saltSodium = null;
@@ -191,9 +191,9 @@ var RegisterProduct = React.createClass({
 				nutBoolData = {boolValue:true};
 
 			visualData = data.visualInformation;
-			if(data.healthClaims) {
-				healthClaimsBool = {boolValue: true};
-				healthClaims = data.healthClaims;
+			if(data.nutrientContentClaims) {
+				nutrientContentClaimsBool = {boolValue: true};
+				nutrientContentClaims = data.nutrientContentClaims;
 			}
 			if(data.otherClaim) {
 				otherBool = {boolValue: true};
@@ -209,7 +209,7 @@ var RegisterProduct = React.createClass({
 		_tmp_state.nutServingValue = servingData;
 		_tmp_state.visualInfo = visualData;
 		_tmp_state.otherClaim = otherClaim;
-		_tmp_state.healthClaims = healthClaims;
+		_tmp_state.nutrientContentClaims = nutrientContentClaims;
 		_tmp_state.servingSaltSodiumValue = servingSaltSodiumValue;
 		_tmp_state.hundredSaltSodiumValue = hundredSaltSodiumValue;
 		_tmp_state.scrollOffset = 0;
@@ -225,8 +225,8 @@ var RegisterProduct = React.createClass({
 			servingSaltSodiumValue: servingSaltSodiumValue,
 			hundredSaltSodiumValue: hundredSaltSodiumValue,
 			visualInfo: visualData,
-			healthClaimsBool: healthClaimsBool,
-			healthClaims: healthClaims,
+			nutrientContentClaimsBool: nutrientContentClaimsBool,
+			nutrientContentClaims: nutrientContentClaims,
 			otherBool: otherBool,
 			otherClaim: otherClaim,
 			initialPosition: null,
@@ -383,10 +383,10 @@ var RegisterProduct = React.createClass({
 		)
 	},
 
-	renderHealthClaims: function()
+	renderNutrientContentClaims: function()
 	{
 
-		if(!this.state.healthClaimsBool.boolValue)
+		if(!this.state.nutrientContentClaimsBool.boolValue)
 			return(
 				<View>
 					<Form
@@ -394,8 +394,8 @@ var RegisterProduct = React.createClass({
 						options={
 							{fields:{boolValue:{ label:'Nutrient content claims', onTintColor:'#4B92DB'}}}
 						}
-						value={this.state.healthClaimsBool}
-						onChange={(value) =>{this.storeTmpState();this.setState({healthClaimsBool: value})}}
+						value={this.state.nutrientContentClaimsBool}
+						onChange={(value) =>{this.storeTmpState();this.setState({nutrientContentClaimsBool: value})}}
 						/>
 				</View>
 			);
@@ -407,12 +407,12 @@ var RegisterProduct = React.createClass({
 						options={
 							{fields:{boolValue:{ label:'Nutrient content claims', onTintColor:'#4B92DB'}}}
 						}
-						value={this.state.healthClaimsBool}
-						onChange = {(value) =>{this.storeTmpState();this.setState({healthClaimsBool: value})}}/>
+						value={this.state.nutrientContentClaimsBool}
+						onChange = {(value) =>{this.storeTmpState();this.setState({nutrientContentClaimsBool: value})}}/>
 
 					<Form
-						ref="healthClaimsForm"
-						type={Models.HealthClaims()}
+						ref="nutrientContentClaimsForm"
+						type={Models.NutrientContentClaims()}
 						options={
 							{
 							fields:{
@@ -430,8 +430,8 @@ var RegisterProduct = React.createClass({
 								}
 							}
 						}
-						value={this.state.healthClaims}
-						onChange={(value) => {_tmp_state.healthClaims = value}}/>
+						value={this.state.nutrientContentClaims}
+						onChange={(value) => {_tmp_state.nutrientContentClaims = value}}/>
 
 				</View>
 			);
@@ -514,7 +514,7 @@ var RegisterProduct = React.createClass({
 					{this.renderNutritionalPrServing()}
 
 					{this.renderBottom()}
-					{this.renderHealthClaims()}
+					{this.renderNutrientContentClaims()}
 					{this.renderImages()}
 				</ScrollView>
 			</View>
@@ -591,7 +591,7 @@ var RegisterProduct = React.createClass({
 			nutHundredValue: _tmp_state.nutHundredValue,
 			nutServingValue: _tmp_state.nutServingValue,
 			visualInfo: _tmp_state.visualInfo,
-			healthClaims: _tmp_state.healthClaims,
+            nutrientContentClaims: _tmp_state.nutrientContentClaims,
 			otherClaim: _tmp_state.otherClaim,
 			hundredSaltSodiumValue: _tmp_state.hundredSaltSodiumValue,
 			servingSaltSodiumValue: _tmp_state.servingSaltSodiumValue
@@ -701,8 +701,8 @@ var RegisterProduct = React.createClass({
 			//console.log("# Checkpoint 7");
 
 
-			if(this.refs.healthClaimsForm){
-				newVal.healthClaims = Datastore.clone(this.refs.healthClaimsForm.getValue());
+			if(this.refs.nutrientContentClaimsForm){
+				newVal.nutrientContentClaims = Datastore.clone(this.refs.nutrientContentClaimsForm.getValue());
 			}
 
 			//console.log("# Checkpoint 8");

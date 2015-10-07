@@ -215,7 +215,7 @@ module.exports.VisualInformation = function(){
 	});
 };
 
-module.exports.HealthClaims = function(){
+module.exports.NutrientContentClaims = function(){
     return t.struct({
         noSalt: t.maybe(t.Bool),
         noSugar: t.maybe(t.Bool),

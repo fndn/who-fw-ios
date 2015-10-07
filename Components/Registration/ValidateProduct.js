@@ -100,7 +100,7 @@ var options = {
 }; // optional rendering options (see documentation)
 
 // theme "checkboxes":
-['cartoons', 'picturesOfInfantsOrYoungChildren', 'picturesOfMothers', 'comparativeClaims', 'nutrientContentClaims', 'healthClaims', 'other'].forEach( function(el){
+['cartoons', 'picturesOfInfantsOrYoungChildren', 'picturesOfMothers', 'comparativeClaims', 'healthClaims', 'nutrientContentClaims', 'other'].forEach( function(el){
 	options.fields[el]['onTintColor'] = '#4B92DB';
 });
 
@@ -293,16 +293,16 @@ var ValidateProduct = React.createClass({
 		)
 	},
 
-	renderHealthClaims: function()
+	renderNutrientContentClaims: function()
 	{
 
-		if(!this.state.value.healthClaims)
+		if(!this.state.value.nutrientContentClaims)
 			return(
 				<View>
 					<Form
 						type={Models.SimpelBool()}
 						options={
-							{fields:{boolValue:{ label:'Health claims', onTintColor:'#4B92DB', disabled: true}}}
+							{fields:{boolValue:{ label:'Nutrient content claims', onTintColor:'#4B92DB', disabled: true}}}
 						}
 						value={{boolValue:false}}
 						/>
@@ -314,32 +314,17 @@ var ValidateProduct = React.createClass({
 					<Form
 						type={Models.SimpelBool()}
 						options={
-							{fields:{boolValue:{ label:'Health claims', onTintColor:'#4B92DB', disabled: true}}}
+							{fields:{boolValue:{ label:'Nutrient content claims', onTintColor:'#4B92DB', disabled: true}}}
 						}
 						value={{boolValue:true}}
 						/>
 
 					<Form
 						ref="healthClaims"
-						type={Models.HealthClaims()}
+						type={Models.NutrientContentClaims()}
 						options={this.state.options
-							/*{
-							fields:{
-								noSalt:{label: 'Unsaltet/No salt/No added salt', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB'},
-								noSugar:{label: 'No added sugar/low in sugar', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB'},
-								noSweeteners:{label: 'No artificial sweetners', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB'},
-								vitamins:{label: 'Fortified with vitamins/minerals', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB'},
-								noPreservatives:{label: 'No artificial preservatives', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB'},
-								noStarch:{label: 'No added starch', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB'},
-								noColors:{label: 'No artificial colors', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB'},
-								noFlavours:{label: 'No artificial flavors', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB'},
-								glutenFree:{label: 'Gluten free', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB'},
-								organic:{label: 'Organic', template:GlobalStyles.indentedBool, onTintColor: '#4B92DB'},
-								other:{template: GlobalStyles.indentedTextbox}
-								}
-							}*/
 						}
-						value={this.state.value.healthClaims}
+						value={this.state.value.nutrientContentClaims}
 						/>
 
 				</View>
@@ -379,7 +364,7 @@ var ValidateProduct = React.createClass({
 					options={options}
 					value={this.state.value.visualInformation}
 					/>
-				{this.renderHealthClaims()}
+				{this.renderNutrientContentClaims()}
 				<Text style={GlobalStyles.title}>
 					Pictures
 				</Text>
