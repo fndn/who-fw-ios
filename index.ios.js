@@ -22,16 +22,17 @@ Form.stylesheet 	= GlobalStyles.formStyle;
 console.log('----------------------------------------------------------------------------------------------------------------');
 var Datastore 		= require('fndn-rn-datastore');
 
+
 Datastore.opts({
 	data: {
-		database: 	'whofwa-071',
+		database: 	'fwa-151006',
 		tables: 	["countries", "locations", "brands", "incomeTypes", "storeTypes", "storeBrands", "ageGroups", "products", "currencies"],
 		uploadOnly: ["register"],
 		localOnly:	["registrations", "credentials"]
 	},
 	net: {
 		remotehost: 'http://127.0.0.1:8090',
-		remotehost: 'http://172.20.10.13:8090',		// kanda ipad
+		//remotehost: 'http://172.20.10.13:8090',		// kanda ipad
 		//remotehost: 'http://10.0.1.2:8090',			// base.io
 		//remotehost: 'http://whofw.fndn.dk:8080',	
 		remotehost: 'https://whofw.fndn.dk',
@@ -52,6 +53,8 @@ var fwa = React.createClass({
 			Datastore.info();
 			Datastore.reach.enable();
 
+			//console.log("X registrations:", Datastore.data.empty("registrations") );
+
 			Datastore.M.credentials = Datastore.data.removeIDs( Datastore.data.last("credentials") );
 			
 			/// Badge
@@ -59,6 +62,10 @@ var fwa = React.createClass({
 				self.setState({regs: Datastore.data.countWhereNo("registrations", "uploaded")});
 			});
 			self.setState({regs: Datastore.data.countWhereNo("registrations", "uploaded")});
+
+			console.log("All products:", Datastore.data.all("products") );
+			console.log("All registrations:", Datastore.data.all("registrations") );
+			console.log("Sweden sth:", Datastore.data.where("registrations", {locationID:'4e7800ada7b88b9a5bf3f1511380ed1c'}) );
 
 		});
 		

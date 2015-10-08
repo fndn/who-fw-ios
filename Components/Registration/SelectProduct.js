@@ -28,25 +28,25 @@ var productNames = {};
 
 var SelectProduct = React.createClass ({
 
-    changed: function(r1, r2)
-    {
-        // In order to force redrawing registered rows, we need this comparison as r1 and r2 are the same
-        if(Datastore.M.locationRegistrations)
-            return Datastore.M.locationRegistrations.indexOf(r2.hash) > -1;
-        else
-            return r1 !== r2;
-    },
+	changed: function(r1, r2)
+	{
+		// In order to force redrawing registered rows, we need this comparison as r1 and r2 are the same
+		if(Datastore.M.locationRegistrations)
+			return Datastore.M.locationRegistrations.indexOf(r2.hash) > -1;
+		else
+			return r1 !== r2;
+	},
 
 	componentWillMount: function() {
 		var dataSource = new ListView.DataSource({rowHasChanged: this.changed});
 
-        this.state = {
+		this.state = {
 			isLoading: false,
 			message: 'init',
 			dataSource: dataSource
 		};
 
-        Datastore.M.SelectProductRoute = this.props.route;
+		Datastore.M.SelectProductRoute = this.props.route;
 		navigatorEventListener = this.props.navigator.navigationContext.addListener('willfocus', (event) => {
 			console.log("[SelectProduct] willfocus", event.data.route.displayName);
 			if(event.data.route.displayName === "SelectProduct"){
@@ -56,7 +56,7 @@ var SelectProduct = React.createClass ({
 				Datastore.data.where('products', {"country": Datastore.M.country.name}, this.dataAvailable);
 			}
 		});
-        console.log(Datastore.M.country.name);
+		console.log(Datastore.M.country.name);
 		Datastore.data.where('products', {"country": Datastore.M.country.name}, this.dataAvailable);
 	},
 	
@@ -67,7 +67,7 @@ var SelectProduct = React.createClass ({
 
 	dataAvailable: function(_data){
 		//console.log('[SelectProduct] dataAvailable', _data);
-        // Add property "registered" to force redraw of newly registered row.
+		// Add property "registered" to force redraw of newly registered row.
 
 		this.setState({
 			dataSource: this.state.dataSource.cloneWithRows(_data)
@@ -94,63 +94,67 @@ var SelectProduct = React.createClass ({
 	},
 
 	_renderRowWithImage: function(rowData, sectionID, rowID) {
-        // test: Read image from Documents folder
+		// test: Read image from Documents folder
 
-        //var _foodType = Models.foodTypes.meta.map[rowData.foodType];
-        //var _ageGroup = Models.ageGroups.meta.map[rowData.ageGroup];
-        //console.log("LOCATION REGISTRATIONS: ", Datastore.M.locationRegistrations, rowData.hash);
-        if (Datastore.M.locationRegistrations && Datastore.M.locationRegistrations.indexOf(rowData.hash) > -1) // registered for this location
-        {
-            return (
-                <View style={{opacity: 0.5}}>
-                    <View style={GlobalStyles.listrowContainer01}>
-                        <View style={GlobalStyles.listrowContainer02}>
+		//var _foodType = Models.foodTypes.meta.map[rowData.foodType];
+		//var _ageGroup = Models.ageGroups.meta.map[rowData.ageGroup];
+		
+		console.log("LOCATION REGISTRATIONS RAW ", rowData);
+		console.log("LOCATION REGISTRATIONS: ", Datastore.M.locationRegistrations, rowData.hash);
+		
 
-                            <Image style={GlobalStyles.rowImage}
-                                   source={{ uri: Datastore.ws.img("products", rowData.uuid, 'front', '300x300') }}/>
-                            {/*<Image style={GlobalStyles.rowImage} source={{ uri: 'http://lorempixel.com/100/100/sports/'}} /> */}
+		if (Datastore.M.locationRegistrations && Datastore.M.locationRegistrations.indexOf(rowData.hash) > -1) // registered for this location
+		{
+			return (
+				<View style={{opacity: 0.5}}>
+					<View style={GlobalStyles.listrowContainer01}>
+						<View style={GlobalStyles.listrowContainer02}>
 
-                            <View>
-                                <Text style={GlobalStyles.listrowTitle}>{rowData.name}</Text>
-                                <Text
-                                    style={GlobalStyles.listrowSubtitle}>{rowData.foodType + '\n'}by {rowData.brand + '\n'}from
-                                    age {rowData.ageGroup}</Text>
-                            </View>
-                        </View>
-                    </View>
-                    <View style={GlobalStyles.listrowSeparator}/>
-                </View>
-            );
-        }
-        else
-        {
-            return(
-                <TouchableHighlight underlayColor='#EEE' onPress={() => this.rowPressed(rowData)}>
-                    <View>
-                        <View style={GlobalStyles.listrowContainer01}>
-                            <View style={GlobalStyles.listrowContainer02}>
+							<Image style={GlobalStyles.rowImage}
+								   source={{ uri: Datastore.ws.img("products", rowData.uuid, 'front', '300x300') }}/>
+							{/*<Image style={GlobalStyles.rowImage} source={{ uri: 'http://lorempixel.com/100/100/sports/'}} /> */}
 
-                                <Image style={GlobalStyles.rowImage}
-                                       source={{ uri: Datastore.ws.img("products", rowData.uuid, 'front', '300x300') }}/>
-                                {/*<Image style={GlobalStyles.rowImage} source={{ uri: 'http://lorempixel.com/100/100/sports/'}} /> */}
+							<View>
+								<Text style={GlobalStyles.listrowTitle}>{rowData.name}</Text>
+								<Text
+									style={GlobalStyles.listrowSubtitle}>{rowData.foodType + '\n'}by {rowData.brand + '\n'}from
+									age {rowData.ageGroup}</Text>
+							</View>
+						</View>
+					</View>
+					<View style={GlobalStyles.listrowSeparator}/>
+				</View>
+			);
+		}
+		else
+		{
+			return(
+				<TouchableHighlight underlayColor='#EEE' onPress={() => this.rowPressed(rowData)}>
+					<View>
+						<View style={GlobalStyles.listrowContainer01}>
+							<View style={GlobalStyles.listrowContainer02}>
 
-                                <View>
-                                    <Text style={GlobalStyles.listrowTitle}>{rowData.name}</Text>
-                                    <Text
-                                        style={GlobalStyles.listrowSubtitle}>{rowData.foodType + '\n'}by {rowData.brand + '\n'}from
-                                        age {rowData.ageGroup}</Text>
-                                </View>
-                            </View>
-                        </View>
-                        <View style={GlobalStyles.listrowSeparator}/>
-                    </View>
-                </TouchableHighlight>
-            );
-        }
+								<Image style={GlobalStyles.rowImage}
+									   source={{ uri: Datastore.ws.img("products", rowData.uuid, 'front', '300x300') }}/>
+								{/*<Image style={GlobalStyles.rowImage} source={{ uri: 'http://lorempixel.com/100/100/sports/'}} /> */}
+
+								<View>
+									<Text style={GlobalStyles.listrowTitle}>{rowData.name}</Text>
+									<Text
+										style={GlobalStyles.listrowSubtitle}>{rowData.foodType + '\n'}by {rowData.brand + '\n'}from
+										age {rowData.ageGroup}</Text>
+								</View>
+							</View>
+						</View>
+						<View style={GlobalStyles.listrowSeparator}/>
+					</View>
+				</TouchableHighlight>
+			);
+		}
 	},
 
 	rowPressed: function(rowData) {
-        console.log("= [SelectProduct] ", rowData.name);
+		console.log("= [SelectProduct] ", rowData.name);
 
 		Datastore.M.product = rowData;
 		this.props.navigator.push({

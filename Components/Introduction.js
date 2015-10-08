@@ -61,21 +61,45 @@ var Introduction = React.createClass ({
 						resizeMode="contain"
 						source={require('image!who_logo')}/>
 				</View>
-                <View style={styles.welcome_wrap}>
-                    <Text style={styles.welcome_text}>Availability of Commercially Produced Complementary Food Products in the Market Place in the WHO European Region</Text>
-                </View>
+				
+				<View style={styles.welcome_wrap}>
+					<Text style={styles.welcome_text}>Availability of Commercially Produced Complementary Food Products in the Market Place in the WHO European Region</Text>
+				</View>
+				
 				<View style={styles.login}>
-                    <Text>{"\n"}</Text>
+					<Text>{"\n"}</Text>
 					<Form
 						ref="form"
 						type={Models.Respondent()}
 						value={this.state.value}
 						onChange={this.onChange}
 						/>
+				</View>
 
+
+
+
+				<View style={styles.h2020wrap}>
+
+					<Image
+						style={styles.h2020logo}
+						resizeMode="contain"
+						source={require('image!h2020globe')}/>
+
+					<View style={styles.rs}>
+						<Image
+							style={styles.rdark}
+							resizeMode="contain"
+							source={require('image!rdark')}/>
+						<Image
+							style={styles.rlight}
+							resizeMode="contain"
+							source={require('image!rlight')}/>
+					</View>
 
 				</View>
 
+				<View style={styles.btmpad}></View>
 				
 			</ScrollView>
 			</View>
@@ -124,7 +148,7 @@ var styles = StyleSheet.create({
 
 	login: {
 		padding: 20,
-		paddingBottom: 300,
+		paddingBottom: 0,
 		paddingTop: 10,
 	},
 
@@ -137,7 +161,37 @@ var styles = StyleSheet.create({
 	welcome_text: {
 		color: '#fff',
 		fontSize: 16,
-        textAlign: 'center'
-	}
+		textAlign: 'center',
+		padding: 10
+	},
 
+
+	rs: {
+		position: 'absolute',
+		top: 278,
+		width: 320,
+		height: 40,
+	},
+	rdark: {
+
+	},
+	rlight: {
+
+	},
+
+
+	h2020wrap: {
+		alignItems: 'center',
+		flex: 1,
+		height: 310,
+		padding: 0,
+		backgroundColor: 'transparent'
+	},
+	h2020logo: {
+		width: 250,
+	},
+
+	btmpad: {
+		/*paddingBottom: 300,*/
+	}
 });

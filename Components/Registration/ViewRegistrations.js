@@ -37,11 +37,11 @@ var ViewRegistrations = React.createClass ({
 			message: 'init',
 			dataSource: dataSource
 		};
-        // Reset current registrations
-        locationRegistrations = [];
-        D.M.locationRegistrations = null;
+		// Reset current registrations
+		locationRegistrations = [];
+		D.M.locationRegistrations = null;
 
-        D.M.ViewRegistrationsRoute = this.props.route;
+		D.M.ViewRegistrationsRoute = this.props.route;
 
 		navigatorEventListener = this.props.navigator.navigationContext.addListener('willfocus', (event) => {
 			//console.log("[ViewRegistrations]", event.data.route);
@@ -58,10 +58,12 @@ var ViewRegistrations = React.createClass ({
 		//D.data.where("registrations", {locationID: D.M.location._id} , this.dataAvailable);
 		D.data.where('registrations', {locationID:D.M.location.hash}, this.dataAvailable);
 
+//		DataSource.data.where("registrations", {locationID:'4e7800ada7b88b9a5bf3f1511380ed1c'});
+
 	},
 
 	dataAvailable: function(_data){
-        console.log("REGISTRATIONS ", _data);
+		console.log("REGISTRATIONS ", _data);
 		this.setState({
 			isLoading:false,
 			message:'loaded',
@@ -99,30 +101,14 @@ var ViewRegistrations = React.createClass ({
 	_renderRowWithImage: function(rowData, sectionID, rowID) {
 		var productInfo = rowData.product;
 
-		
-		/*
-		/// resolve image
-		console.log('_renderRowWithImage', rowData);
-		var image = (<Image style={GlobalStyles.rowImage} source={{ uri: D.ws.img("products", productInfo.uuid, 'front', '300x300') }} />);
-		if( ! rowData.hasImages ){
-			/// see if we registered this record locally
-			var d = D.data.one("registrations", {hash:rowData.hash})
-			//console.log(' > ONE', d );
+		console.log('add prod to locationRegistrations RAW', rowData, sectionID, rowID );
+		console.log('add prod to locationRegistrations:', productInfo );
+		// ah. $rowData.product has no $hash (but $rowData has)
+		// what do we need to compare?
+		// did is use to have a hash?
 
-			var PP = D.data.one("products", {uuid:productInfo.uuid})
-			console.log(' > ONE PP', PP );
-
-
-			if( d.product.imgstore ){
-				console.log('**** this record can use Registration images');
-				var filename = d.product.imgstore[0].path.split("Documents/").slice(-1);
-				image = (<Image style={GlobalStyles.rowImage} source={{ uri: D.ws.raw(filename) }} />);
-			}
-		}
-		*/
-
-        locationRegistrations.push(productInfo.hash);
-        D.M.locationRegistrations = locationRegistrations;
+		locationRegistrations.push(productInfo.hash);
+		D.M.locationRegistrations = locationRegistrations;
 		return (
 			<TouchableHighlight underlayColor='#EEE' onPress={() => this.rowPressed(rowData)}>
 				<View>
