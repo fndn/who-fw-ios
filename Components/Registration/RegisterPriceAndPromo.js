@@ -6,9 +6,9 @@
 var React 			        = require('react-native');
 var Datastore 		        = require('fndn-rn-datastore');
 var t                       = require('tcomb-form-native');
-
 var Models                  = require('../Models');
 var GlobalStyles 	        = require('../../Styles/GlobalStyles');
+
 var CompleteRegistration    = require('./CompleteRegistration');
 var RegisterCurrency        = require('./RegisterCurrency');
 
@@ -20,7 +20,7 @@ var options = {
         currentPrice:{keyboardType: 'numeric'},
         normalPrice:{keyboardType: 'numeric'}
     }
-}; // optional rendering options (see documentation)
+};
 
 var {
     StyleSheet,
@@ -63,9 +63,6 @@ var RegisterPriceAndPromo = React.createClass({
                     keyboardDismissMode={'on-drag'}
                     keyboardShouldPersistTaps={false}
                     scrollsToTop={true}>
-
-
-
 
                     <Form
                         ref="price_form"
@@ -126,9 +123,9 @@ var RegisterPriceAndPromo = React.createClass({
 
     onReturnFromAddCurrency: function(currency)
     {
-        console.log("Returned with", currency);
-        _tmp_state.currency = currency;
-        this.setState({priceInfo: _tmp_state});
+        //console.log("Returned with", currency);
+        _tmp_state.priceInfo.currency = currency;
+        this.storeTmpState();
     },
 
     onPress: function()
@@ -162,8 +159,6 @@ var RegisterPriceAndPromo = React.createClass({
         }
     }
 });
-
-
 
 
 // Heights:

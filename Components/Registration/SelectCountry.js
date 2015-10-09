@@ -31,10 +31,7 @@ var SelectCountry = React.createClass ({
 
 	componentWillMount: function(){
 		console.log('[SelectCountry] componentWillMount');
-        var value = "26,6";
-        console.log("#", value);
-        value = value.replace(/,/g, '.');
-        console.log("## ", value);
+
 		var dataSource = new ListView.DataSource({rowHasChanged: (r1, r2) => r1["_id"] !== r2["_id"] });
 		this.state = {
 			isLoading: false,
@@ -42,14 +39,14 @@ var SelectCountry = React.createClass ({
 			dataSource: dataSource
 		};
 
-		navigatorEventListener = this.props.navigator.navigationContext.addListener('willfocus', (event) => {
-			//console.log("[SelectCountry]", event.data.route.displayName);
-			if(event.data.route.displayName === "SelectCountry"){
-				Datastore.data.all('countries', this.dataAvailable);
-			}			
-		});
+        if(!navigatorEventListener)
+            navigatorEventListener = this.props.navigator.navigationContext.addListener('willfocus', (event) => {
+                //console.log("[SelectCountry]", event.data.route.displayName);
+                if(event.data.route.displayName === "SelectCountry"){
+                    Datastore.data.all('countries', this.dataAvailable);
+                }
+            });
 
-		// 1
 		Datastore.data.all('countries', this.dataAvailable);
 	},
 
