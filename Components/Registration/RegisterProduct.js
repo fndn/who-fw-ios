@@ -628,7 +628,7 @@ var RegisterProduct = React.createClass({
 					}
 					if(!hasInfo)
 					{
-						alert("Please fill in some information under \"Nutritional information per 100 g\" or uncheck it");
+						alert("Please fill in the 'Nutritional information per 100 g'");
 
 						this.jumpToError(this.refs.per100Bool, "boolValue");
 						return null;

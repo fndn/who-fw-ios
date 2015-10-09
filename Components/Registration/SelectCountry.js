@@ -35,8 +35,6 @@ var SelectCountry = React.createClass ({
 
 		var dataSource = new ListView.DataSource({rowHasChanged: (r1, r2) => r1["_id"] !== r2["_id"] });
 		this.state = {
-			isLoading: false,
-			message: 'init',
 			dataSource: dataSource
 		};
 
@@ -75,8 +73,6 @@ var SelectCountry = React.createClass ({
 		Datastore.data.orderBy(_data, "name"); // orders *in place*
 
 		this.setState({
-			isLoading:false,
-			message:'loaded',
 			dataSource: this.state.dataSource.cloneWithRows(_data)
 		});
 	},
@@ -101,15 +97,15 @@ var SelectCountry = React.createClass ({
 	_renderRow: function( rowData, sectionID, rowID ){
 		return (
 			<TouchableHighlight underlayColor='#EEE' onPress={() => this.rowPressed(rowData)}>
-				<View>
-					<View style={GlobalStyles.listrowContainer}>
-						<View>
-							<Text style={GlobalStyles.listrowTitle}>{rowData.name}</Text>
-							<Text style={GlobalStyles.listrowSubtitle}>{rowData.countryCode}</Text>
-						</View>
-					</View>
-					<View style={GlobalStyles.listrowSeparator} />
-				</View>
+                <View>
+                    <View style={GlobalStyles.listrowContainer}>
+                        <View>
+                            <Text style={GlobalStyles.listrowTitle}>{rowData.name}</Text>
+                            <Text style={GlobalStyles.listrowSubtitle}>{rowData.countryCode}</Text>
+                        </View>
+                    </View>
+                    <View style={GlobalStyles.listrowSeparator} />
+                </View>
 			</TouchableHighlight>
 		);
 	},
