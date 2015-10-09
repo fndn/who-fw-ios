@@ -41,12 +41,20 @@ var RegisterPriceAndPromo = React.createClass({
 
     getInitialState: function(){
         // Only pre-select currency
+        console.log(Datastore.M.country);
+
         if(_tmp_state.priceInfo && _tmp_state.priceInfo.currency) {
             var tempCurrency = _tmp_state.priceInfo.currency;
             _tmp_state.priceInfo = null;
             _tmp_state.promotionInfo = null;
             _tmp_state.priceInfo = {currency:tempCurrency};
         }
+        else if(Datastore.M.country.currency)
+        {
+            _tmp_state.priceInfo = {currency:Datastore.M.country.currency};
+        }
+
+
         return({
             priceInfo: _tmp_state.priceInfo,
             promotionInfo: _tmp_state.promotionInfo
@@ -148,6 +156,14 @@ var RegisterPriceAndPromo = React.createClass({
             Datastore.M.locationRegistrations.push(newVal.product.hash);
 
             Datastore.M.product = null;
+
+            // Set default currency for country
+            if(!Datastore.M.country.currency)
+            {
+                var c = newVal.price.currency;
+                Datastore.M.country.currency = c;
+                console.log("add currency to country: ", Datastore.data.put('countries', {_id:Datastore.M.country._id}, {currency:c}));
+            }
 
             this.props.navigator.push({
                 onLeftButtonPress: () => this.props.navigator.popToRoute(Datastore.M.SelectProductRoute),

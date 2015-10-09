@@ -115,23 +115,25 @@ var SelectProduct = React.createClass ({
 		if (Datastore.M.locationRegistrations && Datastore.M.locationRegistrations.indexOf(rowData.hash) > -1) // registered for this location
 		{
 			return (
-				<View style={{opacity: 0.5}}>
-					<View style={GlobalStyles.listrowContainer01}>
-						<View style={GlobalStyles.listrowContainer02}>
+                <TouchableHighlight underlayColor='#EEE' style={{opacity: 0.5}} onPress={() => this.rowPressed(rowData, true)}>
+                    <View>
+                        <View style={GlobalStyles.listrowContainer01}>
+                            <View style={GlobalStyles.listrowContainer02}>
 
-							<Image style={GlobalStyles.rowImage}
-								   source={{ uri: Datastore.ws.img("products", rowData.uuid, 'front', '300x300') }}/>
+                                <Image style={GlobalStyles.rowImage}
+                                       source={{ uri: Datastore.ws.img("products", rowData.uuid, 'front', '300x300') }}/>
 
-							<View>
-								<Text style={GlobalStyles.listrowTitle}>{rowData.name}</Text>
-								<Text
-									style={GlobalStyles.listrowSubtitle}>{rowData.foodType + '\n'}by {rowData.brand + '\n'}from
-									age {rowData.ageGroup}</Text>
-							</View>
-						</View>
-					</View>
-					<View style={GlobalStyles.listrowSeparator}/>
-				</View>
+                                <View>
+                                    <Text style={GlobalStyles.listrowTitle}>{rowData.name}</Text>
+                                    <Text
+                                        style={GlobalStyles.listrowSubtitle}>{rowData.foodType + '\n'}by {rowData.brand + '\n'}from
+                                        age {rowData.ageGroup}</Text>
+                                </View>
+                            </View>
+                        </View>
+                        <View style={GlobalStyles.listrowSeparator}/>
+                    </View>
+                </TouchableHighlight>
 			);
 		}
 		else
@@ -160,7 +162,7 @@ var SelectProduct = React.createClass ({
 		}
 	},
 
-	rowPressed: function(rowData) {
+	rowPressed: function(rowData, onlyClone=false) {
 		console.log("= [SelectProduct] ", rowData.name);
 
 		Datastore.M.product = rowData;
@@ -169,7 +171,8 @@ var SelectProduct = React.createClass ({
 			onLeftButtonPress: () => this.props.navigator.pop(),
 			title: 'Validate Product',
 			displayName: 'ValidateProduct',
-			component: ValidateProduct
+			component: ValidateProduct,
+            passProps: {onlyClone: onlyClone}
 
 		 });
 	}

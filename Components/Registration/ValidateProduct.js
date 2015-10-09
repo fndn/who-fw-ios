@@ -212,6 +212,7 @@ var ValidateProduct = React.createClass({
     {
         // This is to prevent warning when geolocation returns, if component has unmounted
         this_exists = false;
+        navigatorEventListener.remove();
     },
 
 	_noGPS: function(err){
@@ -332,6 +333,35 @@ var ValidateProduct = React.createClass({
 
 	},
 
+    renderConfirm: function(){
+        if(this.props.onlyClone)
+        {
+            return (
+                <View>
+                    <Text style={styles.text}>
+                        This product is already registered, so you can only use if for clone and edit
+                    </Text>
+                    <TouchableHighlight style={[styles.buttonConfirm, {opacity:0.5}]} underlayColor='#A0F584'>
+                        <Text style={GlobalStyles.buttonText}>CONFIRM</Text>
+                    </TouchableHighlight>
+                </View>
+            );
+        }
+        else
+        {
+            return(
+                <View>
+                    <Text style={styles.text}>
+                        Click CONFIRM to confirm that this product matches the one in the store to every detail.
+                    </Text>
+                    <TouchableHighlight style={styles.buttonConfirm} onPress = {this.onPress} underlayColor='#A0F584'>
+                        <Text style={GlobalStyles.buttonText}>CONFIRM</Text>
+                    </TouchableHighlight>
+                </View>
+            );
+        }
+    },
+
 
 	render: function(){
 
@@ -391,12 +421,13 @@ var ValidateProduct = React.createClass({
 				</View>
 				
 				<View>
-					<Text style={styles.text}>
+                    {/*<Text style={styles.text}>
 						Click CONFIRM to confirm that this product matches the one in the store to every detail.
 					</Text>
 					<TouchableHighlight style={styles.buttonConfirm} onPress = {this.onPress} underlayColor='#A0F584'>
 						<Text style={GlobalStyles.buttonText}>CONFIRM</Text>
-					</TouchableHighlight>
+					</TouchableHighlight>*/}
+                    {this.renderConfirm()}
 					<Text style={styles.text}>
 						Click CLONE AND EDIT if there is any difference between the product in the store and this.
 						On the next page you will be able to edit the information.
