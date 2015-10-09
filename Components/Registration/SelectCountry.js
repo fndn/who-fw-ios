@@ -64,6 +64,7 @@ var SelectCountry = React.createClass ({
 	},
 
 	componentWillUnmount: function(){
+        Datastore.M.country = null;
 		navigatorEventListener.remove();
 	},
 

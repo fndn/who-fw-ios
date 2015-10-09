@@ -63,6 +63,7 @@ var SelectLocation = React.createClass ({
 	},
 	
 	componentWillUnmount: function(){
+        Datastore.M.location = null;
 		navigatorEventListener.remove();
 	},
 
