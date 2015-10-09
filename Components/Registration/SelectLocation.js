@@ -20,6 +20,7 @@ var {
 } = React;
 
 var navigatorEventListener;
+var isSubscribedToSync = false;
 
 var SelectLocation = React.createClass ({
 
@@ -32,6 +33,18 @@ var SelectLocation = React.createClass ({
 			message: 'init',
 			dataSource: dataSource
 		};
+
+        // Subscribe for sync event
+        // Since we have no way of unsubscribing we have to check whether the component has been unmounted
+        // because we only want a single subscription
+        if(!isSubscribedToSync) {
+            var self = this;
+            Datastore.data.subscribe("registrations", function (data) {
+                if (Datastore.M.country)
+                    Datastore.data.where('locations', {"countryCode": Datastore.M.country.countryCode}, self.dataAvailable);
+            });
+            isSubscribedToSync = true;
+        }
 
         Datastore.M.SelectLocationRoute = this.props.route;
 

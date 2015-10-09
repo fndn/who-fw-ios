@@ -26,6 +26,7 @@ var {
 } = React;
 
 var navigatorEventListener;
+var isSubscribedToSync = false;
 
 var SelectCountry = React.createClass ({
 
@@ -39,13 +40,24 @@ var SelectCountry = React.createClass ({
 			dataSource: dataSource
 		};
 
-        if(!navigatorEventListener)
-            navigatorEventListener = this.props.navigator.navigationContext.addListener('willfocus', (event) => {
-                //console.log("[SelectCountry]", event.data.route.displayName);
-                if(event.data.route.displayName === "SelectCountry"){
-                    Datastore.data.all('countries', this.dataAvailable);
-                }
+        // Subscribe for sync event
+        // Since we have no way of unsubscribing we have to check whether the component has been unmounted
+        // because we only want a single subscription
+        if(!isSubscribedToSync) {
+            var self = this;
+            Datastore.data.subscribe("registrations", function (data) {
+                Datastore.data.all('countries', self.dataAvailable);
             });
+            isSubscribedToSync = true;
+        }
+
+
+        navigatorEventListener = this.props.navigator.navigationContext.addListener('willfocus', (event) => {
+            //console.log("[SelectCountry]", event.data.route.displayName);
+            if(event.data.route.displayName === "SelectCountry"){
+                Datastore.data.all('countries', this.dataAvailable);
+            }
+        });
 
 		Datastore.data.all('countries', this.dataAvailable);
 	},

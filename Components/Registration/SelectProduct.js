@@ -24,6 +24,7 @@ var {
 
 var navigatorEventListener;
 var productNames = {};
+var isSubscribedToSync = false;
 
 
 var SelectProduct = React.createClass ({
@@ -45,6 +46,18 @@ var SelectProduct = React.createClass ({
 			message: 'init',
 			dataSource: dataSource
 		};
+
+        // Subscribe for sync event
+        // Since we have no way of unsubscribing we have to check whether the component has been unmounted
+        // because we only want a single subscription
+        if(!isSubscribedToSync) {
+            var self = this;
+            Datastore.data.subscribe("registrations", function (data) {
+                if (Datastore.M.country)
+                    Datastore.data.where('products', {"country": Datastore.M.country.name}, self.dataAvailable);
+            });
+            isSubscribedToSync = true;
+        }
 
 		Datastore.M.SelectProductRoute = this.props.route;
 		navigatorEventListener = this.props.navigator.navigationContext.addListener('willfocus', (event) => {
