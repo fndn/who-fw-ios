@@ -152,11 +152,11 @@ var RegisterProduct = React.createClass({
 
 			data = Datastore.clone(Datastore.M.product);
 
-            // remap enums
-            data.foodType = Models.getKeyByValue(Models.foodTypes.meta.map, data.foodType);
-            data.ageGroup = Models.getKeyByValue(Models.ageGroups.meta.map, data.ageGroup);
+			// remap enums
+			data.foodType = Models.getKeyByValue(Models.foodTypes.meta.map, data.foodType);
+			data.ageGroup = Models.getKeyByValue(Models.ageGroups.meta.map, data.ageGroup);
 
-            data.brand = Models.numberToLetters(Datastore.data.where("brands", {country: Datastore.M.country.name, name: data.brand})[0]._id)
+			data.brand = Models.numberToLetters(Datastore.data.where("brands", {country: Datastore.M.country.name, name: data.brand})[0]._id)
 
 
 			hundredData = data.nutritionalPr100g;
@@ -236,7 +236,7 @@ var RegisterProduct = React.createClass({
 	},
 
 	componentDidMount: function() {
-        this_exists = true;
+		this_exists = true;
 		navigator.geolocation.getCurrentPosition(
 			(initialPosition) => {if(this_exists) this.setState({initialPosition});},
 			(error) => alert(error.message),
@@ -244,11 +244,11 @@ var RegisterProduct = React.createClass({
 		);
 	},
 
-    componentWillUnmount: function()
-    {
-        // This is to prevent warning when geolocation returns, if component has unmounted
-        this_exists = false;
-    },
+	componentWillUnmount: function()
+	{
+		// This is to prevent warning when geolocation returns, if component has unmounted
+		this_exists = false;
+	},
 
 
 // <editor-fold desc=" Render methods">
@@ -272,7 +272,7 @@ var RegisterProduct = React.createClass({
 
 
 				<Form
-                    ref="per100Bool"
+					ref="per100Bool"
 					type={Models.SimpelBool()}
 					options={nutBoolOptions}
 					value={this.state.nutBool}
@@ -285,7 +285,7 @@ var RegisterProduct = React.createClass({
 	renderMid: function () {
 		return(
 			<Form
-                ref="perServingBool"
+				ref="perServingBool"
 				type={Models.SimpelBool()}
 				options={nutServingBoolOptions}
 				value={this.state.nutServingBool}
@@ -570,20 +570,20 @@ var RegisterProduct = React.createClass({
 			onLeftButtonPress: () => this.props.navigator.pop(),
 			title: 'Register Brand',
 			component: RegisterBrand,
-            callback: this.onReturnFromAddBrand
+			callback: this.onReturnFromAddBrand
 
 		});
 	},
 
-    onReturnFromAddBrand(id)
-    {
-        console.log("Returned with", id);
-        _tmp_state.brand = Models.numberToLetters(id);
-        this.setState({value: _tmp_state});
-    },
+	onReturnFromAddBrand(id)
+	{
+		console.log("Returned with", id);
+		_tmp_state.brand = Models.numberToLetters(id);
+		this.setState({value: _tmp_state});
+	},
 
 
-    storeTmpState: function () {
+	storeTmpState: function () {
 		//console.log("## Storing TPM state", _tmp_state);
 
 		this.setState({
@@ -591,7 +591,7 @@ var RegisterProduct = React.createClass({
 			nutHundredValue: _tmp_state.nutHundredValue,
 			nutServingValue: _tmp_state.nutServingValue,
 			visualInfo: _tmp_state.visualInfo,
-            nutrientContentClaims: _tmp_state.nutrientContentClaims,
+			nutrientContentClaims: _tmp_state.nutrientContentClaims,
 			otherClaim: _tmp_state.otherClaim,
 			hundredSaltSodiumValue: _tmp_state.hundredSaltSodiumValue,
 			servingSaltSodiumValue: _tmp_state.servingSaltSodiumValue
@@ -614,39 +614,39 @@ var RegisterProduct = React.createClass({
 			if(this.refs.form2) {
 				if (this.refs.form2.getValue()) {
 					newVal.nutritionalPr100g = Datastore.clone(this.refs.form2.getValue());
-                    console.log(newVal.nutritionalPr100g);
-                    var hasInfo = false;
-                    for(var key in newVal.nutritionalPr100g)
-                    {
-                        if(newVal.nutritionalPr100g.hasOwnProperty(key))
-                        {
-                            if(newVal.nutritionalPr100g[key]) {
-                                hasInfo = true;
-                                break;
-                            }
-                        }
-                    }
-                    if(!hasInfo)
-                    {
-                        alert("Please fill in some information under \"Nutritional information per 100 g\" or uncheck it");
+					console.log(newVal.nutritionalPr100g);
+					var hasInfo = false;
+					for(var key in newVal.nutritionalPr100g)
+					{
+						if(newVal.nutritionalPr100g.hasOwnProperty(key))
+						{
+							if(newVal.nutritionalPr100g[key]) {
+								hasInfo = true;
+								break;
+							}
+						}
+					}
+					if(!hasInfo)
+					{
+						alert("Please fill in some information under \"Nutritional information per 100 g\" or uncheck it");
 
-                        this.jumpToError(this.refs.per100Bool, "boolValue");
-                        return null;
-                    }
+						this.jumpToError(this.refs.per100Bool, "boolValue");
+						return null;
+					}
 					//console.log("# Checkpoint 2");
 					if (this.refs.hundredSalt) {
-                        if (this.refs.hundredSalt.getValue()) {
-                            //console.log("# Checkpoint 3");
-                            if (this.state.saltSodium == "Salt")
-                                newVal.nutritionalPr100g.salt = Datastore.clone(this.refs.hundredSalt.getValue()).tValue;
-                            else
-                                newVal.nutritionalPr100g.sodium = Datastore.clone(this.refs.hundredSalt.getValue()).tValue;
-                        }
-                        else {
-                            this.jumpToError(this.refs.hundredSalt);
-                            return null;
-                        }
-                    }
+						if (this.refs.hundredSalt.getValue()) {
+							//console.log("# Checkpoint 3");
+							if (this.state.saltSodium == "Salt")
+								newVal.nutritionalPr100g.salt = Datastore.clone(this.refs.hundredSalt.getValue()).tValue;
+							else
+								newVal.nutritionalPr100g.sodium = Datastore.clone(this.refs.hundredSalt.getValue()).tValue;
+						}
+						else {
+							this.jumpToError(this.refs.hundredSalt);
+							return null;
+						}
+					}
 				}
 				else {this.jumpToError(this.refs.form2); return null;}
 			}
@@ -656,47 +656,47 @@ var RegisterProduct = React.createClass({
 					newVal.nutritionalPrServing = Datastore.clone(this.refs.form3.getValue());
 					//console.log("# Checkpoint 5");
 
-                    var hasInfo = false;
-                    for(var key in newVal.nutritionalPrServing)
-                    {
-                        if(newVal.nutritionalPrServing.hasOwnProperty(key))
-                        {
-                            if(newVal.nutritionalPrServing[key]) {
-                                hasInfo = true;
-                                break;
-                            }
-                        }
-                    }
-                    if(!hasInfo)
-                    {
-                        alert("Please fill in some information under \"Nutritional information per serving\" or uncheck it");
+					var hasInfo = false;
+					for(var key in newVal.nutritionalPrServing)
+					{
+						if(newVal.nutritionalPrServing.hasOwnProperty(key))
+						{
+							if(newVal.nutritionalPrServing[key]) {
+								hasInfo = true;
+								break;
+							}
+						}
+					}
+					if(!hasInfo)
+					{
+						alert("Please fill in some information under \"Nutritional information per serving\" or uncheck it");
 
-                        this.jumpToError(this.refs.perServingBool, "boolValue");
-                        return null;
-                    }
+						this.jumpToError(this.refs.perServingBool, "boolValue");
+						return null;
+					}
 
 					if (this.refs.servingSalt) {
-                        if (this.refs.servingSalt.getValue()) {
-                            //console.log("# Checkpoint 6");
-                            if (this.state.saltSodium == "Salt")
-                                newVal.nutritionalPrServing.salt = Datastore.clone(this.refs.servingSalt.getValue()).tValue;
-                            else
-                                newVal.nutritionalPrServing.sodium = Datastore.clone(this.refs.servingSalt.getValue()).tValue;
-                        }
-                        else {
-                            this.jumpToError(this.refs.servingSalt);
-                            return null;
-                        }
-                    }
+						if (this.refs.servingSalt.getValue()) {
+							//console.log("# Checkpoint 6");
+							if (this.state.saltSodium == "Salt")
+								newVal.nutritionalPrServing.salt = Datastore.clone(this.refs.servingSalt.getValue()).tValue;
+							else
+								newVal.nutritionalPrServing.sodium = Datastore.clone(this.refs.servingSalt.getValue()).tValue;
+						}
+						else {
+							this.jumpToError(this.refs.servingSalt);
+							return null;
+						}
+					}
 				}
 				else {this.jumpToError(this.refs.form3); return null;}
 			}
 
-            // convert foodtype, brand and agegroup
-            newVal.brand = Models.letterToNumbers(newVal.brand);
-            newVal.brand = Datastore.data.one("brands", {_id:newVal.brand}).name;
-            newVal.foodType = Models.foodTypes.meta.map[newVal.foodType];
-            newVal.ageGroup = Models.ageGroups.meta.map[newVal.ageGroup];
+			// convert foodtype, brand and agegroup
+			newVal.brand = Models.letterToNumbers(newVal.brand);
+			newVal.brand = Datastore.data.one("brands", {_id:newVal.brand}).name;
+			newVal.foodType = Models.foodTypes.meta.map[newVal.foodType];
+			newVal.ageGroup = Models.ageGroups.meta.map[newVal.ageGroup];
 
 			//console.log("# Checkpoint 7");
 
@@ -709,18 +709,18 @@ var RegisterProduct = React.createClass({
 
 			newVal.visualInformation = Datastore.clone(this.refs.form4.getValue());
 			//newVal.brand = Datastore.M.brand.name;
-            for(var key in this.state.images)
-            {
-                if(this.state.images.hasOwnProperty(key))
-                {
-                    if(!this.state.images[key]) {
-                        alert("You need to take pictures of the product!");
-                        return null;
-                    }
-                }
-            }
+			for(var key in this.state.images)
+			{
+				if(this.state.images.hasOwnProperty(key))
+				{
+					if(!this.state.images[key]) {
+						alert("You need to take pictures of the product!");
+						return null;
+					}
+				}
+			}
 			newVal.images = this.state.images; //Datastore.clone(this.state.images);
-            newVal.imgstore = this.state.imgstore;
+			newVal.imgstore = this.state.imgstore;
 			
 			newVal.country = Datastore.M.country.name;
 
@@ -740,8 +740,8 @@ var RegisterProduct = React.createClass({
 	jumpToError(ref, firstError = null)
 	{
 
-        if(!firstError)
-		    firstError = ref.validate().errors[0].path[0];
+		if(!firstError)
+			firstError = ref.validate().errors[0].path[0];
 
 		ref.getComponent(firstError).refs.input.measure((ox,oy,width,height,px,py) =>
 		{
@@ -763,52 +763,52 @@ var RegisterProduct = React.createClass({
 			// Register product
 			var entry = Datastore.data.add('products', newVal);
 
-            Datastore.M.product = newVal;
-            // Begin new flow where we jump directly to price
-            newVal = {};
-            newVal.product = Datastore.data.one('products', {_id:entry.insert_id});
-            if(newVal.product) {
-                newVal.country = Datastore.M.country;
-                newVal.location = Datastore.clone(Datastore.M.location);
-                // Convert location to readable info
+			Datastore.M.product = newVal;
+			// Begin new flow where we jump directly to price
+			newVal = {};
+			newVal.product = Datastore.data.one('products', {_id:entry.insert_id});
+			if(newVal.product) {
+				newVal.country = Datastore.M.country;
+				newVal.location = Datastore.clone(Datastore.M.location);
+				// Convert location to readable info
 
 
-                //newVal.location.incomeType = Models.incomeTypes.meta.map[newVal.location.incomeType];
-                //newVal.location.storeType = Models.storeTypes.meta.map[newVal.location.storeType];
-                //newVal.location.storeBrand = Datastore.data.one('storeBrands', {_id:newVal.location.storeBrand}).name;
+				//newVal.location.incomeType = Models.incomeTypes.meta.map[newVal.location.incomeType];
+				//newVal.location.storeType = Models.storeTypes.meta.map[newVal.location.storeType];
+				//newVal.location.storeBrand = Datastore.data.one('storeBrands', {_id:newVal.location.storeBrand}).name;
 
-                newVal.credentials = Datastore.M.credentials;
-                newVal.timeOfRegistration = Date.now(); // UTC in seconds
+				newVal.credentials = Datastore.M.credentials;
+				newVal.timeOfRegistration = Date.now(); // UTC in seconds
 
-                //console.log("  this,state", this.state );
+				//console.log("  this,state", this.state );
 
-                if (this.state.hasOwnProperty('initialPosition')) {
-                    newVal.gpsLocation = this.state.initialPosition;
-                } else {
-                    newVal.gpsLocation = {};
-                }
+				if (this.state.hasOwnProperty('initialPosition')) {
+					newVal.gpsLocation = this.state.initialPosition;
+				} else {
+					newVal.gpsLocation = {};
+				}
 
-                // Create a unique "name":
-                newVal.name = Datastore.shortid.generate();
+				// Create a unique "name":
+				newVal.name = Datastore.shortid.generate();
 
-                // Strip local _id fields
-                newVal = Datastore.data.removeIDs(newVal);
-                // Registrations is sortable by location hash
-                newVal.locationID = Datastore.M.location.hash;
+				// Strip local _id fields
+				newVal = Datastore.data.removeIDs(newVal);
+				// Registrations is sortable by location hash
+				newVal.locationID = Datastore.M.location.hash;
 
-                this.props.navigator.push({
-                    onLeftButtonPress: () => this.props.navigator.popToRoute(Datastore.M.SelectProductRoute),
-                    leftButtonTitle: 'Back',
-                    component: RegisterPriceAndPromo,
-                    title: 'Price Information',
-                    displayName: 'RegisterPriceAndPromo',
-                    passProps: {productToRegister: newVal}
-                });
-            }
-            else {
-                this.props.navigator.pop();
-            }
-            // End new flow
+				this.props.navigator.push({
+					onLeftButtonPress: () => this.props.navigator.popToRoute(Datastore.M.SelectProductRoute),
+					leftButtonTitle: 'Back',
+					component: RegisterPriceAndPromo,
+					title: 'Price Information',
+					displayName: 'RegisterPriceAndPromo',
+					passProps: {productToRegister: newVal}
+				});
+			}
+			else {
+				this.props.navigator.pop();
+			}
+			// End new flow
 
 
 		}

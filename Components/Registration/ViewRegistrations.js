@@ -63,7 +63,7 @@ var ViewRegistrations = React.createClass ({
 	},
 
 	dataAvailable: function(_data){
-		console.log("REGISTRATIONS ", _data);
+		//console.log("REGISTRATIONS ", _data);
 		this.setState({
 			isLoading:false,
 			message:'loaded',
@@ -96,16 +96,11 @@ var ViewRegistrations = React.createClass ({
 	},
 
 
-	// dev:
-
 	_renderRowWithImage: function(rowData, sectionID, rowID) {
 		var productInfo = rowData.product;
 
-		console.log('add prod to locationRegistrations RAW', rowData, sectionID, rowID );
-		console.log('add prod to locationRegistrations:', productInfo );
-		// ah. $rowData.product has no $hash (but $rowData has)
-		// what do we need to compare?
-		// did is use to have a hash?
+		//console.log('add prod to locationRegistrations RAW', rowData, sectionID, rowID );
+		//console.log('add prod to locationRegistrations:', productInfo );
 
 		locationRegistrations.push(productInfo.hash);
 		D.M.locationRegistrations = locationRegistrations;
@@ -127,27 +122,6 @@ var ViewRegistrations = React.createClass ({
 		);
 	},
 
-
-	/*_renderRow: function(rowData, sectionID, rowID) {
-
-		var _foodType = Models.foodTypes.meta.map[rowData.foodType];
-		var _ageGroup = Models.ageGroups.meta.map[rowData.ageGroup];
-
-
-		return (
-			<TouchableHighlight underlayColor='#EEE' onPress={() => this.rowPressed(rowData)}>
-				<View>
-					<View style={GlobalStyles.listrowContainer}>
-						<View>
-							<Text style={GlobalStyles.listrowTitle}>{rowData.name}</Text>
-							<Text style={GlobalStyles.listrowSubtitle}>{_foodType} by {rowData.brand}, from age {_ageGroup}</Text>
-						</View>
-					</View>
-					<View style={GlobalStyles.listrowSeparator}/>
-				</View>
-			</TouchableHighlight>
-		);
-	},*/
 	rowPressed: function(rowData) {
 		console.log("= [ViewRegistrations] ", rowData.product.name);
 		//D.Session.Set('brand', rowData);
@@ -164,8 +138,6 @@ var ViewRegistrations = React.createClass ({
 });
 
 module.exports = ViewRegistrations;
-
-//module.exports.FetchData = this.fetchData();
 
 // Local styles
 var styles = StyleSheet.create({

@@ -50,13 +50,9 @@ var SelectProduct = React.createClass ({
 		navigatorEventListener = this.props.navigator.navigationContext.addListener('willfocus', (event) => {
 			console.log("[SelectProduct] willfocus", event.data.route.displayName);
 			if(event.data.route.displayName === "SelectProduct"){
-
-				//TODO: Filter by what?
-				//Datastore.data.where('products', {"": Datastore.M. }, this.dataAvailable);
 				Datastore.data.where('products', {"country": Datastore.M.country.name}, this.dataAvailable);
 			}
 		});
-		console.log(Datastore.M.country.name);
 		Datastore.data.where('products', {"country": Datastore.M.country.name}, this.dataAvailable);
 	},
 	
@@ -99,8 +95,8 @@ var SelectProduct = React.createClass ({
 		//var _foodType = Models.foodTypes.meta.map[rowData.foodType];
 		//var _ageGroup = Models.ageGroups.meta.map[rowData.ageGroup];
 		
-		console.log("LOCATION REGISTRATIONS RAW ", rowData);
-		console.log("LOCATION REGISTRATIONS: ", Datastore.M.locationRegistrations, rowData.hash);
+		//console.log("LOCATION REGISTRATIONS RAW ", rowData);
+		//console.log("LOCATION REGISTRATIONS: ", Datastore.M.locationRegistrations, rowData.hash);
 		
 
 		if (Datastore.M.locationRegistrations && Datastore.M.locationRegistrations.indexOf(rowData.hash) > -1) // registered for this location
@@ -112,7 +108,6 @@ var SelectProduct = React.createClass ({
 
 							<Image style={GlobalStyles.rowImage}
 								   source={{ uri: Datastore.ws.img("products", rowData.uuid, 'front', '300x300') }}/>
-							{/*<Image style={GlobalStyles.rowImage} source={{ uri: 'http://lorempixel.com/100/100/sports/'}} /> */}
 
 							<View>
 								<Text style={GlobalStyles.listrowTitle}>{rowData.name}</Text>
@@ -136,7 +131,6 @@ var SelectProduct = React.createClass ({
 
 								<Image style={GlobalStyles.rowImage}
 									   source={{ uri: Datastore.ws.img("products", rowData.uuid, 'front', '300x300') }}/>
-								{/*<Image style={GlobalStyles.rowImage} source={{ uri: 'http://lorempixel.com/100/100/sports/'}} /> */}
 
 								<View>
 									<Text style={GlobalStyles.listrowTitle}>{rowData.name}</Text>

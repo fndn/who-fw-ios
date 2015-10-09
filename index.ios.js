@@ -25,7 +25,7 @@ var Datastore 		= require('fndn-rn-datastore');
 
 Datastore.opts({
 	data: {
-		database: 	'fwa-151006',
+		database: 	'fwa-151009',
 		tables: 	["countries", "locations", "brands", "incomeTypes", "storeTypes", "storeBrands", "ageGroups", "products", "currencies"],
 		uploadOnly: ["register"],
 		localOnly:	["registrations", "credentials"]
@@ -65,7 +65,6 @@ var fwa = React.createClass({
 
 			console.log("All products:", Datastore.data.all("products") );
 			console.log("All registrations:", Datastore.data.all("registrations") );
-			console.log("Sweden sth:", Datastore.data.where("registrations", {locationID:'4e7800ada7b88b9a5bf3f1511380ed1c'}) );
 
 		});
 		
