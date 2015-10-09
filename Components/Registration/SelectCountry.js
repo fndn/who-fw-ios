@@ -55,6 +55,7 @@ var SelectCountry = React.createClass ({
         navigatorEventListener = this.props.navigator.navigationContext.addListener('willfocus', (event) => {
             //console.log("[SelectCountry]", event.data.route.displayName);
             if(event.data.route.displayName === "SelectCountry"){
+                Datastore.M.country = null;
                 Datastore.data.all('countries', this.dataAvailable);
             }
         });
@@ -69,7 +70,7 @@ var SelectCountry = React.createClass ({
 
 	dataAvailable: function(_data){
 		//console.log('[SelectCountry] dataAvailable', _data);
-        Datastore.M.country = null;
+
 		Datastore.data.orderBy(_data, "name"); // orders *in place*
 
 		this.setState({

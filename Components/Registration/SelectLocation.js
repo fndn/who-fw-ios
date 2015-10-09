@@ -52,6 +52,7 @@ var SelectLocation = React.createClass ({
 			console.log("[SelectLocation] willfocus ", event.data.route.displayName);
 			if(event.data.route.displayName === "SelectLocation"){
 				// (Re)load all locations filtered by countryCode
+                Datastore.M.location = null;
 				Datastore.data.where('locations', {"countryCode": Datastore.M.country.countryCode }, this.dataAvailable);
 			}
 		});
@@ -66,7 +67,7 @@ var SelectLocation = React.createClass ({
 	},
 
 	dataAvailable: function(_data){
-        Datastore.M.location = null;
+        //Datastore.M.location = null;
 		this.setState({
 			isLoading:false,
 			message:'loaded',
