@@ -34,11 +34,12 @@ var Registrations = React.createClass ({
 				initialRoute={{
 					component: SelectCountry,
 					displayName: 'SelectCountry',
-					rightButtonTitle: 'Add',
-					onRightButtonPress: () => this.OpenAddCountry(),
-					title: 'Select Country'
+					title: 'Select Country',
+					
 				}}/>
 		);
+
+		/* rightButtonTitle: 'Add', onRightButtonPress: () => this.OpenAddCountry() */
 	},
 
 	OpenAddCountry: function ()

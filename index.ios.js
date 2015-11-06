@@ -25,7 +25,7 @@ var Datastore 		= require('fndn-rn-datastore');
 
 Datastore.opts({
 	data: {
-		database: 	'fwa-151009',
+		database: 	'fwa-151106-2',
 		tables: 	["countries", "locations", "brands", "incomeTypes", "storeTypes", "storeBrands", "ageGroups", "products", "currencies"],
 		uploadOnly: ["register"],
 		localOnly:	["registrations", "credentials"]
@@ -52,6 +52,9 @@ var fwa = React.createClass({
 
 			Datastore.info();
 			Datastore.reach.enable();
+
+			// init server
+			//Datastore.tool_popdefs.init_countries();
 
 			//console.log("X registrations:", Datastore.data.empty("registrations") );
 
