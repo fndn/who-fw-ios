@@ -1,6 +1,10 @@
 {
 	"name": "fwa",
+<<<<<<< HEAD
 	"version": "0.9.7",
+=======
+	"version": "0.9.4",
+>>>>>>> 694b82ee749a7077e4223b2dde64e3ccf48eccf7
 	"private": true,
 	"scripts": {
 	"start": "node_modules/react-native/packager/packager.sh"
