@@ -25,11 +25,7 @@ var Datastore 		= require('fndn-rn-datastore');
 
 Datastore.opts({
 	data: {
-<<<<<<< HEAD
 		database: 	'fwa-151106-2',
-=======
-		database: 	'fwa-pilot-151011',
->>>>>>> 694b82ee749a7077e4223b2dde64e3ccf48eccf7
 		tables: 	["countries", "locations", "brands", "incomeTypes", "storeTypes", "storeBrands", "ageGroups", "products", "currencies"],
 		uploadOnly: ["register"],
 		localOnly:	["registrations", "credentials"]
